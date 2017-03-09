@@ -2,3 +2,16 @@ Wonderland/Wonderland/x64/Debug/vc140.idb
 Wonderland/Wonderland/x64/Debug/
 Wonderland/Wonderland/x64/Release/
 Wonderland/Wonderland/Release/
+Wonderland/Wonderland/Debug/
+Wonderland/Wonderland/wonderland.metrics
+Wonderland/Wonderland/test.json
+Wonderland/Wonderland/test.tga
+Wonderland/Wonderland/linker-error.txt
+Wonderland/Wonderland/shader-error.txt
+Wonderland/Debug/
+Wonderland/Release/
+*.db
+*.filters
+*.iobj
+*.ipdb
+Wonderland/Wonderland/Source.rar
