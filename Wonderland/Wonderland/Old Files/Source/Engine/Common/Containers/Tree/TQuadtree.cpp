@@ -1,0 +1,25 @@
+///////////////////////////////////////////////////////////////////////////////
+// Filename: TQuadtree.cpp
+///////////////////////////////////////////////////////////////////////////////
+#include "TQuadtree.h"
+
+/*
+TQuadtree::TQuadtree()
+{
+}
+
+TQuadtree::TQuadtree(const TQuadtree& other)
+{
+}
+
+TQuadtree::~TQuadtree()
+{
+}
+
+bool TQuadtree::Initialize()
+{
+	bool result;
+
+	return true;
+}
+*/

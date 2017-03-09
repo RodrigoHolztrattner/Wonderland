@@ -1,0 +1,50 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: RenderModule.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+// We know the view class
+class UIBase;
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: RenderModule
+////////////////////////////////////////////////////////////////////////////////
+class RenderModule
+{
+public:
+	RenderModule();
+	RenderModule(const RenderModule&);
+	~RenderModule();
+
+	// Initialize the module
+	bool Initialize();
+
+	// Shutdown the module
+	void Shutdown();
+
+	// Start the rendering process
+	void Update(UIBase* _currentWidget, float _time, unsigned int _renderingId);
+
+private:
+
+	// Start the rendering process aux
+	void StartRenderProcessAux(UIBase* _currentWidget, unsigned int _renderingId);
+
+private:
+
+	// The depth order
+	float m_DepthOrder;
+
+};

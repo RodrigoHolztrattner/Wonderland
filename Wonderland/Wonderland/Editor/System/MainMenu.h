@@ -1,0 +1,65 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: MainMenu.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include "..\Foundation\UI\UI.h"
+#include <string>
+#include <iostream>
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: MainMenu
+////////////////////////////////////////////////////////////////////////////////
+class MainMenu : public UIMenu
+{
+	// UIBase is a friend
+	friend UIBase;
+
+//////////////////////////////
+// CONSTRUCTOR / DESTRUCTOR //
+protected: ///////////////////
+
+	// We cant create this widget without using the UIBase::Create()
+	MainMenu();
+
+	// We cant copy or destruct too
+	MainMenu(const MainMenu&);
+	~MainMenu();
+
+	// Create this widget (called from the UIBase)
+	virtual bool Create();
+
+///////////////
+// MODIFIERS //
+public: ///////
+
+/////////////
+// VIRTUAL //
+public: /////
+
+	// Process a command (virtual, dont call the parent function back if overloaded)
+	virtual bool ProcessCommand(CommandType* _command);
+
+	// Render this widget
+	virtual void Render() {};
+
+///////////////
+// VARIABLES //
+private: //////
+
+};

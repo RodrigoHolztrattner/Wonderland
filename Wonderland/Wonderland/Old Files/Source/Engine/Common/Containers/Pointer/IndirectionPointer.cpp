@@ -1,0 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: IndirectionPointer.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "IndirectionPointer.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/*
+IndirectionPointer::IndirectionPointer()
+{
+}
+
+IndirectionPointer::IndirectionPointer(const IndirectionPointer& other)
+{
+}
+
+IndirectionPointer::~IndirectionPointer()
+{
+}
+*/

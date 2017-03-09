@@ -1,0 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: DynamicMemberFunctionRegister.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "DynamicMemberFunctionRegister.h"
+
+Flux::DynamicMemberFunctionRegister::DynamicMemberFunctionRegister()
+{
+}
+
+Flux::DynamicMemberFunctionRegister::~DynamicMemberFunctionRegister()
+{
+}

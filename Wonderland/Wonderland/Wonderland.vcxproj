@@ -1,0 +1,507 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Editor\Application.h" />
+    <ClInclude Include="Editor\ApplicationInstance.h" />
+    <ClInclude Include="Editor\ApplicationMetrics.h" />
+    <ClInclude Include="Editor\Foundation\Context\Context.h" />
+    <ClInclude Include="Editor\Foundation\Context\UserDefinitions\UserDefinitions.h" />
+    <ClInclude Include="Editor\Foundation\Context\UserDefinitions\UserDefinitionsIO.h" />
+    <ClInclude Include="Editor\Foundation\Debug\DebugView.h" />
+    <ClInclude Include="Editor\Foundation\ECS\ECS_Component.h" />
+    <ClInclude Include="Editor\Foundation\ECS\ECS_Entity.h" />
+    <ClInclude Include="Editor\Foundation\ECS\ECS_System.h" />
+    <ClInclude Include="Editor\Foundation\MVC\MVC_Controller.h" />
+    <ClInclude Include="Editor\Foundation\MVC\MVC_Model.h" />
+    <ClInclude Include="Editor\Foundation\MVC\MVC_View.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderBase.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderFileLoader.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderFrame.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderManager.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderProgram.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderRenderer.h" />
+    <ClInclude Include="Editor\Foundation\Shader\ShaderShard.h" />
+    <ClInclude Include="Editor\Foundation\Texture\Texture2D.h" />
+    <ClInclude Include="Editor\Foundation\Trigger\TriggerManager.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Command\UICommandComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Command\UICommandComponentCallback.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Command\UIMovableCommandComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Frame\Anchor\UIAnchorComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Frame\Fit\UITextFitComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Frame\UIFrameComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Frame\UIFrameToken.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Frame\UIRelativeFrameComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Border\UIBorderComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Border\UIBorderShader.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Color\UIColorComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Color\UIColorShader.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Line\UILineComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Line\UILineShader.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Texture\UITextureComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Texture\UITextureShader.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Text\UIFont.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Text\UIFontShader.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Text\UIString.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\Text\UITextComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Renderable\UIRenderableComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\State\UIStateComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\Tree\UITreeComponent.h" />
+    <ClInclude Include="Editor\Foundation\UI\Components\UIComponents.h" />
+    <ClInclude Include="Editor\Foundation\UI\UI.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\Modules\BaseModule.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\Modules\CommandModule\CommandDispatcher.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\Modules\CommandModule\CommandModule.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\Modules\CommandModule\CommandType.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\Modules\RenderModule\RenderModule.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\Modules\WindowModule\WindowModule.h" />
+    <ClInclude Include="Editor\Foundation\UI\ViewController\ViewController.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Button\UIButton.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Menu\UIMenu.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Menu\UIMenuButton.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Menu\UIMenuChain.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Menu\UIMenuLaneView.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Programming\ProgrammingSocket.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Programming\UIProgrammingBox.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Programming\UIProgrammingLine.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Programming\UIProgrammingSocket.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\Text\UITextField.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\UIBase.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\UIWidgets.h" />
+    <ClInclude Include="Editor\Foundation\UI\Widgets\View\UIView.h" />
+    <ClInclude Include="Editor\Modules\ConcurrentQueue.h" />
+    <ClInclude Include="Editor\Modules\HashedString.h" />
+    <ClInclude Include="Editor\Modules\hopscotch_map.h" />
+    <ClInclude Include="Editor\Modules\LogSystem.h" />
+    <ClInclude Include="Editor\Modules\NamespaceDefinitions.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Box.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\BoxBody.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\BoxCreator.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\BoxRegister.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\DynamicFunction\DynamicFunction.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\DynamicFunction\DynamicFunctionCreator.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\DynamicFunction\DynamicFunctionRegister.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\DynamicMemberFunction\DynamicMemberFunction.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\DynamicMemberFunction\DynamicMemberFunctionCreator.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\DynamicMemberFunction\DynamicMemberFunctionRegister.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionBody.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionEnd.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionFlow.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionHead.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionLinker.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionLinkerFlow.h" />
+    <ClInclude Include="Editor\Modules\Flux\Box\Function\FunctionStart.h" />
+    <ClInclude Include="Editor\Modules\Flux\Class\Class.h" />
+    <ClInclude Include="Editor\Modules\Flux\Class\ClassCreator.h" />
+    <ClInclude Include="Editor\Modules\Flux\Class\ClassRegister.h" />
+    <ClInclude Include="Editor\Modules\Flux\Flux.h" />
+    <ClInclude Include="Editor\Modules\Flux\Handle\Handle.h" />
+    <ClInclude Include="Editor\Modules\Flux\Socket\Socket.h" />
+    <ClInclude Include="Editor\Modules\Flux\Socket\SocketExecution.h" />
+    <ClInclude Include="Editor\Modules\Flux\Socket\SocketType.h" />
+    <ClInclude Include="Editor\Modules\Flux\Type\Type.h" />
+    <ClInclude Include="Editor\Modules\Flux\Type\TypeCreator.h" />
+    <ClInclude Include="Editor\Modules\Flux\Type\TypeRegister.h" />
+    <ClInclude Include="Editor\Modules\Flux\Variable.h" />
+    <ClInclude Include="Editor\Modules\Functor.h" />
+    <ClInclude Include="Editor\Modules\GlobalInstance.h" />
+    <ClInclude Include="Editor\Modules\HookGui\Anchor.h" />
+    <ClInclude Include="Editor\Modules\HookGui\Frame.h" />
+    <ClInclude Include="Editor\Modules\HookGui\InputDispatcher.h" />
+    <ClInclude Include="Editor\Modules\HookGui\ReferenceCounter.h" />
+    <ClInclude Include="Editor\Modules\HookGui\UIDef.h" />
+    <ClInclude Include="Editor\Modules\HookGui\Widget.h" />
+    <ClInclude Include="Editor\Modules\HookGui\WidgetController.h" />
+    <ClInclude Include="Editor\Modules\HookGui\Window.h" />
+    <ClInclude Include="Editor\Modules\Peon\Peon.h" />
+    <ClInclude Include="Editor\Modules\Peon\PeonJob.h" />
+    <ClInclude Include="Editor\Modules\Peon\PeonStealingQueue.h" />
+    <ClInclude Include="Editor\Modules\Peon\PeonSystem.h" />
+    <ClInclude Include="Editor\Modules\Peon\PeonWorker.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWDescriptorSetCreator.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWMaterial.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResource.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResourceBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResourceCache.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResourceLoader.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResourceManager.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResourceRequest.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWResourceVault.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWShaderParameterHolder.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWObject.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTexture.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroup.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupManager.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureManager.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWVertexObject.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderCommandBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderDescriptorBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderPipelineBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderRenderingBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWBuffer.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWFrameCommandBufferAllocator.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWContextBase.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWGraphicAdapter.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWBufferClear.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWContext.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWGraphicInstance.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWMaterialShader.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWRenderable.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWSwapChain.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VulkanWrapper.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWWindow.h" />
+    <ClInclude Include="Editor\Support\Callback\Callback.h" />
+    <ClInclude Include="Editor\Support\Callback\MemberCallback.h" />
+    <ClInclude Include="Editor\Support\Container\Array\Array.h" />
+    <ClInclude Include="Editor\Support\Container\Array\BinaryArray.h" />
+    <ClInclude Include="Editor\Support\Container\Array\StaticArray.h" />
+    <ClInclude Include="Editor\Support\Container\List\GlobalList.h" />
+    <ClInclude Include="Editor\Support\Container\Map\ConstantMap.h" />
+    <ClInclude Include="Editor\Support\Math\Math.h" />
+    <ClInclude Include="Editor\Support\Math\Matrix\WMatrix3.h" />
+    <ClInclude Include="Editor\Support\Math\Matrix\WMatrix4.h" />
+    <ClInclude Include="Editor\Support\Math\Primitive\Primitives.h" />
+    <ClInclude Include="Editor\Support\Math\Quaternion\WQuaternion.h" />
+    <ClInclude Include="Editor\Support\Math\Transform\WTransform2D.h" />
+    <ClInclude Include="Editor\Support\Math\Transform\WTransform3D.h" />
+    <ClInclude Include="Editor\Support\Math\Vector\Vector2.h" />
+    <ClInclude Include="Editor\Support\Math\Vector\Vector3.h" />
+    <ClInclude Include="Editor\Support\Math\Vector\Vector4.h" />
+    <ClInclude Include="Editor\Support\String\FHashedString.h" />
+    <ClInclude Include="Editor\System\MainInfoView.h" />
+    <ClInclude Include="Editor\System\MainMenu.h" />
+    <ClInclude Include="Editor\System\MainViewController.h" />
+    <ClInclude Include="Editor\System\Project\ProjectData.h" />
+    <ClInclude Include="Editor\System\Project\ProjectExplorerView.h" />
+    <ClInclude Include="Editor\System\Project\ProjectView.h" />
+    <ClInclude Include="Source\Engine\BaseClass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Editor\Application.cpp" />
+    <ClCompile Include="Editor\ApplicationInstance.cpp" />
+    <ClCompile Include="Editor\ApplicationMetrics.cpp" />
+    <ClCompile Include="Editor\Foundation\Context\Context.cpp" />
+    <ClCompile Include="Editor\Foundation\Context\UserDefinitions\UserDefinitions.cpp" />
+    <ClCompile Include="Editor\Foundation\Context\UserDefinitions\UserDefinitionsIO.cpp" />
+    <ClCompile Include="Editor\Foundation\Debug\DebugView.cpp" />
+    <ClCompile Include="Editor\Foundation\ECS\ECS_Component.cpp" />
+    <ClCompile Include="Editor\Foundation\ECS\ECS_Entity.cpp" />
+    <ClCompile Include="Editor\Foundation\ECS\ECS_System.cpp" />
+    <ClCompile Include="Editor\Foundation\MVC\MVC_Controller.cpp" />
+    <ClCompile Include="Editor\Foundation\MVC\MVC_Model.cpp" />
+    <ClCompile Include="Editor\Foundation\MVC\MVC_View.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderBase.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderFileLoader.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderFrame.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderManager.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderProgram.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderRenderer.cpp" />
+    <ClCompile Include="Editor\Foundation\Shader\ShaderShard.cpp" />
+    <ClCompile Include="Editor\Foundation\Texture\Texture2D.cpp" />
+    <ClCompile Include="Editor\Foundation\Trigger\TriggerManager.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Command\UICommandComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Command\UICommandComponentCallback.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Command\UIMovableCommandComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Frame\Anchor\UIAnchorComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Frame\Fit\UITextFitComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Frame\UIFrameComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Frame\UIFrameToken.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Frame\UIRelativeFrameComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Border\UIBorderComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Border\UIBorderShader.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Color\UIColorComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Color\UIColorShader.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Line\UILineComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Line\UILineShader.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Texture\UITextureComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Texture\UITextureShader.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Text\UIFont.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Text\UIFontShader.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Text\UIString.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\Text\UITextComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Renderable\UIRenderableComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\State\UIStateComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Components\Tree\UITreeComponent.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\Modules\BaseModule.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\Modules\CommandModule\CommandDispatcher.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\Modules\CommandModule\CommandModule.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\Modules\CommandModule\CommandType.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\Modules\RenderModule\RenderModule.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\Modules\WindowModule\WindowModule.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\ViewController\ViewController.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Button\UIButton.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Menu\UIMenu.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Menu\UIMenuButton.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Menu\UIMenuChain.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Menu\UIMenuLaneView.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Programming\ProgrammingSocket.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Programming\UIProgrammingBox.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Programming\UIProgrammingLine.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Programming\UIProgrammingSocket.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\Text\UITextField.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\UIBase.cpp" />
+    <ClCompile Include="Editor\Foundation\UI\Widgets\View\UIView.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Box.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\BoxBody.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\BoxCreator.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\BoxRegister.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\DynamicFunction\DynamicFunction.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\DynamicFunction\DynamicFunctionCreator.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\DynamicFunction\DynamicFunctionRegister.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\DynamicMemberFunction\DynamicMemberFunction.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\DynamicMemberFunction\DynamicMemberFunctionCreator.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\DynamicMemberFunction\DynamicMemberFunctionRegister.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionBody.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionEnd.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionFlow.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionHead.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionLinker.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionLinkerFlow.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Box\Function\FunctionStart.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Class\Class.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Class\ClassCreator.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Class\ClassRegister.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Handle\Handle.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Socket\Socket_.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Socket\SocketExecution.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Socket\SocketType.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Type\Type.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Type\TypeCreator.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Type\TypeRegister.cpp" />
+    <ClCompile Include="Editor\Modules\Flux\Variable.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\Anchor.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\Frame.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\InputDispatcher.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\ReferenceCounter.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\Widget.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\WidgetController.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\Window.cpp" />
+    <ClCompile Include="Editor\Modules\Peon\PeonJob.cpp" />
+    <ClCompile Include="Editor\Modules\Peon\PeonStealingQueue.cpp" />
+    <ClCompile Include="Editor\Modules\Peon\PeonSystem.cpp" />
+    <ClCompile Include="Editor\Modules\Peon\PeonWorker.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWDescriptorSetCreator.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWMaterial.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResource.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResourceBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResourceCache.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResourceLoader.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResourceManager.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResourceRequest.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWResourceVault.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWShaderParameterHolder.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWObject.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTexture.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroup.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupManager.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureManager.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWVertexObject.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderCommandBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderDescriptorBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderPipelineBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderRenderingBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWBuffer.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWFrameCommandBufferAllocator.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWContextBase.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWGraphicAdapter.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWBufferClear.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWContext.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWGraphicInstance.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWMaterialShader.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWRenderable.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWSwapChain.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWWindow.cpp" />
+    <ClCompile Include="Editor\Support\Callback\MemberCallback.cpp" />
+    <ClCompile Include="Editor\Support\Container\Array\Array.cpp" />
+    <ClCompile Include="Editor\Support\Container\Array\BinaryArray.cpp" />
+    <ClCompile Include="Editor\Support\Container\Array\StaticArray.cpp" />
+    <ClCompile Include="Editor\Support\Container\List\GlobalList.cpp" />
+    <ClCompile Include="Editor\Support\Container\Map\ConstantMap.cpp" />
+    <ClCompile Include="Editor\Support\Math\Math.cpp" />
+    <ClCompile Include="Editor\Support\Math\Matrix\WMatrix3.cpp" />
+    <ClCompile Include="Editor\Support\Math\Matrix\WMatrix4.cpp" />
+    <ClCompile Include="Editor\Support\Math\Quaternion\WQuaternion.cpp" />
+    <ClCompile Include="Editor\Support\Math\Transform\WTransform2D.cpp" />
+    <ClCompile Include="Editor\Support\Math\Transform\WTransform3D.cpp" />
+    <ClCompile Include="Editor\Support\Math\Vector\Vector2.cpp" />
+    <ClCompile Include="Editor\Support\Math\Vector\Vector3.cpp" />
+    <ClCompile Include="Editor\Support\Math\Vector\Vector4.cpp" />
+    <ClCompile Include="Editor\Support\String\FHashedString.cpp" />
+    <ClCompile Include="Editor\System\MainInfoView.cpp" />
+    <ClCompile Include="Editor\System\MainMenu.cpp" />
+    <ClCompile Include="Editor\System\MainViewController.cpp" />
+    <ClCompile Include="Editor\System\Project\ProjectData.cpp" />
+    <ClCompile Include="Editor\System\Project\ProjectExplorerView.cpp" />
+    <ClCompile Include="Editor\System\Project\ProjectView.cpp" />
+    <ClCompile Include="Source\Engine\BaseClass.cpp" />
+    <ClCompile Include="Source\Engine\Wonderland.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Editor\Support\Math\Transform\Details.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F152F44B-B9A6-48F4-AA12-EE7EED599D8A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Wonderland</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\conanbuildinfo.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\conanbuildinfo.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\conanbuildinfo.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\conanbuildinfo.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)\Source\Engine\Common;$(ProjectDir)\Source\External\glm;$(ProjectDir)\Source\External\GLFW\include;$(ProjectDir)\Source\External\GLEW\include;$(ProjectDir)\Source\External\freetype\include;$(ProjectDir)\Source\External\json-develop\src;$(ProjectDir)\Source\External\Pthreads\include;$(ProjectDir)\Source\External\stb;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Source\External\freetype\lib;$(ProjectDir)\Source\External\GLFW\lib-vc2015;$(ProjectDir)\Source\External\GLEW\lib;$(ProjectDir)\Source\External\Pthreads\lib\x86;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)\Source\Engine\Common;$(ProjectDir)\Source\External\glm;$(ProjectDir)\Source\External\GLFW\include;$(ProjectDir)\Source\External\GLEW\include;$(ProjectDir)\Source\External\freetype\include;$(ProjectDir)\Source\External\json-develop\src;$(ProjectDir)\Source\External\Pthreads\include;$(ProjectDir)\Source\External\stb;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Source\External\freetype\lib;$(ProjectDir)\Source\External\GLFW\lib-vc2015;$(ProjectDir)\Source\External\GLEW\lib;$(ProjectDir)\Source\External\Pthreads\lib\x86;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;HAVE_STRUCT_TIMESPEC;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.39.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vulkan-1.lib;pthreadVC2.lib;opengl32.lib;glew32s.lib;glfw3.lib;glfw3dll.lib;freetype.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.39.1\Bin32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;HAVE_STRUCT_TIMESPEC;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.39.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vulkan-1.lib;pthreadVC2.lib;opengl32.lib;glew32s.lib;glfw3.lib;glfw3dll.lib;freetype.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.39.1\Bin32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

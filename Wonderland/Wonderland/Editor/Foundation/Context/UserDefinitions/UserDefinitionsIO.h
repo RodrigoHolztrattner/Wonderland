@@ -1,0 +1,69 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: UserDefinitionsIO.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: UserDefinitionsIO
+////////////////////////////////////////////////////////////////////////////////
+class UserDefinitionsIO
+{
+public:
+	UserDefinitionsIO();
+	UserDefinitionsIO(const UserDefinitionsIO&);
+	~UserDefinitionsIO();
+
+	// Return the global instance
+	static UserDefinitionsIO* GetInstance()
+	{
+		// Check if the context exist
+		static UserDefinitionsIO* context = nullptr;
+		if (context == nullptr)
+		{
+			// Create a new instance
+			context = new UserDefinitionsIO;
+
+			// Initialize the new context
+			context->Initialize();
+		}
+
+		return context;
+	}
+
+////////////////////
+// INITIALIZATION //
+public: ////////////
+
+	// Initialize the context
+	bool Initialize();
+
+//////////
+// GETS //
+public: //
+
+
+///////////////
+// VARIABLES //
+private: //////
+
+	// Screen dimension
+	unsigned int m_ScreenWidth;
+	unsigned int m_ScreenHeight;
+
+};

@@ -1,0 +1,59 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: FMesh.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _FMesh_H_
+#define _FMesh_H_
+
+/////////////
+// LINKING //
+/////////////
+
+//////////////
+// INCLUDES //
+//////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+/*
+	=> Mesh:
+
+	- É um recurso.
+	- Possiu uma array de vertices assim como o vertex e index buffer.
+	- Os vertices necessariamente precisam conter: 
+	
+		~ Position.
+		~ TextureCoordinates.
+		~ Normals.
+		
+		Sendo opcional conter:
+	
+		~ Binormals.
+		~ Tangent.
+
+	- Usamos um sistema proprio de data para armazenar os vertices (another mesh format (.amf)).
+
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FMesh
+////////////////////////////////////////////////////////////////////////////////
+class FMesh
+{
+private:
+
+public:
+	FMesh();
+	FMesh(const FMesh&);
+	~FMesh();
+
+	bool Initialize();
+
+private:
+
+
+
+};
+
+#endif

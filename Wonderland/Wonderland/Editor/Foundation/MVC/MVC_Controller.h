@@ -1,0 +1,77 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: MVC_Controller.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+/////////////
+// LINKING //
+/////////////
+
+//////////////
+// INCLUDES //
+//////////////
+#include "..\..\Support\Container\Array\Array.h"
+
+/////////////
+// DEFINES //
+/////////////
+
+// We know the MVC_View class
+class MVC_View;
+
+// We know the MVC_Model class
+class MVC_Model;
+
+////////////
+// MACROS //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: MVC_Controller
+////////////////////////////////////////////////////////////////////////////////
+class MVC_Controller
+{
+private:
+
+//////////////////////////////
+// CONSTRUCTOR / DESTRUCTOR //
+public: //////////////////////
+
+	// Constructor / Destructor
+	MVC_Controller();
+	MVC_Controller(const MVC_Controller&);
+	~MVC_Controller();
+
+///////////////
+// MODIFIERS //
+public: ///////
+
+	// Set our model reference
+	void SetModelReference(MVC_Model* _modelReference);
+
+	// Add a subscriber
+	void AddSubscriber(MVC_View* _subscriber);
+
+protected:
+
+	// Alert all subscribers (model changed)
+	void AlertSubscribers();
+
+/////////////
+// VIRTUAL //
+public: /////
+
+//////////////
+// INTERNAL //
+public: //////
+
+///////////////
+// VARIABLES //
+private: //////
+
+	// Our subscribe array
+	Array<MVC_View*> m_Subscribers;
+
+	// Our model reference
+	MVC_Model* m_ModelReference;
+};

@@ -1,0 +1,60 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: ShaderShard.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include <GLEW\glew.h>
+#include <GLFW\glfw3.h>
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: ShaderShard
+////////////////////////////////////////////////////////////////////////////////
+class ShaderShard
+{
+private:
+
+public:
+
+	ShaderShard();
+	ShaderShard(char* _data);
+	ShaderShard(const ShaderShard& other);
+	~ShaderShard();
+
+	// Set the shard data
+	void SetData(char* _data);
+
+	// Make the shard
+	bool MakeShard(unsigned int _shardType);
+
+	// Return the shard id
+	unsigned int GetShardId();
+
+private:
+
+	// Output a shard error message
+	void OutputShardErrorMessage(unsigned int shaderId);
+
+private:
+
+	// The shard Id
+	unsigned int m_ShardId;
+
+	// The byte data
+	char* m_ByteData;
+
+};

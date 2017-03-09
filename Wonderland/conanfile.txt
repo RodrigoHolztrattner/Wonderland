@@ -1,0 +1,8 @@
+[requires]
+
+[generators]
+visual_studio
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin

@@ -1,0 +1,27 @@
+///////////////////////////////////////////////////////////////////////////////
+// Filename: TArray.cpp
+///////////////////////////////////////////////////////////////////////////////
+#include "TArray.h"
+
+/*
+
+TArray::TArray()
+{
+}
+
+TArray::TArray(const TArray& other)
+{
+}
+
+TArray::~TArray()
+{
+}
+
+bool TArray::Initialize()
+{
+	bool result;
+
+	return true;
+}
+
+*/

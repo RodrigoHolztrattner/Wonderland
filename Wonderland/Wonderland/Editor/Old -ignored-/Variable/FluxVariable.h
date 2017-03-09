@@ -1,0 +1,65 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: FluxVariable.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include <string>
+#include "..\Type\FluxType.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FluxVariable
+////////////////////////////////////////////////////////////////////////////////
+class FluxVariable
+{
+//////////////////
+// CONSTRUCTORS //
+public: //////////
+
+	// Constructor / destructor
+	FluxVariable();
+	FluxVariable(const FluxVariable& _other);
+	~FluxVariable();
+
+//////////////////
+// MAIN METHODS //
+public: //////////
+
+	// Create/Initialize this object
+	static FluxVariable* Create(FluxType _type, std::string _name);
+
+	//  Get/set the variable name
+	std::string GetName();
+	void SetName(std::string _name);
+
+	// Return the variable type
+	FluxType GetType();
+
+	// Compare 2 variables (type)
+	bool IsFromType(FluxType _type);
+	bool IsFromType(std::string _type);
+	
+///////////////
+// VARIABLES //
+private: //////
+
+	// The variable type
+	FluxType m_Type;
+
+	// The variable name
+	std::string m_Name;
+};

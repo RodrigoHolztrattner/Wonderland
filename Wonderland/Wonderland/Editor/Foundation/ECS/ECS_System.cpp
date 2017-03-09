@@ -1,0 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////
+// Filename: ECS_System.cpp
+///////////////////////////////////////////////////////////////////////////////
+#include "ECS_System.h"
+#include "ECS_Component.h"
+
+/*
+
+ECS_System::ECS_System()
+{
+}
+
+ECS_System::ECS_System(const ECS_System& other)
+{
+}
+
+ECS_System::~ECS_System()
+{
+}
+
+*/

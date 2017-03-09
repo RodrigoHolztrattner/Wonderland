@@ -1,0 +1,23 @@
+///////////////////////////////////////////////////////////////////////////////
+// Filename: FTimeline.cpp
+///////////////////////////////////////////////////////////////////////////////
+#include "FTimeline.h"
+
+FTimeline::FTimeline()
+{
+}
+
+FTimeline::FTimeline(const FTimeline& other)
+{
+}
+
+FTimeline::~FTimeline()
+{
+}
+
+bool FTimeline::Initialize()
+{
+	bool result;
+
+	return true;
+}

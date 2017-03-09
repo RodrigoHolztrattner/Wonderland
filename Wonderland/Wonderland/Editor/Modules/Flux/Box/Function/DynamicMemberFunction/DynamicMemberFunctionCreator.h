@@ -1,0 +1,59 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: DynamicMemberFunctionCreator.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include "..\..\BoxCreator.h"
+#include "DynamicMemberFunction.h"
+#include "..\..\..\Handle\Handle.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+///////////////
+// NAMESPACE //
+///////////////
+
+// Flux workspace
+NamespaceBegin(Flux)
+
+////////////////////////////////////////////////////////////////////////////////
+// DynamicMemberFunctionCreator name: DynamicMemberFunctionCreator
+////////////////////////////////////////////////////////////////////////////////
+class DynamicMemberFunctionCreator : public Flux::BoxCreator<DynamicMemberFunctionCreator, DynamicMemberFunction>
+{
+//////////////////
+// CONSTRUCTORS //
+public: //////////
+
+	// Constructor / destructor
+	DynamicMemberFunctionCreator();
+	~DynamicMemberFunctionCreator();
+
+//////////////////
+// MAIN METHODS //
+public: //////////
+
+	// Create a new member function
+	Flux::DynamicMemberFunction* CreateDynamicMemberFunction(std::string _functionName, Flux::Handle _classHandle);
+
+///////////////
+// VARIABLES //
+private: //////
+
+};
+
+// Flux workspace
+NamespaceEnd(Flux)

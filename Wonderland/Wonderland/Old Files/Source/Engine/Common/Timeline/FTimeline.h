@@ -1,0 +1,51 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: FTimeline.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _FTimeline_H_
+#define _FTimeline_H_
+
+/////////////
+// LINKING //
+/////////////
+
+//////////////
+// INCLUDES //
+//////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+/*
+
+	- No update global ele faz o controler das timelines ativas.
+	- Deve permitir o registro de funções de fim, fim do loop, etc...
+	- Recebe como parâmetros os endereços das variáveis (usando const) e deve ter uma forma de verificar se o objeto onde a timeline foi criada ainda existe.
+
+	Timeline timeline;
+
+	timeline = 
+
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FTimeline
+////////////////////////////////////////////////////////////////////////////////
+class FTimeline
+{
+private:
+
+public:
+	FTimeline();
+	FTimeline(const FTimeline&);
+	~FTimeline();
+
+	bool Initialize();
+
+private:
+
+
+
+};
+
+#endif

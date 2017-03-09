@@ -1,0 +1,71 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: TextFunctionObject.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include "FluxObject.h"
+#include <string>
+#include "..\..\Support\Container\Array\Array.h"
+#include "VariableObject.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+class LinkObject;
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: TextFunctionObject
+////////////////////////////////////////////////////////////////////////////////
+class TextFunctionObject : public FluxObject
+{
+/////////////
+// DEFINES //
+public: /////
+
+//////////////////
+// CONSTRUCTORS //
+public: //////////
+
+	// Constructor / destructor
+	TextFunctionObject();
+	~TextFunctionObject();
+
+//////////////////
+// MAIN METHODS //
+public: //////////
+
+	// Create/Initialize this object
+	bool Create(std::string _functionName, std::string _functionBody);
+
+	// Compile this object
+	virtual bool Compile(std::string* _compileString, LinkObject* _link, unsigned int _fromLinkInput = 0);
+
+////////////
+// LINKER //
+public: ////
+
+/////////////////////
+// VIRTUAL METHODS //
+protected: //////////
+
+///////////////
+// VARIABLES //
+private: //////
+
+	// The function name
+	std::string m_FunctionName;
+	
+	// The function body
+	std::string m_FunctionBody;
+};

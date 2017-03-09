@@ -1,0 +1,67 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: FunctionHead.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include <vector>
+#include <string>
+#include "..\Box.h"
+#include "FunctionBody.h"
+#include "..\..\Variable.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+///////////////
+// NAMESPACE //
+///////////////
+
+// Flux workspace
+NamespaceBegin(Flux)
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FunctionHead
+////////////////////////////////////////////////////////////////////////////////
+class FunctionHead : public Box
+{
+
+//////////////////
+// CONSTRUCTORS //
+public: //////////
+
+	// Constructor / destructor
+	FunctionHead();
+	~FunctionHead();
+
+//////////////////
+// MAIN METHODS //
+public: //////////
+
+	// Add a local variable
+	bool AddLocalVariable(Flux::Variable _variable); // <talvez seja melhor mover toda essa parte de variável local para a box (ou não)>
+
+	// Get a local variable
+	Flux::Variable* GetLocalVariable(Flux::Handle _variableHandle);
+
+///////////////
+// VARIABLES //
+private: //////
+
+	// The local variables
+	std::vector<Flux::Variable> m_LocalVariables;
+};
+
+// Flux workspace
+NamespaceEnd(Flux)

@@ -1,0 +1,67 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: VariableObject.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#include <string>
+#include "Type\FluxType.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+// 
+class LinkObject;
+
+////////////
+// GLOBAL //
+////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: VariableObject
+////////////////////////////////////////////////////////////////////////////////
+class VariableObject
+{
+//////////////////
+// CONSTRUCTORS //
+public: //////////
+
+	// Constructor / destructor
+	VariableObject();
+	VariableObject(const VariableObject& _other);
+	~VariableObject();
+
+//////////////////
+// MAIN METHODS //
+public: //////////
+
+	// Create/Initialize this object
+	static VariableObject* Create(FluxType _type, std::string _name);
+
+	//  Get/set the variable name
+	std::string GetName();
+	void SetName(std::string _name);
+
+	// Return the variable type
+	FluxType GetType();
+
+	// Compare 2 variables (type)
+	bool IsFromType(FluxType _type);
+
+///////////////
+// VARIABLES //
+private: //////
+
+	// The variable type
+	FluxType m_Type;
+
+	// The variable name
+	std::string m_Name;
+};

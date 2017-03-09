@@ -1,0 +1,33 @@
+[settings]
+    arch=x86
+    build_type=Release
+    compiler=Visual Studio
+    compiler.runtime=MD
+    compiler.version=14
+    os=Windows
+
+[requires]
+
+
+[options]
+
+
+[full_settings]
+    arch=x86
+    build_type=Release
+    compiler=Visual Studio
+    compiler.runtime=MD
+    compiler.version=14
+    os=Windows
+
+[full_requires]
+
+
+[full_options]
+
+
+[scope]
+    dev=True
+
+[recipe_hash]
+None

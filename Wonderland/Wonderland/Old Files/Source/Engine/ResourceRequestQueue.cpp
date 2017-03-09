@@ -1,0 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: ResourceRequestQueue.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "ResourceRequestQueue.h"
+
+///////////////
+// NAMESPACE //
+///////////////
+
+ResourceRequestQueue::ResourceRequestQueue()
+{
+}
+
+ResourceRequestQueue::ResourceRequestQueue(const ResourceRequestQueue& other)
+{
+}
+
+ResourceRequestQueue::~ResourceRequestQueue()
+{
+}

@@ -1,0 +1,10 @@
+
+=> Details:
+
+	- Those classes should be used by another classes that need 3D or 2D translation, scale or rotation.
+	- They need the files from the math lib.
+	- Cant be used stand-alone.
+
+	* IMPORTANT!!
+	- The 2D transform class SHOULD be used ONLY for UI, this class is made for this use.
+	- The 3D transform class SHOULD be used ONLY for the OpenGL 3D world. (same as top).
