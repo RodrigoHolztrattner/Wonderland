@@ -75,7 +75,12 @@ public: //////////
 
 public:
 	
-	VWTexture* GetTexture(VWContext* _graphicContext, std::string _textureName, std::string _textureGroup, VkCommandPool _commandPool);
+	// Request a texture group
+	void RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, uint32_t _groupIdentifier, std::function<void()> _onLoadCallback);
+	void RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, std::string _groupName, std::function<void()> _onLoadCallback);
+
+
+	VWTexture* GetTexture(VWContext* _graphicContext, std::string _textureName, std::string _textureGroup);
 
 private:
 public:

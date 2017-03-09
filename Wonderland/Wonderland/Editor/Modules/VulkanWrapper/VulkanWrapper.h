@@ -22,7 +22,7 @@
 
 #include "VWMaterialShader.h"
 #include "Material\VWTextureGroupManager.h"
-#include "Material\VWResourceManager.h"
+#include "Resource\VWResourceManager.h"
 
 ///////////////
 // NAMESPACE //

@@ -102,5 +102,59 @@ private: //////
 	std::list<uint32_t> m_TextureIdFreelist;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: VWTextureGroupReference
+////////////////////////////////////////////////////////////////////////////////
+class VWTextureGroupReference
+{
+public:
+
+	VWTextureGroupReference()
+	{
+		// Set the initial data
+		m_IsValid = false;
+		m_TextureGroupPtr = nullptr;
+	}
+
+	// If we can use this reference
+	bool IsValid()
+	{
+		return m_IsValid;
+	}
+
+	// Get the internal resource
+	VWTextureGroup* GetGroup()
+	{
+		return m_TextureGroupPtr;
+	}
+
+	// Access the internal texture group
+	VWTextureGroup* operator->() const
+	{
+		return m_TextureGroupPtr;
+	}
+
+protected:
+
+	// The VWResourceManager is a friend
+	friend VWTextureGroupManager;
+
+	// Validate this resource reference
+	void ValidateResourceReference(VWTextureGroup* _textureGroupPtr)
+	{
+		m_TextureGroupPtr = _textureGroupPtr;
+		std::atomic_thread_fence(std::memory_order_seq_cst); // Ensure no reordering
+		m_IsValid = true;
+	}
+
+private:
+
+	// If we can use the resource reference
+	bool m_IsValid;
+
+	// Our resource ptr
+	VWTextureGroup* m_TextureGroupPtr;
+};
+
 // Just another graphic wrapper
 NamespaceEnd(VulkanWrapper)

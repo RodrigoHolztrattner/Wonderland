@@ -42,7 +42,7 @@ class VWContext;
 // STRUCTURES //
 ////////////////
 
-aqui
+// aqui
 /*
 	- Não usamos texturas sozinhas, usamos grupos, quando uma textura é solicitada ela obrigatoriamente pertence a um grupo (nem que ela seja sozinha) e este
 	grupo é inteiramente carregado.

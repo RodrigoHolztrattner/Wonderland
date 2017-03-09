@@ -5,6 +5,7 @@
 #include "..\VWContext.h"
 #include "VWTexture.h"
 #include "..\..\LogSystem.h"
+#include "..\..\Peon\Peon.h"
 
 VulkanWrapper::VWTextureGroupManager::VWTextureGroupManager()
 {
@@ -34,8 +35,26 @@ void VulkanWrapper::VWTextureGroupManager::Release()
 {
 
 }
+/*
+void VulkanWrapper::VWTextureGroupManager::RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, uint32_t _groupIdentifier, std::function<void()> _onLoadCallback)
+{
+	// Get the current worker index
+	uint32_t currentWorkerIndex = Peon::GetCurrentWorkerIndex();
 
-VulkanWrapper::VWTexture* VulkanWrapper::VWTextureGroupManager::GetTexture(VWContext* _graphicContext, std::string _textureName, std::string _textureGroup, VkCommandPool _commandPool)
+	// Create a new resource request
+	VWResourceRequest newRequest = {};
+	newRequest.CreateFromId(_resourceReference, _resourceIdentifier, _onLoadCallback);
+
+	// Insert into the queue
+	m_ResourceRequests[currentWorkerIndex].push_back(newRequest);
+}
+
+void VulkanWrapper::VWTextureGroupManager::RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, std::string _groupName, std::function<void()> _onLoadCallback)
+{
+
+}
+*/
+VulkanWrapper::VWTexture* VulkanWrapper::VWTextureGroupManager::GetTexture(VWContext* _graphicContext, std::string _textureName, std::string _textureGroup)
 {
 	// Check if the texture group exists
 	VulkanWrapper::VWTextureGroup* textureGroup = FindTextureGroup(_textureGroup);
@@ -54,7 +73,7 @@ VulkanWrapper::VWTexture* VulkanWrapper::VWTextureGroupManager::GetTexture(VWCon
 	if (texture == nullptr)
 	{
 		// Create a new texture
-		texture = CreateTexture(_graphicContext, _textureName, _commandPool);
+		texture = CreateTexture(_graphicContext, _textureName, _graphicContext->GetGraphicInstance()->GetCommandPool());
 		if(texture == nullptr)
 		{
 			throw std::runtime_error("failed to create texture!");

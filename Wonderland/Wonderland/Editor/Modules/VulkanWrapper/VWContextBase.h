@@ -18,7 +18,7 @@
 #include "VWRenderShard.h"
 #include "Material\VWTextureGroupManager.h"
 #include "VWFrameCommandBufferAllocator.h"
-#include "Material\VWResourceManager.h"
+#include "Resource\VWResourceManager.h"
 
 ///////////////
 // NAMESPACE //
