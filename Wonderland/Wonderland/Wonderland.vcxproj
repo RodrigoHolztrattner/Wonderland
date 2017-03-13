@@ -88,6 +88,7 @@
     <ClInclude Include="Editor\Foundation\UI\Widgets\View\UIView.h" />
     <ClInclude Include="Editor\Modules\ConcurrentQueue.h" />
     <ClInclude Include="Editor\Modules\HashedString.h" />
+    <ClInclude Include="Editor\Modules\HookGui\Shaders\HGWidgetBackgroundShader.h" />
     <ClInclude Include="Editor\Modules\hopscotch_map.h" />
     <ClInclude Include="Editor\Modules\LogSystem.h" />
     <ClInclude Include="Editor\Modules\NamespaceDefinitions.h" />
@@ -130,6 +131,15 @@
     <ClInclude Include="Editor\Modules\HookGui\Widget.h" />
     <ClInclude Include="Editor\Modules\HookGui\WidgetController.h" />
     <ClInclude Include="Editor\Modules\HookGui\Window.h" />
+    <ClInclude Include="Editor\Modules\Packet\Packet.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketDirectory.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketFile.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketIndex.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketIndexLoader.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketLoader.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketManager.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketMode.h" />
+    <ClInclude Include="Editor\Modules\Packet\PacketString.h" />
     <ClInclude Include="Editor\Modules\Peon\Peon.h" />
     <ClInclude Include="Editor\Modules\Peon\PeonJob.h" />
     <ClInclude Include="Editor\Modules\Peon\PeonStealingQueue.h" />
@@ -142,6 +152,7 @@
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTexture.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroup.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupManager.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupRequest.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureManager.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWVertexObject.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResource.h" />
@@ -291,9 +302,17 @@
     <ClCompile Include="Editor\Modules\HookGui\Frame.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\InputDispatcher.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\ReferenceCounter.cpp" />
+    <ClCompile Include="Editor\Modules\HookGui\Shaders\HGWidgetBackgroundShader.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\Widget.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\WidgetController.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\Window.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketDirectory.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketFile.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketIndex.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketIndexLoader.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketLoader.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketManager.cpp" />
+    <ClCompile Include="Editor\Modules\Packet\PacketString.cpp" />
     <ClCompile Include="Editor\Modules\Peon\PeonJob.cpp" />
     <ClCompile Include="Editor\Modules\Peon\PeonStealingQueue.cpp" />
     <ClCompile Include="Editor\Modules\Peon\PeonSystem.cpp" />
@@ -305,6 +324,7 @@
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTexture.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroup.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupManager.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupRequest.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureManager.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWVertexObject.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResource.cpp" />

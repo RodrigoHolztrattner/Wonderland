@@ -9,6 +9,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <atomic>
+#include <vector>
 
 #include "..\..\NamespaceDefinitions.h"
 #include "VWResourceBase.h"
@@ -38,6 +39,7 @@ NamespaceBegin(VulkanWrapper)
 
 class VWContext;
 class VWResourceManager;
+class VWResourceLoader;
 
 ////////////////
 // STRUCTURES //
@@ -50,8 +52,9 @@ class VWResource : public VWResourceBase
 {
 private:
 
-	// The VWResourceManager is a friend
+	// Friends
 	friend VWResourceManager;
+	friend VWResourceLoader;
 
 //////////////////
 // CONSTRUCTORS //
@@ -80,12 +83,18 @@ protected:
 	// Return the total number of references
 	uint32_t GetReferenceCount() { return m_TotalReferences; }
 
+	// Return the byte array data
+	std::vector<unsigned char>& GetByteArrayData() { return m_ByteArrayData; }
+
 ///////////////
 // VARIABLES //
 private: //////
 
 	// The total number of references to this resource
 	uint32_t m_TotalReferences;
+
+	// The resource byte array data
+	std::vector<unsigned char> m_ByteArrayData;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

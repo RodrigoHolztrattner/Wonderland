@@ -31,7 +31,7 @@ bool VulkanWrapper::VWRenderable::Initialize(VWContext* _context)
 	m_VertexObject->CreateIndexBuffer(_context, indices.data(), sizeof(indices[0]), indices.size());
 
 	// Get our texture
-	VWTexture* diffuseTexture = _context->GetTextureGroupManager()->GetTexture(_context, "images/teste.png", "dummy", _context->GetGraphicInstance()->GetCommandPool());
+	VWTexture* diffuseTexture = _context->GetTextureGroupManager()->GetTexture(_context, "images/teste.png", "dummy");
 
 	// Set the diffure texture parameter
 	SetTextureParameter("diffuseTexture", diffuseTexture);

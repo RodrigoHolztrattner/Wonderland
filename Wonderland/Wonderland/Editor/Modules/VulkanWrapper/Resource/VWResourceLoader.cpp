@@ -4,6 +4,8 @@
 #include "VWResourceLoader.h"
 #include "..\VWContext.h"
 #include "VWResource.h"
+#include "..\..\GlobalInstance.h"
+#include "..\..\Packet\Packet.h"
 
 VulkanWrapper::VWResourceLoader::VWResourceLoader()
 {
@@ -135,18 +137,26 @@ void VulkanWrapper::VWResourceLoader::LoadExternalResource(ExternalResourceOrder
 	// Set that we are loading this resource
 	resource->SetStatus(VWResource::ResourceStatus::Loading);
 
-	// Open the file
-	std::ifstream file(_resourceOrder->resourcePath, std::fstream::binary);
-	if (!file.is_open())
-	{
-		// Set the unknow status
-		resource->SetStatus(VWResource::ResourceStatus::Unknow);
+	// Get the packet manager global instance
+	GlobalInstance<Packet::Manager> PacketManager;
 
+	// Get the resource byte array data
+	std::vector<unsigned char>& resourceByteArrayData = resource->GetByteArrayData();
+
+	// Get the file from the packet manager
+	Packet::File* resourceFile = PacketManager->FindFile(_resourceOrder->resourcePath.c_str(), false);
+	if (resourceFile == nullptr)
+	{
+		// The file doesnt exist!
 		return;
 	}
 
-	// Close the file
-	file.close();
+	// Load the file
+	if (!PacketManager->LoadFile(resourceFile, resourceByteArrayData))
+	{
+		// Error loading the resource file
+		return;
+	}
 
 	// Set the loaded status
 	resource->SetStatus(VWResource::ResourceStatus::Loaded);

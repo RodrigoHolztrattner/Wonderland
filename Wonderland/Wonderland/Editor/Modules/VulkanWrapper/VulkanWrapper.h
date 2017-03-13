@@ -19,6 +19,7 @@
 #include "VWBuffer.h"
 #include "VWContext.h"
 #include "VWRenderable.h"
+#include "Shader\VWShaderBase.h"
 
 #include "VWMaterialShader.h"
 #include "Material\VWTextureGroupManager.h"
@@ -61,6 +62,7 @@ NamespaceBegin(VulkanWrapper)
  typedef VWRenderable			Renderable;
  typedef VWContext				Context;
  typedef VWResourceManager		ResourceManager;
+ typedef VWShaderBase			ShaderBase;
 
 // Just another graphic wrapper
 NamespaceEnd(VulkanWrapper)

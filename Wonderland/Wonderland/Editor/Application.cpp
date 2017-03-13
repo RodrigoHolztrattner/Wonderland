@@ -2,6 +2,7 @@
 // Filename: FluxApplication.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "Application.h"
+#include "Modules\Packet\PacketManager.h"
 
 Application::Application()
 {
@@ -16,6 +17,9 @@ Application::~Application()
 {
 	// Save our metric data
 	m_ApplicationMetrics->Release();
+
+	// Save our packet data
+	// m_PacketManager-> // m_IndexLoader.SaveIndex(m_IndexData, &m_RootFolder);
 }
 
 VulkanWrapper::VWResourceReference resourceReference;
@@ -41,6 +45,13 @@ bool Application::Initialize(InitializationParams _initializationParams)
 	{
 		return false;
 	}
+
+	// Initialize our packet manager
+	result = m_PacketManager->Initialize("wonderland");
+	if (!result)
+	{
+		return false;
+	}
 	
 	// Initialize our resource manager
 	result = m_ResourceManager->Initialize(Peon::GetTotalWorkers());
@@ -54,6 +65,9 @@ bool Application::Initialize(InitializationParams _initializationParams)
 
 	// Setup the debug callback
 	m_GraphicAdapter->SetupDebugCallback();
+
+	// Initialize the common resources
+	InitializeCommonResources();
 
 	//
 	//
@@ -76,9 +90,8 @@ bool Application::Initialize(InitializationParams _initializationParams)
 		}
 	}
 
-
-	// m_ResourceManager->RequestResource(&resourceReference, "images/teste.png", [&] { Release(); });
-	// m_ResourceManager->RequestResource(&resourceReference2, "images/teste.png", [&] { Release(); });
+	m_ResourceManager->RequestResource(&resourceReference, "Images/Galaxy", [&] { Release(); });
+	m_ResourceManager->RequestResource(&resourceReference2, "Images/Ground", [&] { Release(); });
 
 	return true;
 }
@@ -92,6 +105,13 @@ void Application::MainLoop()
 {
 	// Create a valid working area for the peon system
 	Peon::CreateWorkingArea([&] { MainLoopAux(nullptr); }); // Changed from [=]
+}
+
+void Application::InitializeCommonResources()
+{
+	// Set our packet resource data
+	m_PacketManager->CreateFile("Images/Galaxy", "images/teste.png");
+	m_PacketManager->CreateFile("Images/Ground", "images/teste2.png");
 }
 
 void Application::ValidateApplicationInstances()

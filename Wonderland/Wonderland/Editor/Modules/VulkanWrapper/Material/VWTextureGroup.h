@@ -16,6 +16,7 @@
 #include <map>
 #include <array>
 #include <list>
+#include <atomic>
 
 ///////////////
 // NAMESPACE //
@@ -42,6 +43,7 @@ NamespaceBegin(VulkanWrapper)
 
 class VWContext;
 class VWTexture;
+class VWTextureGroupManager;
 
 ////////////////
 // STRUCTURES //

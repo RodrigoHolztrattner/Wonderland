@@ -7,6 +7,8 @@
 // INCLUDES //
 //////////////
 
+//TODO: Remover dos modulos pois esta lib não faz parte dos modulos reais da "engine", posso colocá-la numa parte para modulos externos mas aqui não!
+
 // Namespace
 #include "..\NamespaceDefinitions.h"
 

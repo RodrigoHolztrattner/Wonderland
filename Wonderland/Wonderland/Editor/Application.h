@@ -22,6 +22,7 @@
 /////////////
 #include "Modules\GlobalInstance.h"
 #include "Modules\Peon\Peon.h"
+#include "Modules\Packet\Packet.h"
 
 ////////////
 // GLOBAL //
@@ -87,6 +88,9 @@ public: //////////
 
 private:
 
+	// Initialize our common resources
+	void InitializeCommonResources();
+
 	// Validate all application instances
 	void ValidateApplicationInstances();
 
@@ -106,6 +110,9 @@ private: //////
 
 	// Our graphic adapter
 	GlobalInstance<VulkanWrapper::GraphicAdapter> m_GraphicAdapter;
+
+	// Our packet manager
+	GlobalInstance<Packet::Manager> m_PacketManager;
 
 	// Our resource manager
 	GlobalInstance<VulkanWrapper::ResourceManager> m_ResourceManager;
