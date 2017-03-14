@@ -4,6 +4,8 @@
 #include "VWResourceManager.h"
 #include "..\VWContext.h"
 #include "..\..\Peon\Peon.h"
+#include "..\..\Packet\Packet.h"
+#include "..\..\GlobalInstance.h"
 
 VulkanWrapper::VWResourceManager::VWResourceManager()
 {
@@ -33,30 +35,34 @@ bool VulkanWrapper::VWResourceManager::Initialize(uint32_t _totalWorkerThreads)
 	return true;
 }
 
-void VulkanWrapper::VWResourceManager::RequestResource(VWResourceReference* _resourceReference, uint32_t _resourceIdentifier, std::function<void()> _onLoadCallback)
+void VulkanWrapper::VWResourceManager::RequestResource(Reference::Blob<VWResource>* _resourceReference, uint32_t _resourceIdentifier, std::function<void()> _onLoadCallback, std::function<void()> _processMethod)
 {
 	// Get the current worker index
 	uint32_t currentWorkerIndex = Peon::GetCurrentWorkerIndex();
 
 	// Create a new resource request
 	VWResourceRequest newRequest = {};
-	newRequest.CreateFromId(_resourceReference, _resourceIdentifier, _onLoadCallback);
+	newRequest.Create(_resourceReference, _resourceIdentifier, _onLoadCallback, _processMethod);
 
 	// Insert into the queue
 	m_ResourceRequests[currentWorkerIndex].push_back(newRequest);
 }
 
-void VulkanWrapper::VWResourceManager::RequestResource(VWResourceReference* _resourceReference, std::string _resourcePath, std::function<void()> _onLoadCallback)
+void VulkanWrapper::VWResourceManager::RequestResource(Reference::Blob<VWResource>* _resourceReference, std::string _resourcePath, std::function<void()> _onLoadCallback, std::function<void()> _processMethod)
 {	
-	// Get the current worker index
-	uint32_t currentWorkerIndex = Peon::GetCurrentWorkerIndex();
+	// Get the packet manager global instance
+	GlobalInstance<Packet::Manager> PacketManager;
 
-	// Create a new resource request
-	VWResourceRequest newRequest = {};
-	newRequest.CreateFromPath(_resourceReference, _resourcePath, _onLoadCallback);
+	// Find the file using the resource path
+	Packet::File* resourceFile = PacketManager->FindFile(_resourcePath.c_str(), false);
+	if (resourceFile == nullptr) 
+	{
+		// Error, we cant find the file!
+		return;
+	}
 
-	// Insert into the queue
-	m_ResourceRequests[currentWorkerIndex].push_back(newRequest);
+	// Request the resource using the file internal identifier
+	return RequestResource(_resourceReference, resourceFile->GetIdentifier(), _onLoadCallback, _processMethod);
 }
 
 void VulkanWrapper::VWResourceManager::ProcessResourceRequestQueues()
@@ -112,42 +118,15 @@ void VulkanWrapper::VWResourceManager::ProcessWakeList()
 	m_ResourceWakeList = dummyPointer.next;
 }
 
-void VulkanWrapper::VWResourceManager::ProcessResourceRequest(VWResourceRequest& _resourceRequest)
-{
-	// Check the request type
-	switch (_resourceRequest.GetRequestType())
-	{
-		// Internal: Using an identifier
-		case VWResourceRequest::RequestType::InternalIdentifier:
-		{
-
-			break;
-		}
-		// External: Using a path
-		case VWResourceRequest::RequestType::ExternalPath:
-		{
-			// Process this external resource
-			ProcessExternalResourceRequest(_resourceRequest);
-
-			break;
-		}
-		// Error
-		case VWResourceRequest::RequestType::Unknow:
-		{
-			break;
-		}
-	}
-}
-
 void VulkanWrapper::VWResourceManager::ProcessInternalResourceRequest(VWResourceRequest& _resourceRequest)
 {
 	return;
 }
 
-void VulkanWrapper::VWResourceManager::ProcessExternalResourceRequest(VWResourceRequest& _resourceRequest)
+void VulkanWrapper::VWResourceManager::ProcessResourceRequest(VWResourceRequest& _resourceRequest)
 {
 	// Check if the resource is inside the vault
-	VWResource* resource = m_ResourceVault.IsExternalResourceLoaded(_resourceRequest.GetRequestPath());
+	VWResource* resource = m_ResourceVault.IsResourceLoaded(_resourceRequest.GetRequestIdentifier());
 	if (resource != nullptr)
 	{
 		// Check if the resource was initialized
@@ -185,10 +164,10 @@ void VulkanWrapper::VWResourceManager::ProcessExternalResourceRequest(VWResource
 	newResource->InsertWakeCallback(_resourceRequest.GetWakeCallback());
 
 	// Queue the resource load
-	m_ResourceLoader.QueueExternalResourceLoad(_resourceRequest.GetResourceReference(), _resourceRequest.GetRequestPath());
+	m_ResourceLoader.QueueResourceLoad(_resourceRequest.GetResourceReference(), _resourceRequest.GetRequestIdentifier(), _resourceRequest.GetProcessMethod());
 
 	// Insert the resource into the vault
-	m_ResourceVault.InsertExternalResource(newResource, _resourceRequest.GetRequestPath());
+	m_ResourceVault.InsertResource(newResource, _resourceRequest.GetRequestIdentifier());
 
 	// Set the resource ptr
 	_resourceRequest.GetResourceReference()->ValidateResourceReference(newResource);

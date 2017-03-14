@@ -56,7 +56,16 @@ class VWTextureGroup
 {
 public:
 
-	//	static const uint32_t TextureGroupBindingLocation	= 0;
+	enum class TextureGroupStatus
+	{
+		Unknow,
+		Created,
+		Loading,
+		Loaded,
+		Initialized
+	};
+
+	// Static const uint32_t TextureGroupBindingLocation	= 0;
 	static const uint32_t MaximumTexturePerGroup = 76;
 	static const uint32_t MaximumTextureGroups = 1024;
 
@@ -72,6 +81,9 @@ public: //////////
 // MAIN METHODS //
 public: //////////
 
+	// Initialize this texture group
+	bool Initialize();
+
 	// Create this texture group
 	bool Create(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout);
 
@@ -84,6 +96,9 @@ public: //////////
 	// Return the descriptor set
 	VkDescriptorSet GetDescriptorSet() { return m_DescriptorSet; }
 
+	// Return the status
+	TextureGroupStatus GetStatus() { return m_Status; }
+
 private:
 
 	// Update the descriptor set
@@ -92,6 +107,9 @@ private:
 ///////////////
 // VARIABLES //
 private: //////
+
+	// The status
+	TextureGroupStatus m_Status;
 
 	// The group descriptor set
 	VkDescriptorSet m_DescriptorSet;
@@ -103,7 +121,7 @@ private: //////
 	// The texture id freelist
 	std::list<uint32_t> m_TextureIdFreelist;
 };
-
+/*
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWTextureGroupReference
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,6 +175,6 @@ private:
 	// Our resource ptr
 	VWTextureGroup* m_TextureGroupPtr;
 };
-
+*/
 // Just another graphic wrapper
 NamespaceEnd(VulkanWrapper)

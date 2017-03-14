@@ -1,22 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: VWTexture.h
+// Filename: VWTextureGroupVault.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
 //////////////
 // INCLUDES //
 //////////////
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include <vector>
 
 #include "..\..\NamespaceDefinitions.h"
-#include "VWTextureGroup.h"
+#include "..\..\HashedString.h"
 
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <array>
-#include <glm/glm.hpp>
+#include "VWTextureGroup.h"
 
 ///////////////
 // NAMESPACE //
@@ -48,10 +43,21 @@ class VWContext;
 ////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: VWTexture
+// Class name: VWTextureGroupVault
 ////////////////////////////////////////////////////////////////////////////////
-class VWTexture
+class VWTextureGroupVault
 {
+private:
+
+	struct TextureGroupHolder
+	{
+		// The texture group itself
+		VWTextureGroup* textureGroup;
+
+		// The texture group identifier
+		HashedStringIdentifier resourceGroupIdentifier;
+	};
+
 public:
 
 //////////////////
@@ -59,28 +65,28 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	VWTexture();
-	~VWTexture();
+	VWTextureGroupVault();
+	~VWTextureGroupVault();
 
 //////////////////
 // MAIN METHODS //
 public: //////////
 
-	// Create this texture
-	void Create(VWTextureGroup* _textureGroup, uint16_t _textureIndex);
+	// Initialize the resource manager
+	bool Initialize();
+
+	// Check if a internal resource is currently loaded into memory
+	VWTextureGroup* IsTextureGroupLoaded(HashedStringIdentifier _textureGroupIdentifier);
+
+	// Insert a external resource into memory
+	void InsertTextureGroup(VWTextureGroup* _textureGroup, HashedStringIdentifier _textureGroupIdentifier);
 
 ///////////////
 // VARIABLES //
 private: //////
 
-	// If this image was initialized
-	bool m_Initialized;
-
-	// The texture group reference
-	VWTextureGroup* m_TextureGroup;
-
-	// The texture index
-	uint16_t m_TextureIndex;
+	// Our texture group array
+	std::vector<TextureGroupHolder> m_TextureGroups; //TODO: Usar um map
 };
 
 // Just another graphic wrapper

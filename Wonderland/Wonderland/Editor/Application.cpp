@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Application.h"
 #include "Modules\Packet\PacketManager.h"
+#include "Modules\Reference.h"
 
 Application::Application()
 {
@@ -22,8 +23,17 @@ Application::~Application()
 	// m_PacketManager-> // m_IndexLoader.SaveIndex(m_IndexData, &m_RootFolder);
 }
 
-VulkanWrapper::VWResourceReference resourceReference;
-VulkanWrapper::VWResourceReference resourceReference2;
+/*
+	- Não existe mais o resource "texture", existe apenas array textures, ou melhor, texture groups... Esses são considerados recursos.
+	- Existe o objeto textura que nada mais é uma referência à um Texture Group mais um identificador de qual textura utilizar.
+	- Com a utilização de array textures, todas as texturas de um grupo devem ter o mesmo tamanho e formato, isso é obrigatório.
+	- Cada gerenciador de textura é único para cada instancia e utiliza um resource manager global, isso faz com que caso duas instancias precisem da mesma
+	textura, 2 objetos deverão ser criados (mas usaremos o mesmo objeto "Recurso").
+
+*/
+
+Reference::Blob<VulkanWrapper::VWResource> resourceReference;
+Reference::Blob<VulkanWrapper::VWResource> resourceReference2;
 
 bool Application::Initialize(InitializationParams _initializationParams)
 {

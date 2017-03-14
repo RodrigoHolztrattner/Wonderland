@@ -298,33 +298,6 @@ const char* Packet::PacketManager::FindNameInFormatedPath(const char* _formatedP
 		return nullptr;
 	}
 
-	/*
-	// While we dont find a separator
-	// uint32_t findPosition = _currentPosition;
-	while (_formatedPath[_currentPosition] != Separator)
-	{
-		// Increment our find position
-		_currentPosition++;
-
-		// Check if we dont overlap
-		if (_currentPosition >= _maxSize)
-		{
-			// No more formated name
-			return nullptr;
-		}
-	}
-
-	// Jump the separator
-	_currentPosition++;
-
-	// Check if the next character is valid
-	if (_formatedPath[_currentPosition + 1] == 0)
-	{
-		// No more formated name (the string was: "/something.ext/")
-		return nullptr;
-	}
-	*/
-
 	// Until we dont overlap
 	uint32_t localSearchPosition = _currentPosition;
 	while (localSearchPosition < _maxSize)
@@ -406,7 +379,15 @@ Packet::PacketDirectory* Packet::PacketManager::CreateFolderAux(PacketDirectory*
 	_fromFolder->childFolders.push_back(newFolder);
 	
 	// Insert into the map
-	return m_IndexData.folderIdentifierReferences[newFolder.folderId] = &_fromFolder->childFolders[insertIndex];
+	m_IndexData.folderIdentifierReferences[newFolder.folderId] = &_fromFolder->childFolders[insertIndex];
+
+	// Update all map data
+	for (auto& packetFolder : _fromFolder->childFolders)
+	{
+		m_IndexData.folderIdentifierReferences[packetFolder.folderId] = &packetFolder; //TODO: Pensar em uma forma melhor de fazer isso (ele perde a referencia porque ocorre resize acima as vezes (_fromFolder->childFileInfos.push_back(newFile);)
+	}
+
+	return &_fromFolder->childFolders[insertIndex];
 }
 
 Packet::PacketFile* Packet::PacketManager::CreateFileAux(PacketDirectory* _fromFolder, const char* _withName, const char* _withExternalRawPath, uint32_t _nameSize)
@@ -432,7 +413,15 @@ Packet::PacketFile* Packet::PacketManager::CreateFileAux(PacketDirectory* _fromF
 	_fromFolder->childFileInfos.push_back(newFile);
 
 	// Insert into the map
-	return m_IndexData.fileIdentifierReferences[newFile.fileId] = &_fromFolder->childFileInfos[insertIndex];
+	m_IndexData.fileIdentifierReferences[newFile.fileId] = &_fromFolder->childFileInfos[insertIndex];
+
+	// Update all map data
+	for (auto& packetFile : _fromFolder->childFileInfos)
+	{
+		m_IndexData.fileIdentifierReferences[packetFile.fileId] = &packetFile; //TODO: Pensar em uma forma melhor de fazer isso (ele perde a referencia porque ocorre resize acima as vezes (_fromFolder->childFileInfos.push_back(newFile);)
+	}
+
+	return &_fromFolder->childFileInfos[insertIndex];
 }
 
 uint32_t Packet::PacketManager::GetValidFolderIdentifier()

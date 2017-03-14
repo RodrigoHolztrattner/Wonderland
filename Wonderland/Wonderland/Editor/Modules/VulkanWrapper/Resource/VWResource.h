@@ -96,7 +96,7 @@ private: //////
 	// The resource byte array data
 	std::vector<unsigned char> m_ByteArrayData;
 };
-
+/*
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWResourceReference
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +151,6 @@ private:
 	// Our resource ptr
 	VWResource* m_ResourcePtr;
 };
-
+*/
 // Just another graphic wrapper
 NamespaceEnd(VulkanWrapper)

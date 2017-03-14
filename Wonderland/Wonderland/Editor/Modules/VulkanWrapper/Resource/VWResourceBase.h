@@ -63,6 +63,7 @@ public:
 		Created,		// When we first create this object
 		Loading,		// If we are loading this resource
 		Loaded,			// When we loaded this resource
+		Initializing,	// When we are initializing this resource
 		Initialized,	// When we initialized this resource
 		Deleted			// The resource is pending deletion
 	};

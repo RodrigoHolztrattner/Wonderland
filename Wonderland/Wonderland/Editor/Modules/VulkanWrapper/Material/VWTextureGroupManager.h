@@ -10,8 +10,13 @@
 #include <GLFW/glfw3.h>
 
 #include "..\..\NamespaceDefinitions.h"
+#include "..\..\HashedString.h"
+#include "..\..\Reference.h"
+
 #include "VWDescriptorSetCreator.h"
 #include "VWTextureGroup.h"
+#include "VWTextureGroupRequest.h"
+#include "VWTextureGroupVault.h"
 
 #include <vector>
 #include <map>
@@ -49,6 +54,33 @@ class VWTexture;
 // STRUCTURES //
 ////////////////
 
+/*
+	- Temos o texture group index, onde ficam todas as informações de como cada texture group é formado (quais imagens, tamanhos, mipmaps, informações de criação, etc).
+	- Quando queremos um group, usamos a hashed string do nome do mesmo.
+	- Verificamos primeiro se ele se encontra na memória, caso afirmativo seguimos pegando a referencia do vault e tal...
+	- Caso não esteja, procuramos o index referente ao grupo e solicitamos o recurso (ou os recursos).
+
+	- Como foi definido que usaremos um map para o texture group, podemos ler os dados do index do disco e criar novos em runtime.
+*/
+
+/*
+	- Varias solicitações de texture group são feitas por vários objetos durante o update de uma instancia de App
+	- No final do update, essas requisições são enfileiradas e são processadas:
+
+		: Caso o texture group já esteja na memória :
+
+			- Apenas alteramos a referência e aumentamos o contador de referencia.
+
+		: Caso o texture group não esteja na memória :
+
+			- Ou o texture group ainda não fez nada.							-> O mesmo é criado, é adicionado na memória, é feita a solicitação de carregamento do recurso e é adicionado na lista para ser gerado.
+			- Ou o texture group está esperando o carregamento do recurso.		-> Adicionamos um wake call para o recurso apontando para a referencia solicitante.
+			- Ou o texture group está na lista de espera para ser gerado.		-> Em algum momento no update faremos a verificação que ele pode ser gerado e 
+			- Ou o texture group está sendo gerado.
+
+
+*/
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWTextureGroupManager
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,36 +101,39 @@ public: //////////
 public: //////////
 
 	// Initialize
-	bool Initialize(VWContext* _graphicContext);
+	bool Initialize(VWContext* _graphicContext, uint32_t _totalWorkerThreads);
 
 	// Release this image
 	void Release();
 
 public:
-	
+
 	// Request a texture group
-	void RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, uint32_t _groupIdentifier, std::function<void()> _onLoadCallback);
-	void RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, std::string _groupName, std::function<void()> _onLoadCallback);
+	void RequestTextureGroup(Reference::Blob<VWTextureGroup>* _textureGroupReference, HashedStringIdentifier _groupIdentifier);
 
-
-	VWTexture* GetTexture(VWContext* _graphicContext, std::string _textureName, std::string _textureGroup);
+	// Process texture group requests
+	void ProcessTextureGroupRequestQueues();
 
 private:
-public:
 
-	// Get/find a texture group
-	VWTextureGroup* GetTextureGroup(std::string _textureGroup) { return FindTextureGroup(_textureGroup); }
-	VWTextureGroup* FindTextureGroup(std::string _textureGroup);
-
-	// Create a texture
-	VWTexture* CreateTexture(VWContext* _graphicContext, std::string _textureName, VkCommandPool _commandPool);
+	// Process a texture group request
+	void ProcessTextureGroupRequest(VWTextureGroupRequest& _textureGroupRequest);
 
 ///////////////
 // VARIABLES //
 private: //////
 
+	// The total number of worker threads we are using
+	uint32_t m_TotalWorkerThreads;
+
+	// Our texture group requests
+	std::vector<VWTextureGroupRequest>* m_TextureGroupRequests;
+
+	// Our texture group vault
+	VWTextureGroupVault m_TextureGroupVault;
+
 	// Our texture groups
-	std::map<std::string, VWTextureGroup> m_TextureGroups;
+	// std::map<std::string, VWTextureGroup> m_TextureGroups;
 };
 
 // Just another graphic wrapper

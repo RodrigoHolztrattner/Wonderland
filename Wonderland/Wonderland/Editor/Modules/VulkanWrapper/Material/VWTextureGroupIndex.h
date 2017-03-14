@@ -1,22 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: VWTexture.h
+// Filename: VWTextureGroupIndex.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
 //////////////
 // INCLUDES //
 //////////////
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include <vector>
 
 #include "..\..\NamespaceDefinitions.h"
-#include "VWTextureGroup.h"
+#include "..\..\HashedString.h"
 
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <array>
-#include <glm/glm.hpp>
+#include "VWTextureGroup.h"
 
 ///////////////
 // NAMESPACE //
@@ -48,10 +43,25 @@ class VWContext;
 ////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: VWTexture
+// Class name: VWTextureGroupIndex
 ////////////////////////////////////////////////////////////////////////////////
-class VWTexture
+class VWTextureGroupIndex
 {
+private:
+
+	struct TextureGroupIndexInfo
+	{
+		// The texture group identifier
+		HashedStringIdentifier identifier; // usado externamente quando alguem precisa deste grupo
+
+		// Preciso ter um recurso aqui, pode ser o path, não tem problema, mas isso emplicará na etapa abaixo:
+
+		// Identificador do recurso, precisamos de uma etapa responsável por pegá-lo e armazená-lo aqui, fazer isso apra todos os grupos, assim evitador comparar usando strings
+
+		// Informações de tamanho, mipmaps, etc
+		// etc...
+	};
+
 public:
 
 //////////////////
@@ -59,28 +69,20 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	VWTexture();
-	~VWTexture();
+	VWTextureGroupIndex();
+	~VWTextureGroupIndex();
 
 //////////////////
 // MAIN METHODS //
 public: //////////
 
-	// Create this texture
-	void Create(VWTextureGroup* _textureGroup, uint16_t _textureIndex);
+	// Initialize the texture group index
+	bool Initialize(const char* _textureGroupIndexFilename);
 
 ///////////////
 // VARIABLES //
 private: //////
 
-	// If this image was initialized
-	bool m_Initialized;
-
-	// The texture group reference
-	VWTextureGroup* m_TextureGroup;
-
-	// The texture index
-	uint16_t m_TextureIndex;
 };
 
 // Just another graphic wrapper

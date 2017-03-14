@@ -20,18 +20,13 @@ bool VulkanWrapper::VWResourceVault::Initialize()
 	return true;
 }
 
-VulkanWrapper::VWResource* VulkanWrapper::VWResourceVault::IsInternalResourceLoaded(uint32_t _resourceIdentifier)
-{
-	return nullptr;
-}
-
-VulkanWrapper::VWResource* VulkanWrapper::VWResourceVault::IsExternalResourceLoaded(std::string _resourcePath)
+VulkanWrapper::VWResource* VulkanWrapper::VWResourceVault::IsResourceLoaded(uint32_t _resourceIdentifier)
 {
 	// For each external resource loaded
-	for (auto& resourceHolder : m_ExternalResources)
+	for (auto& resourceHolder : m_Resources)
 	{
 		// Compare the resource paths
-		if(!resourceHolder.resourcePath.compare(_resourcePath))
+		if (!resourceHolder.resourceIdentifier == _resourceIdentifier)
 		{
 			return resourceHolder.resource;
 		}
@@ -40,11 +35,11 @@ VulkanWrapper::VWResource* VulkanWrapper::VWResourceVault::IsExternalResourceLoa
 	return nullptr;
 }
 
-void VulkanWrapper::VWResourceVault::InsertExternalResource(VWResource* _resource, std::string _resourcePath)
+void VulkanWrapper::VWResourceVault::InsertResource(VWResource* _resource, uint32_t _resourceIdentifier)
 {
-	ExternalResourceHolder resourceHolder = {};
+	ResourceHolder resourceHolder = {};
 	resourceHolder.resource = _resource;
-	resourceHolder.resourcePath = _resourcePath;
+	resourceHolder.resourceIdentifier = _resourceIdentifier;
 
-	m_ExternalResources.push_back(resourceHolder);
+	m_Resources.push_back(resourceHolder);
 }

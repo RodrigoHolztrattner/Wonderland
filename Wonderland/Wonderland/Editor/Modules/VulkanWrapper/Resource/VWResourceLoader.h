@@ -14,6 +14,7 @@
 #include <mutex>
 
 #include "..\..\NamespaceDefinitions.h"
+#include"..\..\Reference.h"
 
 ///////////////
 // NAMESPACE //
@@ -40,7 +41,6 @@ NamespaceBegin(VulkanWrapper)
 
 class VWContext;
 class VWResource;
-class VWResourceReference;
 
 ////////////////
 // STRUCTURES //
@@ -53,16 +53,11 @@ class VWResourceLoader
 {
 private:
 
-	struct InternalResourceOrder
+	struct ResourceOrder
 	{
-		VWResourceReference* resourceReference;
+		Reference::Blob<VWResource>* resourceReference;
 		uint32_t resourceIdentifier;
-	};
-
-	struct ExternalResourceOrder
-	{
-		VWResourceReference* resourceReference;
-		std::string resourcePath;
+		std::function<void()> resourceProcessMethod;
 	};
 
 public:
@@ -83,10 +78,7 @@ public: //////////
 	bool Initialize();
 
 	// Queue an internal resource to load
-	void QueueInternalResourceLoad(VWResourceReference* _resourceReference, uint32_t _resourceIdentifier);
-
-	// Queue an external resource to load
-	void QueueExternalResourceLoad(VWResourceReference* _resourceReference, std::string _resourcePath);
+	void QueueResourceLoad(Reference::Blob<VWResource>* _resourceReference, uint32_t _resourceIdentifier, std::function<void()> _processResourceMethod);
 
 	// Commit our load orders
 	void CommitLoadQueues();
@@ -97,24 +89,20 @@ private:
 	void LoadProcess();
 
 	// Try to load an internal/external resource order
-	bool TryLoadingInternalResource(InternalResourceOrder& _resourceOrder);
-	bool TryLoadingExternalResource(ExternalResourceOrder& _resourceOrder);
+	bool TryLoadingResource(ResourceOrder& _resourceOrder);
 
 	// Load an internal/external resource
-	void LoadInternalResource(InternalResourceOrder* _resourceOrder);
-	void LoadExternalResource(ExternalResourceOrder* _resourceOrder);
+	void LoadResource(ResourceOrder* _resourceOrder);
 
 ///////////////
 // VARIABLES //
 private: //////
 
 	// Our temporary queues
-	std::vector<InternalResourceOrder> m_TemporaryInternalQueue;
-	std::vector<ExternalResourceOrder> m_TemporaryExternalQueue;
+	std::vector<ResourceOrder> m_TemporaryQueue;
 
 	// Our load queues
-	std::vector<InternalResourceOrder> m_InternalOrderQueue;
-	std::vector<ExternalResourceOrder> m_ExternalOrderQueue;
+	std::vector<ResourceOrder> m_OrderQueue;
 
 	// Our load thread
 	std::thread m_LoadThread;

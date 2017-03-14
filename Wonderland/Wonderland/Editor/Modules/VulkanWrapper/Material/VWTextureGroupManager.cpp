@@ -17,8 +17,20 @@ VulkanWrapper::VWTextureGroupManager::~VWTextureGroupManager()
 {
 }
 
-bool VulkanWrapper::VWTextureGroupManager::Initialize(VWContext* _graphicContext)
+bool VulkanWrapper::VWTextureGroupManager::Initialize(VWContext* _graphicContext, uint32_t _totalWorkerThreads)
 {
+	// Set the total worker threads
+	m_TotalWorkerThreads = _totalWorkerThreads;
+
+	// Alloc the resource requests
+	m_TextureGroupRequests = new std::vector<VWTextureGroupRequest>[_totalWorkerThreads];
+
+	// Initialize the texture group vault
+	if (!m_TextureGroupVault.Initialize())
+	{
+		return false;
+	}
+
 	// Add our layout descriptors
 	AddDescriptorSetLayoutBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VWTextureGroup::MaximumTexturePerGroup, VK_SHADER_STAGE_FRAGMENT_BIT);
 
@@ -35,6 +47,79 @@ void VulkanWrapper::VWTextureGroupManager::Release()
 {
 
 }
+
+void VulkanWrapper::VWTextureGroupManager::RequestTextureGroup(Reference::Blob<VWTextureGroup>* _textureGroupReference, HashedStringIdentifier _groupIdentifier)
+{
+	// Get the current worker index
+	uint32_t currentWorkerIndex = Peon::GetCurrentWorkerIndex();
+
+	// Create a new resource request
+	VWTextureGroupRequest newRequest = {};
+	newRequest.Create(_textureGroupReference, _groupIdentifier);
+
+	// Insert into the queue
+	m_TextureGroupRequests[currentWorkerIndex].push_back(newRequest);
+}
+
+void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequestQueues()
+{
+	// Process our wake list first
+	// ProcessWakeList();
+
+	// Process and clear all request queues
+	for (int i = 0; i < m_TotalWorkerThreads; i++)
+	{
+		// Process all requests for this queue
+		for (auto& resourceRequest : m_TextureGroupRequests[i])
+		{
+			// Process this request
+			ProcessTextureGroupRequest(resourceRequest);
+		}
+
+		// Clear this request queue
+		m_TextureGroupRequests[i].clear();
+	}
+
+	// Commit all resource requests for loading
+	// m_ResourceLoader.CommitLoadQueues();
+}
+
+
+void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequest(VWTextureGroupRequest& _textureGroupRequest)
+{
+	// Check if the texture group is inside the vault
+	VWTextureGroup* textureGroup = m_TextureGroupVault.IsTextureGroupLoaded(_textureGroupRequest.GetRequestIdentifier());
+	if (textureGroup != nullptr)
+	{
+		// Increment the texture group reference counter
+		// resource->IncrementReferenceCount();
+
+		// Set the resource ptr
+		_textureGroupRequest.GetRequestReference()->ValidateResourceReference(textureGroup);
+
+		return;
+	}
+
+	// Create a new resource object
+	VWTextureGroup* newTextureGroup = new VWTextureGroup();
+
+	// Append this new resource to the wake list
+	// newResource->next = m_ResourceWakeList;
+	// m_ResourceWakeList = newResource;
+
+	// Initialize the new texture group
+	newTextureGroup->Initialize();
+
+	// Queue the resource load
+	// m_ResourceLoader.QueueExternalResourceLoad(_resourceRequest.GetResourceReference(), _resourceRequest.GetRequestPath(), _resourceRequest.GetProcessMethod());
+
+	// Insert the texture group into the vault
+	m_TextureGroupVault.InsertTextureGroup(newTextureGroup, _textureGroupRequest.GetRequestIdentifier());
+
+	// Set the resource ptr
+	_textureGroupRequest.GetRequestReference()->ValidateResourceReference(newTextureGroup);
+}
+
 /*
 void VulkanWrapper::VWTextureGroupManager::RequestTextureGroup(VWTextureGroupReference* _textureGroupReference, uint32_t _groupIdentifier, std::function<void()> _onLoadCallback)
 {
@@ -54,6 +139,7 @@ void VulkanWrapper::VWTextureGroupManager::RequestTextureGroup(VWTextureGroupRef
 
 }
 */
+/*
 VulkanWrapper::VWTexture* VulkanWrapper::VWTextureGroupManager::GetTexture(VWContext* _graphicContext, std::string _textureName, std::string _textureGroup)
 {
 	// Check if the texture group exists
@@ -108,3 +194,4 @@ VulkanWrapper::VWTexture* VulkanWrapper::VWTextureGroupManager::CreateTexture(VW
 
 	return newTexture;
 }
+*/

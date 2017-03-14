@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "..\..\NamespaceDefinitions.h"
+#include "..\..\Reference.h"
 
 #include "VWResource.h"
 
@@ -73,10 +74,10 @@ public: //////////
 
 	// Return a resource sync
 	// VWResource* GetResourceSync();
-
+	
 	// Request a resource async
-	void RequestResource(VWResourceReference* _resourceReference, uint32_t _resourceIdentifier, std::function<void()> _onLoadCallback);
-	void RequestResource(VWResourceReference* _resourceReference, std::string _resourcePath, std::function<void()> _onLoadCallback);
+	void RequestResource(Reference::Blob<VWResource>* _resourceReference, uint32_t _resourceIdentifier, std::function<void()> _onLoadCallback = []() {}, std::function<void()> _processMethod = []() {});
+	void RequestResource(Reference::Blob<VWResource>* _resourceReference, std::string _resourcePath, std::function<void()> _onLoadCallback = []() {}, std::function<void()> _processMethod = []() {});
 
 	// Process all resource request queues
 	void ProcessResourceRequestQueues();
@@ -91,9 +92,6 @@ private:
 	
 	// Process an internal resource
 	void ProcessInternalResourceRequest(VWResourceRequest& _resourceRequest);
-
-	// Process a external resource
-	void ProcessExternalResourceRequest(VWResourceRequest& _resourceRequest);
 
 ///////////////
 // VARIABLES //

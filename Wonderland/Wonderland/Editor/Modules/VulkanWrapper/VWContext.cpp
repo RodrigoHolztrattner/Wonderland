@@ -67,7 +67,7 @@ bool VulkanWrapper::VWContext::Initialize(VWGraphicAdapter* _adapter)
 	m_SwapChain.CreateBackgroundCleaner(_adapter, &m_GraphicInstance);
 
 	// Initialize the texture group manager
-	result = m_TextureGroupManager.Initialize(this);
+	result = m_TextureGroupManager.Initialize(this, Peon::GetTotalWorkers());
 	if (!result)
 	{
 		return false;

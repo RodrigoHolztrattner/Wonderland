@@ -50,22 +50,13 @@ class VWResourceVault
 {
 private:
 
-	struct InternalResourceHolder
+	struct ResourceHolder
 	{
 		// The resource itself
 		VWResource* resource;
 
 		// The resource identifier
 		uint32_t resourceIdentifier;
-	};
-
-	struct ExternalResourceHolder
-	{
-		// The resource itself
-		VWResource* resource;
-
-		// The resource path
-		std::string resourcePath;
 	};
 
 public:
@@ -86,23 +77,18 @@ public: //////////
 	bool Initialize();
 
 	// Check if a internal resource is currently loaded into memory
-	VWResource* IsInternalResourceLoaded(uint32_t _resourceIdentifier);
-
-	// Check if a external resource is currently loaded into memory
-	VWResource* IsExternalResourceLoaded(std::string _resourcePath);
+	VWResource* IsResourceLoaded(uint32_t _resourceIdentifier);
 
 	// Insert a external resource into memory
-	void InsertExternalResource(VWResource* _resource, std::string _resourcePath);
+	void InsertResource(VWResource* _resource, uint32_t _resourceIdentifier);
 
 ///////////////
 // VARIABLES //
 private: //////
 
 	// Our internal resource array
-	std::vector<InternalResourceHolder> m_InternalResources;
+	std::vector<ResourceHolder> m_Resources;
 
-	// Our external resource array
-	std::vector<ExternalResourceHolder> m_ExternalResources;
 };
 
 // Just another graphic wrapper

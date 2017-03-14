@@ -9,11 +9,19 @@
 VulkanWrapper::VWTextureGroup::VWTextureGroup()
 {
 	// Set the initial data
-	// ...
+	m_Status = TextureGroupStatus::Unknow;
 }
 
 VulkanWrapper::VWTextureGroup::~VWTextureGroup()
 {
+}
+
+bool VulkanWrapper::VWTextureGroup::Initialize()
+{
+	// Set the status
+	m_Status = TextureGroupStatus::Created;
+
+	return true;
 }
 
 bool VulkanWrapper::VWTextureGroup::Create(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout)

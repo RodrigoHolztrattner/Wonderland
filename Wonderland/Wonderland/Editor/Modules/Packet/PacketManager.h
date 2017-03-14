@@ -19,6 +19,8 @@
 #include "PacketIndex.h"
 
 #include "..\NamespaceDefinitions.h"
+#include "..\HashedString.h"
+
 #include "PacketLoader.h"
 #include "PacketIndexLoader.h"
 
@@ -82,6 +84,16 @@ class PacketManager;
 		- Cada pasta também terá um identificador único o qual será atribuido na hora da criação.
 		- Podemos a qualquer momento descobrir qual é o identificador de um arquivo.
 		- Não é permitido o uso de multithread na leitura, este deve ser utilizado externalmente e deve ser sincronizado.
+
+*/
+
+/*
+
+	- Adicionamos um objeto fazendo referencia à algum arquivo existente em disco.
+	- Geramos um identificador unico para esse arquivo, quando quisermos carregar esse arquivo independente dele estar no vault ou não, usaremos este objeto.
+	- Externamente quando queremos fazer referencia à um arquivo, podemos usar diretamente o identifcador unico dele OU perguntar utilizando o caminho dentro do vault qual é o ID do mesmo,
+	destá forma devemos fazer com que por exemplo o gerenciador de texturas faça o cruzamento do caminho de cada grupo com o ID correspondente do recurso, assim existe uma etapa de configuração
+	(pegar os ids) e a normal (runtime) onde usaremos os identificadores para fazer referencia ao arquivo.
 
 */
 
