@@ -32,9 +32,6 @@ Application::~Application()
 
 */
 
-Reference::Blob<VulkanWrapper::VWResource> resourceReference;
-Reference::Blob<VulkanWrapper::VWResource> resourceReference2;
-
 bool Application::Initialize(InitializationParams _initializationParams)
 {
 	bool result;
@@ -63,8 +60,8 @@ bool Application::Initialize(InitializationParams _initializationParams)
 		return false;
 	}
 	
-	// Initialize our resource manager
-	result = m_ResourceManager->Initialize(Peon::GetTotalWorkers());
+	// Initialize the resource context
+	result = m_ResourceContext->Initialize(m_GraphicAdapter, m_PacketManager);
 	if (!result)
 	{
 		return false;
@@ -78,6 +75,15 @@ bool Application::Initialize(InitializationParams _initializationParams)
 
 	// Initialize the common resources
 	InitializeCommonResources();
+
+	//
+	//
+	//
+
+	VulkanWrapper::VWTextureGroupIndex newTextureGroupIndex = {};
+	newTextureGroupIndex.Create(HashedString("textureGroupSky").Hash(), "Images/Galaxy");
+
+	m_ResourceContext->GetTextureGroupIndexLoader()->AddIndex(m_PacketManager, newTextureGroupIndex);
 
 	//
 	//
@@ -99,9 +105,6 @@ bool Application::Initialize(InitializationParams _initializationParams)
 			return false;
 		}
 	}
-
-	m_ResourceManager->RequestResource(&resourceReference, "Images/Galaxy", [&] { Release(); });
-	m_ResourceManager->RequestResource(&resourceReference2, "Images/Ground", [&] { Release(); });
 
 	return true;
 }
@@ -169,6 +172,12 @@ void Application::MainLoopAux(void* _dummy)
 		{
 			// Update this application instance
 			applicationInstance->Update(timeDifference);
+
+			// Get the context reference
+			VulkanWrapper::Context* applicationContext = applicationInstance->GetContextReference();
+
+			// Do the application update
+			applicationContext->ApplicationUpdate();
 		}
 
 		// Validate all application instances
@@ -194,6 +203,6 @@ void Application::MainLoopAux(void* _dummy)
 		lockedTime = currentTime;
 
 		// Process all resource requests (we can use another thread)
-		m_ResourceManager->ProcessResourceRequestQueues();
+		m_ResourceContext->ProcessResourceRequests();
 	}
 }

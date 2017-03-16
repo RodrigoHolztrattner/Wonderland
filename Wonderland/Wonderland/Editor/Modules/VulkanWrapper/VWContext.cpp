@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWContext.h"
 #include "..\Peon\Peon.h"
+#include "Resource\VWResourceContext.h"
 
 VulkanWrapper::VWContext::VWContext()
 {
@@ -14,12 +15,15 @@ VulkanWrapper::VWContext::~VWContext()
 {
 }
 
-bool VulkanWrapper::VWContext::Initialize(VWGraphicAdapter* _adapter)
+bool VulkanWrapper::VWContext::Initialize(VWGraphicAdapter* _adapter, VWResourceContext* _resourceContext)
 {
 	bool result;
 
 	// Save our adapter reference
 	m_GraphicAdapterReference = _adapter;
+
+	// Save our resource context
+	m_ResourceContextReference = _resourceContext;
 
 	// Initialize our m_Window
 	result = m_Window.Initialize();
@@ -67,7 +71,7 @@ bool VulkanWrapper::VWContext::Initialize(VWGraphicAdapter* _adapter)
 	m_SwapChain.CreateBackgroundCleaner(_adapter, &m_GraphicInstance);
 
 	// Initialize the texture group manager
-	result = m_TextureGroupManager.Initialize(this, Peon::GetTotalWorkers());
+	result = m_TextureGroupManager.Initialize(this, _resourceContext->GetTextureGroupIndexLoader(), Peon::GetTotalWorkers());
 	if (!result)
 	{
 		return false;
@@ -103,4 +107,9 @@ void VulkanWrapper::VWContext::EndRenderingFrame()
 {
 	// Reset the command buffers
 	m_CommandBufferAllocator.ResetCommandBuffers(&m_GraphicInstance);
+}
+
+void VulkanWrapper::VWContext::ApplicationUpdate()
+{
+	m_TextureGroupManager.ProcessTextureGroupRequestQueues(m_ResourceContextReference->GetResourceManager());
 }

@@ -2,10 +2,10 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroupManager.h"
-#include "..\VWContext.h"
+#include "..\..\VWContext.h"
 #include "VWTexture.h"
-#include "..\..\LogSystem.h"
-#include "..\..\Peon\Peon.h"
+#include "..\..\..\LogSystem.h"
+#include "..\..\..\Peon\Peon.h"
 
 VulkanWrapper::VWTextureGroupManager::VWTextureGroupManager()
 {
@@ -17,8 +17,11 @@ VulkanWrapper::VWTextureGroupManager::~VWTextureGroupManager()
 {
 }
 
-bool VulkanWrapper::VWTextureGroupManager::Initialize(VWContext* _graphicContext, uint32_t _totalWorkerThreads)
+bool VulkanWrapper::VWTextureGroupManager::Initialize(VWContext* _graphicContext, VWResourceIndexLoader<VWTextureGroupIndex>* _textureGroupIndexLoaderRef, uint32_t _totalWorkerThreads)
 {
+	// Set the texture group index loader reference
+	m_TextureGroupIndexLoader = _textureGroupIndexLoaderRef;
+
 	// Set the total worker threads
 	m_TotalWorkerThreads = _totalWorkerThreads;
 
@@ -61,11 +64,8 @@ void VulkanWrapper::VWTextureGroupManager::RequestTextureGroup(Reference::Blob<V
 	m_TextureGroupRequests[currentWorkerIndex].push_back(newRequest);
 }
 
-void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequestQueues()
+void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequestQueues(VWResourceManager* _resourceManager)
 {
-	// Process our wake list first
-	// ProcessWakeList();
-
 	// Process and clear all request queues
 	for (int i = 0; i < m_TotalWorkerThreads; i++)
 	{
@@ -73,27 +73,21 @@ void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequestQueues()
 		for (auto& resourceRequest : m_TextureGroupRequests[i])
 		{
 			// Process this request
-			ProcessTextureGroupRequest(resourceRequest);
+			ProcessTextureGroupRequest(_resourceManager, resourceRequest);
 		}
 
 		// Clear this request queue
 		m_TextureGroupRequests[i].clear();
 	}
-
-	// Commit all resource requests for loading
-	// m_ResourceLoader.CommitLoadQueues();
 }
 
 
-void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequest(VWTextureGroupRequest& _textureGroupRequest)
+void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequest(VWResourceManager* _resourceManager, VWTextureGroupRequest& _textureGroupRequest)
 {
 	// Check if the texture group is inside the vault
 	VWTextureGroup* textureGroup = m_TextureGroupVault.IsTextureGroupLoaded(_textureGroupRequest.GetRequestIdentifier());
 	if (textureGroup != nullptr)
 	{
-		// Increment the texture group reference counter
-		// resource->IncrementReferenceCount();
-
 		// Set the resource ptr
 		_textureGroupRequest.GetRequestReference()->ValidateResourceReference(textureGroup);
 
@@ -103,15 +97,19 @@ void VulkanWrapper::VWTextureGroupManager::ProcessTextureGroupRequest(VWTextureG
 	// Create a new resource object
 	VWTextureGroup* newTextureGroup = new VWTextureGroup();
 
-	// Append this new resource to the wake list
-	// newResource->next = m_ResourceWakeList;
-	// m_ResourceWakeList = newResource;
-
 	// Initialize the new texture group
 	newTextureGroup->Initialize();
 
-	// Queue the resource load
-	// m_ResourceLoader.QueueExternalResourceLoad(_resourceRequest.GetResourceReference(), _resourceRequest.GetRequestPath(), _resourceRequest.GetProcessMethod());
+	// Get the texture group index for the current request
+	VWTextureGroupIndex* textureGroupIndex = m_TextureGroupIndexLoader->GetIndex(_textureGroupRequest.GetRequestIdentifier());
+	if (textureGroupIndex == nullptr)
+	{
+		// Error, the request texture identifier dont exist inside the index loader!
+		return;
+	}
+
+	// Request the new resource
+	_resourceManager->RequestResource(newTextureGroup->GetResourceReference(), textureGroupIndex->GetResourceIdentifier(), []() {}, [=]() {newTextureGroup->LoadingProcess(); });
 
 	// Insert the texture group into the vault
 	m_TextureGroupVault.InsertTextureGroup(newTextureGroup, _textureGroupRequest.GetRequestIdentifier());

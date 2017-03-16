@@ -3,7 +3,7 @@
 
 #define GLFW_INCLUDE_VULKAN
 
-#include <pthread.h>
+//#include <pthread.h>
 // #include "SystemClass.h"
 
 #include <fstream>
@@ -23,7 +23,7 @@
 		- Thread library
 			- System specific
 			- __InternalPeonJob stealing system
-			- Multitasking for all modules
+			- Multitasking for all module
 		- File explorer (IO file system)
 			- With cached/temporary/predicted data
 		- Core (main engine functionality)

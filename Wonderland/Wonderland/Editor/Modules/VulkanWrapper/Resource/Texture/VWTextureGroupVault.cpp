@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroupVault.h"
-#include "..\VWContext.h"
+#include "..\..\VWContext.h"
 
 VulkanWrapper::VWTextureGroupVault::VWTextureGroupVault()
 {
@@ -26,7 +26,7 @@ VulkanWrapper::VWTextureGroup* VulkanWrapper::VWTextureGroupVault::IsTextureGrou
 	for (auto& textureGroupHolder : m_TextureGroups)
 	{
 		// Compare the resource paths
-		if (!textureGroupHolder.resourceGroupIdentifier == _textureGroupIdentifier)
+		if (textureGroupHolder.resourceGroupIdentifier == _textureGroupIdentifier)
 		{
 			return textureGroupHolder.textureGroup;
 		}

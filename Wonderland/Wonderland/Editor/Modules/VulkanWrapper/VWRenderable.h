@@ -20,7 +20,7 @@
 #include <glm/glm.hpp>
 
 #include "VWBuffer.h"
-#include "Material\VWTexture.h"
+#include "Resource\Texture\VWTexture.h"
 
 ///////////////
 // NAMESPACE //

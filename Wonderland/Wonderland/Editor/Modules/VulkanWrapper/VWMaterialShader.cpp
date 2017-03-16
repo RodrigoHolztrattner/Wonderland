@@ -6,7 +6,7 @@
 #include "VWContext.h"
 
 #include "VWBuffer.h"
-#include "Material\VWTexture.h"
+#include "Resource\Texture\VWTexture.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>

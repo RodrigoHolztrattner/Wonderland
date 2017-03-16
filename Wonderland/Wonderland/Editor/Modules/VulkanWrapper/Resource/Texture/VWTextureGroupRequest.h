@@ -9,9 +9,9 @@
 #include <string>
 #include <functional>
 
-#include "..\..\NamespaceDefinitions.h"
-#include "..\..\HashedString.h"
-#include "..\..\Reference.h"
+#include "..\..\..\NamespaceDefinitions.h"
+#include "..\..\..\HashedString.h"
+#include "..\..\..\Reference.h"
 
 #include "VWTextureGroup.h"
 

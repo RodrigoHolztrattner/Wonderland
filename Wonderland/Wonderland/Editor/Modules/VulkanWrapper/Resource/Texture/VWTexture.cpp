@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTexture.h"
-#include "..\VWContext.h"
+#include "..\..\VWContext.h"
 
 VulkanWrapper::VWTexture::VWTexture()
 {

@@ -2,9 +2,9 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroup.h"
-#include "..\VWContext.h"
+#include "..\..\VWContext.h"
 #include "VWTexture.h"
-#include "..\..\LogSystem.h"
+#include "..\..\..\LogSystem.h"
 
 VulkanWrapper::VWTextureGroup::VWTextureGroup()
 {
@@ -22,6 +22,11 @@ bool VulkanWrapper::VWTextureGroup::Initialize()
 	m_Status = TextureGroupStatus::Created;
 
 	return true;
+}
+
+void VulkanWrapper::VWTextureGroup::LoadingProcess()
+{
+	m_Status = TextureGroupStatus::Initialized;
 }
 
 bool VulkanWrapper::VWTextureGroup::Create(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout)
@@ -104,12 +109,12 @@ bool VulkanWrapper::VWTextureGroup::UpdateDescription(VWContext* _graphicContext
 		// Prepare the image info
 		VkDescriptorImageInfo imageInfo = {};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = texture->GetImageView();
-		imageInfo.sampler = texture->GetSampler();
+		// imageInfo.imageView = texture->GetImageView();
+		// imageInfo.sampler = texture->GetSampler();
 		imageInfos.push_back(imageInfo);
 
 		// Set the texture index
-		texture->SetId(textureIndex);
+		// texture->SetId(textureIndex);
 
 		// Increment our texture index
 		textureIndex++;

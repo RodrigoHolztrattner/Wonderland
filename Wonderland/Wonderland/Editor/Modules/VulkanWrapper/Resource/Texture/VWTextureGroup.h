@@ -9,8 +9,10 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "..\..\NamespaceDefinitions.h"
-#include "VWDescriptorSetCreator.h"
+#include "..\..\..\NamespaceDefinitions.h"
+#include "..\..\Material\VWDescriptorSetCreator.h"
+#include "..\..\..\Reference.h"
+#include "..\VWResource.h"
 
 #include <vector>
 #include <map>
@@ -84,6 +86,9 @@ public: //////////
 	// Initialize this texture group
 	bool Initialize();
 
+	// The loading process
+	void LoadingProcess();
+
 	// Create this texture group
 	bool Create(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout);
 
@@ -99,6 +104,9 @@ public: //////////
 	// Return the status
 	TextureGroupStatus GetStatus() { return m_Status; }
 
+	// Return the resource reference
+	Reference::Blob<VulkanWrapper::VWResource>* GetResourceReference() { return &m_ResourceReference; }
+
 private:
 
 	// Update the descriptor set
@@ -110,6 +118,9 @@ private: //////
 
 	// The status
 	TextureGroupStatus m_Status;
+
+	// The resource reference
+	Reference::Blob<VulkanWrapper::VWResource> m_ResourceReference;
 
 	// The group descriptor set
 	VkDescriptorSet m_DescriptorSet;

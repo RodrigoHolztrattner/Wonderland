@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: VWTextureGroupIndex.h
+// Filename: VWTextureGroupVault.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -8,8 +8,8 @@
 //////////////
 #include <vector>
 
-#include "..\..\NamespaceDefinitions.h"
-#include "..\..\HashedString.h"
+#include "..\..\..\NamespaceDefinitions.h"
+#include "..\..\..\HashedString.h"
 
 #include "VWTextureGroup.h"
 
@@ -43,23 +43,19 @@ class VWContext;
 ////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: VWTextureGroupIndex
+// Class name: VWTextureGroupVault
 ////////////////////////////////////////////////////////////////////////////////
-class VWTextureGroupIndex
+class VWTextureGroupVault
 {
 private:
 
-	struct TextureGroupIndexInfo
+	struct TextureGroupHolder
 	{
+		// The texture group itself
+		VWTextureGroup* textureGroup;
+
 		// The texture group identifier
-		HashedStringIdentifier identifier; // usado externamente quando alguem precisa deste grupo
-
-		// Preciso ter um recurso aqui, pode ser o path, não tem problema, mas isso emplicará na etapa abaixo:
-
-		// Identificador do recurso, precisamos de uma etapa responsável por pegá-lo e armazená-lo aqui, fazer isso apra todos os grupos, assim evitador comparar usando strings
-
-		// Informações de tamanho, mipmaps, etc
-		// etc...
+		HashedStringIdentifier resourceGroupIdentifier;
 	};
 
 public:
@@ -69,20 +65,28 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	VWTextureGroupIndex();
-	~VWTextureGroupIndex();
+	VWTextureGroupVault();
+	~VWTextureGroupVault();
 
 //////////////////
 // MAIN METHODS //
 public: //////////
 
-	// Initialize the texture group index
-	bool Initialize(const char* _textureGroupIndexFilename);
+	// Initialize the resource manager
+	bool Initialize();
+
+	// Check if a internal resource is currently loaded into memory
+	VWTextureGroup* IsTextureGroupLoaded(HashedStringIdentifier _textureGroupIdentifier);
+
+	// Insert a external resource into memory
+	void InsertTextureGroup(VWTextureGroup* _textureGroup, HashedStringIdentifier _textureGroupIdentifier);
 
 ///////////////
 // VARIABLES //
 private: //////
 
+	// Our texture group array
+	std::vector<TextureGroupHolder> m_TextureGroups; //TODO: Usar um map
 };
 
 // Just another graphic wrapper

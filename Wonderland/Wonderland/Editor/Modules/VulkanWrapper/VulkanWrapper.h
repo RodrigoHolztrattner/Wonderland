@@ -22,8 +22,14 @@
 #include "Shader\VWShaderBase.h"
 
 #include "VWMaterialShader.h"
-#include "Material\VWTextureGroupManager.h"
+#include "Resource\Texture\VWTextureGroupManager.h"
 #include "Resource\VWResourceManager.h"
+#include "Resource\VWResourceIndexLoader.h"
+
+#include "Resource\Texture\VWTextureGroupManager.h"
+#include "Resource\Texture\VWTextureGroupIndex.h"
+
+#include "Resource\VWResourceContext.h"
 
 ///////////////
 // NAMESPACE //
@@ -63,6 +69,9 @@ NamespaceBegin(VulkanWrapper)
  typedef VWContext				Context;
  typedef VWResourceManager		ResourceManager;
  typedef VWShaderBase			ShaderBase;
+ typedef VWTextureGroupManager	TextureGroupManager;
+ typedef VWTextureGroupIndex	TextureGroupIndex;
+ typedef VWResourceContext		ResourceContext;
 
 // Just another graphic wrapper
 NamespaceEnd(VulkanWrapper)

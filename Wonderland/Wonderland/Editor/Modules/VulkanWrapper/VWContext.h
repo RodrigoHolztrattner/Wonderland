@@ -26,6 +26,12 @@
 // GLOBAL //
 ////////////
 
+////////////////
+// FORWARDING //
+////////////////
+
+class Application;
+
 ///////////////
 // NAMESPACE //
 ///////////////
@@ -36,6 +42,8 @@ NamespaceBegin(VulkanWrapper)
 ////////////////
 // FORWARDING //
 ////////////////
+
+class VWResourceContext;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWContext
@@ -57,7 +65,7 @@ public: //////////
 public: //////////
 
 	// Initialize
-	bool Initialize(VWGraphicAdapter* _adapter);
+	bool Initialize(VWGraphicAdapter* _adapter, VWResourceContext* _resourceContext);
 
 	// Release
 	void Release();
@@ -67,6 +75,14 @@ public: //////////
 
 	// End the rendering frame
 	void EndRenderingFrame();
+
+protected:
+
+	// The application class is a friend of us
+	friend Application;
+
+	// Do the application update
+	void ApplicationUpdate();
 
 ////////////////////
 // COMMAND BUFFER //

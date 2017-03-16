@@ -65,6 +65,9 @@ public: //////////
 	// The update function
 	void Update(float _timeElapsed);
 
+	// Return the context reference
+	VulkanWrapper::Context* GetContextReference() { return &m_Context; }
+
 public:
 
 	// Return if we are valid

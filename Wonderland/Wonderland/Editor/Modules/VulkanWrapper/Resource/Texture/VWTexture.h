@@ -1,17 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: VWTextureGroupVault.h
+// Filename: VWTexture.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
 //////////////
 // INCLUDES //
 //////////////
-#include <vector>
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
-#include "..\..\NamespaceDefinitions.h"
-#include "..\..\HashedString.h"
-
+#include "..\..\..\NamespaceDefinitions.h"
 #include "VWTextureGroup.h"
+
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <array>
+#include <glm/glm.hpp>
 
 ///////////////
 // NAMESPACE //
@@ -43,21 +48,10 @@ class VWContext;
 ////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: VWTextureGroupVault
+// Class name: VWTexture
 ////////////////////////////////////////////////////////////////////////////////
-class VWTextureGroupVault
+class VWTexture
 {
-private:
-
-	struct TextureGroupHolder
-	{
-		// The texture group itself
-		VWTextureGroup* textureGroup;
-
-		// The texture group identifier
-		HashedStringIdentifier resourceGroupIdentifier;
-	};
-
 public:
 
 //////////////////
@@ -65,28 +59,28 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	VWTextureGroupVault();
-	~VWTextureGroupVault();
+	VWTexture();
+	~VWTexture();
 
 //////////////////
 // MAIN METHODS //
 public: //////////
 
-	// Initialize the resource manager
-	bool Initialize();
-
-	// Check if a internal resource is currently loaded into memory
-	VWTextureGroup* IsTextureGroupLoaded(HashedStringIdentifier _textureGroupIdentifier);
-
-	// Insert a external resource into memory
-	void InsertTextureGroup(VWTextureGroup* _textureGroup, HashedStringIdentifier _textureGroupIdentifier);
+	// Create this texture
+	void Create(VWTextureGroup* _textureGroup, uint16_t _textureIndex);
 
 ///////////////
 // VARIABLES //
 private: //////
 
-	// Our texture group array
-	std::vector<TextureGroupHolder> m_TextureGroups; //TODO: Usar um map
+	// If this image was initialized
+	bool m_Initialized;
+
+	// The texture group reference
+	VWTextureGroup* m_TextureGroup;
+
+	// The texture index
+	uint16_t m_TextureIndex;
 };
 
 // Just another graphic wrapper

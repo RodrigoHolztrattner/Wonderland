@@ -10,6 +10,10 @@
 #include <GLFW/glfw3.h>
 
 #include "Modules\VulkanWrapper\VulkanWrapper.h"
+#include "Modules\GlobalInstance.h"
+#include "Modules\Peon\Peon.h"
+#include "Modules\Packet\Packet.h"
+
 #include "ApplicationInstance.h"
 #include "ApplicationMetrics.h"
 
@@ -20,9 +24,6 @@
 /////////////
 // DEFINES //
 /////////////
-#include "Modules\GlobalInstance.h"
-#include "Modules\Peon\Peon.h"
-#include "Modules\Packet\Packet.h"
 
 ////////////
 // GLOBAL //
@@ -115,7 +116,7 @@ private: //////
 	GlobalInstance<Packet::Manager> m_PacketManager;
 
 	// Our resource manager
-	GlobalInstance<VulkanWrapper::ResourceManager> m_ResourceManager;
+	GlobalInstance<VulkanWrapper::ResourceContext> m_ResourceContext;
 
 	// Our application metrics
 	GlobalInstance<ApplicationMetrics> m_ApplicationMetrics;

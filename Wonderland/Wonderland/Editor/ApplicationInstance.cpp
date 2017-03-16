@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "ApplicationInstance.h"
 #include "Modules\GlobalInstance.h"
-#include "Modules\VulkanWrapper\Material\VWTextureGroupManager.h"
+#include "Modules\VulkanWrapper\Resource\VWResourceContext.h"
 
 #include <chrono>
 
@@ -17,6 +17,9 @@ ApplicationInstance::~ApplicationInstance()
 {
 }
 
+Reference::Blob<VulkanWrapper::VWTextureGroup> s_TextureGroup;
+Reference::Blob<VulkanWrapper::VWTextureGroup> s_TextureGroup2;
+
 bool ApplicationInstance::Initialize()
 {
 	bool result;
@@ -24,8 +27,11 @@ bool ApplicationInstance::Initialize()
 	// Get the graphic adapter singleton
 	VulkanWrapper::GraphicAdapter* graphicAdapter = GlobalInstance<VulkanWrapper::GraphicAdapter>();
 
+	// Get the resource context singleton
+	VulkanWrapper::VWResourceContext* resourceContext = GlobalInstance<VulkanWrapper::VWResourceContext>();
+
 	// Initialize our graphic context
-	result = m_Context.Initialize(graphicAdapter);
+	result = m_Context.Initialize(graphicAdapter, resourceContext);
 	if (!result)
 	{
 		return false;
@@ -62,6 +68,9 @@ bool ApplicationInstance::Initialize()
 		}
 	}
 	*/
+	
+	m_Context.GetTextureGroupManager()->RequestTextureGroup(&s_TextureGroup, HashedString("textureGroupSky").Hash());
+	m_Context.GetTextureGroupManager()->RequestTextureGroup(&s_TextureGroup2, HashedString("textureGroupSky").Hash());
 
 	// Set is valid
 	return m_IsValid = true;

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: VWTexture.h
+// Filename: VWResourceContext.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -10,13 +10,12 @@
 #include <GLFW/glfw3.h>
 
 #include "..\..\NamespaceDefinitions.h"
-#include "VWTextureGroup.h"
 
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <array>
-#include <glm/glm.hpp>
+#include "..\VWGraphicAdapter.h"
+#include "VWResourceManager.h"
+#include "VWResourceIndexLoader.h"
+
+#include "Texture\VWTextureGroupIndex.h"
 
 ///////////////
 // NAMESPACE //
@@ -41,16 +40,10 @@ NamespaceBegin(VulkanWrapper)
 // FORWARDING //
 ////////////////
 
-class VWContext;
-
-////////////////
-// STRUCTURES //
-////////////////
-
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: VWTexture
+// Class name: VWResourceContext
 ////////////////////////////////////////////////////////////////////////////////
-class VWTexture
+class VWResourceContext
 {
 public:
 
@@ -59,28 +52,40 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	VWTexture();
-	~VWTexture();
+	VWResourceContext();
+	~VWResourceContext();
 
 //////////////////
 // MAIN METHODS //
 public: //////////
 
-	// Create this texture
-	void Create(VWTextureGroup* _textureGroup, uint16_t _textureIndex);
+	// Initialize
+	bool Initialize(VWGraphicAdapter* _adapter, Packet::Manager* _packetManager);
+
+	// Release
+	void Release();
+
+	// Process the resource requests
+	void ProcessResourceRequests();
+
+	// Return the resource manager reference
+	VWResourceManager* GetResourceManager() { return &m_ResourceManager; }
+
+	// Return the texture group index loader reference
+	VWResourceIndexLoader<VWTextureGroupIndex>* GetTextureGroupIndexLoader() { return &m_TextureGroupIndexLoader; }
 
 ///////////////
 // VARIABLES //
 private: //////
 
-	// If this image was initialized
-	bool m_Initialized;
+	// The graphic adapter reference
+	VWGraphicAdapter* m_GraphicAdapterReference;
 
-	// The texture group reference
-	VWTextureGroup* m_TextureGroup;
+	// The resource manager
+	VWResourceManager m_ResourceManager;
 
-	// The texture index
-	uint16_t m_TextureIndex;
+	// All the index loaders
+	VWResourceIndexLoader<VWTextureGroupIndex> m_TextureGroupIndexLoader;
 };
 
 // Just another graphic wrapper

@@ -9,14 +9,17 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "..\..\NamespaceDefinitions.h"
-#include "..\..\HashedString.h"
-#include "..\..\Reference.h"
+#include "..\..\..\NamespaceDefinitions.h"
+#include "..\..\..\HashedString.h"
+#include "..\..\..\Reference.h"
+#include "..\..\Resource\VWResourceManager.h"
+#include "..\..\Resource\VWResourceIndexLoader.h"
 
-#include "VWDescriptorSetCreator.h"
+#include "..\..\Material\VWDescriptorSetCreator.h"
 #include "VWTextureGroup.h"
 #include "VWTextureGroupRequest.h"
 #include "VWTextureGroupVault.h"
+#include "VWTextureGroupIndex.h"
 
 #include <vector>
 #include <map>
@@ -101,7 +104,7 @@ public: //////////
 public: //////////
 
 	// Initialize
-	bool Initialize(VWContext* _graphicContext, uint32_t _totalWorkerThreads);
+	bool Initialize(VWContext* _graphicContext, VWResourceIndexLoader<VWTextureGroupIndex>* _textureGroupIndexLoaderRef, uint32_t _totalWorkerThreads);
 
 	// Release this image
 	void Release();
@@ -112,12 +115,12 @@ public:
 	void RequestTextureGroup(Reference::Blob<VWTextureGroup>* _textureGroupReference, HashedStringIdentifier _groupIdentifier);
 
 	// Process texture group requests
-	void ProcessTextureGroupRequestQueues();
+	void ProcessTextureGroupRequestQueues(VWResourceManager* _resourceManager);
 
 private:
 
 	// Process a texture group request
-	void ProcessTextureGroupRequest(VWTextureGroupRequest& _textureGroupRequest);
+	void ProcessTextureGroupRequest(VWResourceManager* _resourceManager, VWTextureGroupRequest& _textureGroupRequest);
 
 ///////////////
 // VARIABLES //
@@ -131,6 +134,9 @@ private: //////
 
 	// Our texture group vault
 	VWTextureGroupVault m_TextureGroupVault;
+
+	// The texture index loader reference
+	VWResourceIndexLoader<VWTextureGroupIndex>* m_TextureGroupIndexLoader;
 
 	// Our texture groups
 	// std::map<std::string, VWTextureGroup> m_TextureGroups;

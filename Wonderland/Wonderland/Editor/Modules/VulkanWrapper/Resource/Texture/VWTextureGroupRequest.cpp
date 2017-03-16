@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroupRequest.h"
-#include "..\VWContext.h"
+#include "..\..\VWContext.h"
 
 VulkanWrapper::VWTextureGroupRequest::VWTextureGroupRequest()
 {
