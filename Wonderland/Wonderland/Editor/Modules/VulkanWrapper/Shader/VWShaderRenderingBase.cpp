@@ -20,6 +20,13 @@ VulkanWrapper::VWShaderRenderingBase::~VWShaderRenderingBase()
 
 void VulkanWrapper::VWShaderRenderingBase::AddRenderable(VWRenderable* _renderable)
 {
+	// Check if this renderable is valid to be used
+	if (!_renderable->IsValid())
+	{
+		// Ignore this renderable
+		return;
+	}
+
 	// Add this renderable
 	m_Renderables.push_back(_renderable);
 }
@@ -47,8 +54,16 @@ void VulkanWrapper::VWShaderRenderingBase::RenderOpaqueGeometry(VWContext* _grap
 		// Get the current object
 		VWRenderable* currentObject = m_Renderables[i];
 
+		// Get the object vertex object and texture group
+		VWModel* model = currentObject->GetModel();
+		VWTextureGroup* textureGroup = currentObject->GetTextureGroup();
+		
+		// Get the texture group and vertex identificators for the current object
+		uint32_t textureIdentificator = textureGroup->GetTextureGroupIdentificator();
+		uint32_t vertexIdentificator = model->GetModelIdentificator();
+
 		// Check if the next object should be threated as a new object
-		if (currentObject->GetTextureIdentificator() != currentTextureIdentificator || currentObject->GetVertexObject()->GetId() != currentVertexObjectId)
+		if (textureIdentificator != currentTextureIdentificator || vertexIdentificator != currentVertexObjectId)
 		{
 			// Verify if we have at last one instance to be rendered
 			if (instanceCounter)
@@ -62,23 +77,23 @@ void VulkanWrapper::VWShaderRenderingBase::RenderOpaqueGeometry(VWContext* _grap
 			}
 
 			// Check if we should update the vertex data
-			if (currentObject->GetVertexObject()->GetId() != currentVertexObjectId)
+			if (vertexIdentificator != currentVertexObjectId)
 			{
 				// Update the vertices
 				UpdateVertices(currentObject, indexCount);
 
 				// Set the new vertex object id
-				currentVertexObjectId = currentObject->GetVertexObject()->GetId();
+				currentVertexObjectId = vertexIdentificator;
 			}
 
 			// Check if we should update the texture
-			if (currentObject->GetTextureIdentificator() != currentTextureIdentificator)
+			if (textureIdentificator != currentTextureIdentificator)
 			{
 				// Update the textures
 				UpdateTextures(currentObject);
 
 				// Set the new texture identificator
-				currentTextureIdentificator = currentObject->GetTextureIdentificator();
+				currentTextureIdentificator = textureIdentificator;
 			}
 		}
 

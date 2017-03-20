@@ -2,13 +2,13 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWShaderParameterHolder.h"
-#include "VWTexture.h"
+#include "..\Resource\Texture\VWTexture.h"
 #include "..\VWBuffer.h"
 
 VulkanWrapper::VWShaderParameterHolder::VWShaderParameterHolder()
 {
 	// Set the initial data
-	m_TextureIdentificator = 0;
+	// ...
 }
 
 VulkanWrapper::VWShaderParameterHolder::~VWShaderParameterHolder()
@@ -62,9 +62,6 @@ void VulkanWrapper::VWShaderParameterHolder::SetTextureParameter(const char* _pa
 	MaterialParameterAux& newParameter = m_ParameterMap[SimpleHash(_parameterName)];
 	newParameter.sParameterName = _parameterName;
 	newParameter.texture = _texture;
-
-	// Update the texture identificator
-	m_TextureIdentificator += (_texture->GetId() + 1) * (_texture->GetId() + 2) * _texture->GetId();
 }
 
 void VulkanWrapper::VWShaderParameterHolder::SetBufferParameter(const char* _parameterName, VulkanWrapper::VWBuffer* _buffer)

@@ -35,7 +35,7 @@ void __InternalPeon::__InternalPeonWorker::SetQueueSize(unsigned int _jobBufferS
 
 bool __InternalPeon::__InternalPeonWorker::Initialize(__InternalPeon::__InternalPeonSystem* _ownerSystem, int _threadId, bool _mainThread)
 {
-	pthread_t thread;
+	// pthread_t thread;
 
 	// Set the thread id and owner system
 	m_ThreadId = _threadId;

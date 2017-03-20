@@ -29,6 +29,13 @@ class Serializable
 {
 public:
 
+	// Serialize this object and append
+	virtual void SerializeAndAppend(std::vector<unsigned char>& _byteArray)
+	{
+		std::vector<unsigned char> serializedData = Serialize();
+		_byteArray.insert(_byteArray.end(), serializedData.begin(), serializedData.end());
+	}
+
 	// Serialize this object
 	virtual std::vector<unsigned char> Serialize() = 0;
 
@@ -53,6 +60,12 @@ public:
 	{
 		unsigned char * src = reinterpret_cast < unsigned char* >(data);
 		m_Dst.insert(m_Dst.end(), src, src + sizeof(char) * total);
+	}
+
+	template <typename T>
+	inline void PackData(T* data, uint32_t total)
+	{
+		PackData((char*)data, sizeof(T) * total);
 	}
 
 private:

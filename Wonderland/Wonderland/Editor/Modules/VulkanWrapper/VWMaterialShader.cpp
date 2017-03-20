@@ -6,7 +6,8 @@
 #include "VWContext.h"
 
 #include "VWBuffer.h"
-#include "Material\VWTexture.h"
+#include "Resource\Texture\VWTexture.h"
+#include "..\ModelComposer\ModelComposer.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -72,16 +73,18 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 
 	// Set our vertex input binding description
-	VWShaderBase::AddVertexInputBindingDescription(0, sizeof(Vertex),		VK_VERTEX_INPUT_RATE_VERTEX);
-	VWShaderBase::AddVertexInputBindingDescription(1, sizeof(InstanceData), VK_VERTEX_INPUT_RATE_INSTANCE);
+	VWShaderBase::AddVertexInputBindingDescription(0, sizeof(ModelComposer::VertexFormat),		VK_VERTEX_INPUT_RATE_VERTEX);
+	VWShaderBase::AddVertexInputBindingDescription(1, sizeof(InstanceData),						VK_VERTEX_INPUT_RATE_INSTANCE);
 	
 	// Set our vertex input attribute description
-	VWShaderBase::AddVertexInputAttributeDescription(0, 0, VK_FORMAT_R32G32_SFLOAT,		offsetof(Vertex, pos));
-	VWShaderBase::AddVertexInputAttributeDescription(0, 1, VK_FORMAT_R32G32B32_SFLOAT,	offsetof(Vertex, color));
-	VWShaderBase::AddVertexInputAttributeDescription(0, 2, VK_FORMAT_R32G32_SFLOAT,		offsetof(Vertex, texCoord));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 3, VK_FORMAT_R32G32B32_SFLOAT,	offsetof(InstanceData, model1));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 4, VK_FORMAT_R32G32B32_SFLOAT,	offsetof(InstanceData, model2));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 5, VK_FORMAT_R32G32B32_SFLOAT,	offsetof(InstanceData, model3));
+	VWShaderBase::AddVertexInputAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(ModelComposer::VertexFormat, position));
+	VWShaderBase::AddVertexInputAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT,			offsetof(ModelComposer::VertexFormat, textureCoordinate));
+	VWShaderBase::AddVertexInputAttributeDescription(0, 2, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(ModelComposer::VertexFormat, normal));
+	VWShaderBase::AddVertexInputAttributeDescription(0, 3, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(ModelComposer::VertexFormat, binormal));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 4, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, model1));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 5, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, model2));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 6, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, model3));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 7, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, other));
 
 	// Create our input state
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = VWShaderBase::CreateVertexInputState();
@@ -110,7 +113,7 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	pushConstantRange.size = sizeof(int32_t);
 	pushConstantRange.offset = 0;
-	
+
 	// Create a new pipeline layout using the descriptor set
 	VkDescriptorSetLayout descriptorSetLayouts[] = { _graphicContext->GetTextureGroupManager()->GetDescriptorSetLayout(), descriptorSetLayout };
 	pipelineLayout = VWShaderBase::CreatePipelineLayout(_graphicContext->GetGraphicInstance(), descriptorSetLayouts, 2, &pushConstantRange, 0);
@@ -336,7 +339,15 @@ void VulkanWrapper::VWMaterialShader::UpdateInstanceData(VWContext* _context, st
 		// Set the data
 		InstanceData& instanceData = tempData[i];
 
+		// Set the position
 		instanceData.model1 = glm::vec4(_renderables[i]->GetPosition(), 0);
+
+		// Get the diffuse texture from the object
+		VWTexture* diffuseTexture = _renderables[i]->GetTextureParameter("diffuseTexture");
+		if (diffuseTexture != nullptr)
+		{
+			instanceData.other.x = diffuseTexture->GetTextureFetchIndex();
+		}	
 	}
 
 	m_InstanceBuffer.Update(_context, tempData);
@@ -353,8 +364,8 @@ void VulkanWrapper::VWMaterialShader::UpdateTextures(VWRenderable* _instance)
 void VulkanWrapper::VWMaterialShader::UpdateVertices(VWRenderable* _instance, uint32_t& _indexCount)
 {
 	// Get the vertex buffers
-	VWBuffer* vertexBuffer = _instance->GetVertexObject()->GetVertexBuffer();
-	VWBuffer* indexBuffer = _instance->GetVertexObject()->GetIndexBuffer();
+	VWBuffer* vertexBuffer = _instance->GetModel()->GetVertexBuffer();
+	VWBuffer* indexBuffer = _instance->GetModel()->GetIndexBuffer();
 
 	// Set the buffers and offsets
 	VkBuffer vertexBuffers[] = { vertexBuffer->GetRawBuffer() };
@@ -365,10 +376,10 @@ void VulkanWrapper::VWMaterialShader::UpdateVertices(VWRenderable* _instance, ui
 	// Bind them
 	vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, vertexOffsets);
 	vkCmdBindVertexBuffers(m_CommandBuffer, 1, 1, instanceBuffers, instaceOffsets);
-	vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetRawBuffer(), 0, VK_INDEX_TYPE_UINT16);
+	vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetRawBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 	// Set the index count
-	_indexCount = _instance->GetVertexObject()->GetIndexCount();
+	_indexCount = _instance->GetModel()->GetIndexCount();
 }
 
 void VulkanWrapper::VWMaterialShader::RenderCall(uint32_t _globalInstanceCount, uint32_t _indexCount, uint32_t _instanceCount)

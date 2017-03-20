@@ -23,21 +23,50 @@ VulkanWrapper::VWRenderable::~VWRenderable()
 
 bool VulkanWrapper::VWRenderable::Initialize(VWContext* _context)
 {
-	// REMOVE THIS // We should set a model object here
-	m_VertexObject = new VWVertexObject();
-	m_VertexObject->Initialize();
-	m_VertexObject->SetVertexSlots(VertexSlots::Position | VertexSlots::TextureCoordinate | VertexSlots::Color);
-	m_VertexObject->CreateVertexBuffer(_context, vertices.data(), vertices.size());
-	m_VertexObject->CreateIndexBuffer(_context, indices.data(), sizeof(indices[0]), indices.size());
+	// Get the model manager
+	VWModelManager* modelManager = _context->GetModelManager();
+
+	// Get the texture group manager
+	VWTextureGroupManager* textureGroupManager = _context->GetTextureGroupManager();
+
+	//
+
+	// Request our model object
+	modelManager->RequestObject(&GetModelReference(), "square");
+
+	// Get the texture group
+	textureGroupManager->RequestObject(&GetTextureGroupReference(), "textureGroupSky");
+
+	//
 
 	// Get our texture
-	VWTexture* diffuseTexture = _context->GetTextureGroupManager()->GetTexture(_context, "images/teste.png", "dummy");
+	m_DiffuseTexture.CreateWithTextureGroup(&m_TextureGroup, "Ground");
 
-	// Set the diffure texture parameter
-	SetTextureParameter("diffuseTexture", diffuseTexture);
+	// Set the texture parameter
+	SetTextureParameter("diffuseTexture", &m_DiffuseTexture);
 
-	// Set our texture group
-	m_TextureGroup = _context->GetTextureGroupManager()->GetTextureGroup("dummy");
+	return true;
+}
+
+bool VulkanWrapper::VWRenderable::IsValid()
+{
+	// Check if the texture group is valid
+	if (!m_TextureGroup.IsValid())
+	{
+		return false;
+	}
+
+	// Check if the model is valid
+	if (!m_Model.IsValid())
+	{
+		return false;
+	}
+	
+	// Check if the diffuse texture is valid
+	if (!m_DiffuseTexture.IsValid())
+	{
+		return false;
+	}
 
 	return true;
 }

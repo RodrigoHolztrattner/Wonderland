@@ -101,9 +101,6 @@ public:
 	VWTexture* GetTextureParameter(const char* _parameterName);
 	VWBuffer* GetBufferParameter(const char* _parameterName);
 
-	// Return the texture identificator
-	uint32_t GetTextureIdentificator() { return m_TextureIdentificator; }
-
 private:
 
 	// Find a material parameter inside our map using the parameter name
@@ -115,9 +112,6 @@ private: //////
 
 	// Our parameter map
 	std::map<int64_t, MaterialParameterAux> m_ParameterMap;
-
-	// Our texture identificator
-	uint32_t m_TextureIdentificator;
 };
 
 // Just another graphic wrapper

@@ -7,6 +7,7 @@
 // INCLUDES //
 //////////////
 #include "..\NamespaceDefinitions.h"
+#include "..\HashedString.h"
 #include "PacketString.h"
 #include "PacketFile.h"
 #include "PacketDirectory.h"
@@ -66,12 +67,12 @@ public: ///////
 	uint32_t totalNumberFolders;
 
 	// The folder/file identifier references
-	std::map<uint32_t, PacketDirectory*> folderIdentifierReferences;
-	std::map<uint32_t, PacketFile*> fileIdentifierReferences;
+	std::map<HashedStringIdentifier, PacketDirectory*> folderIdentifierReferences; //TODO: Usar o map mais rapido
+	std::map<HashedStringIdentifier, PacketFile*> fileIdentifierReferences;
 
 	// The folder/file identifier freelist
-	std::vector<uint32_t> folderIdentifierFreelist;
-	std::vector<uint32_t> fileIdentifierFreelist;
+	std::vector<HashedStringIdentifier> folderIdentifierFreelist;
+	std::vector<HashedStringIdentifier> fileIdentifierFreelist;
 };
 
 // Packet data explorer

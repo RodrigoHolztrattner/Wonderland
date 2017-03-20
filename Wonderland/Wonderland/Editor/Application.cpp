@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Application.h"
 #include "Modules\Packet\PacketManager.h"
+#include "Modules\Reference.h"
 
 Application::Application()
 {
@@ -22,8 +23,14 @@ Application::~Application()
 	// m_PacketManager-> // m_IndexLoader.SaveIndex(m_IndexData, &m_RootFolder);
 }
 
-VulkanWrapper::VWResourceReference resourceReference;
-VulkanWrapper::VWResourceReference resourceReference2;
+/*
+	- Não existe mais o resource "texture", existe apenas array textures, ou melhor, texture groups... Esses são considerados recursos.
+	- Existe o objeto textura que nada mais é uma referência à um Texture Group mais um identificador de qual textura utilizar.
+	- Com a utilização de array textures, todas as texturas de um grupo devem ter o mesmo tamanho e formato, isso é obrigatório.
+	- Cada gerenciador de textura é único para cada instancia e utiliza um resource manager global, isso faz com que caso duas instancias precisem da mesma
+	textura, 2 objetos deverão ser criados (mas usaremos o mesmo objeto "Recurso").
+
+*/
 
 bool Application::Initialize(InitializationParams _initializationParams)
 {
@@ -53,8 +60,8 @@ bool Application::Initialize(InitializationParams _initializationParams)
 		return false;
 	}
 	
-	// Initialize our resource manager
-	result = m_ResourceManager->Initialize(Peon::GetTotalWorkers());
+	// Initialize the resource context
+	result = m_ResourceContext->Initialize(m_GraphicAdapter, m_PacketManager);
 	if (!result)
 	{
 		return false;
@@ -67,7 +74,7 @@ bool Application::Initialize(InitializationParams _initializationParams)
 	m_GraphicAdapter->SetupDebugCallback();
 
 	// Initialize the common resources
-	InitializeCommonResources();
+	InitializeInternalStorage();
 
 	//
 	//
@@ -90,9 +97,6 @@ bool Application::Initialize(InitializationParams _initializationParams)
 		}
 	}
 
-	m_ResourceManager->RequestResource(&resourceReference, "Images/Galaxy", [&] { Release(); });
-	m_ResourceManager->RequestResource(&resourceReference2, "Images/Ground", [&] { Release(); });
-
 	return true;
 }
 
@@ -107,11 +111,61 @@ void Application::MainLoop()
 	Peon::CreateWorkingArea([&] { MainLoopAux(nullptr); }); // Changed from [=]
 }
 
-void Application::InitializeCommonResources()
+#include "Modules\TextureCollecion\TextureCollection.h"
+
+void Application::InitializeInternalStorage()
 {
+	// The texture collection creator
+	TextureCollection::Creator textureCollectionCreator;
+
+	// Create a texture collection
+	textureCollectionCreator.AddTextureFromFile("Galaxy", "images/teste.png");
+	textureCollectionCreator.AddTextureFromFile("Ground", "images/teste3.png");
+
+	// Save the texture collection
+	textureCollectionCreator.SaveTextureCollection("MyTextureCollection", "images/texCollection.tc");
+
 	// Set our packet resource data
-	m_PacketManager->CreateFile("Images/Galaxy", "images/teste.png");
-	m_PacketManager->CreateFile("Images/Ground", "images/teste2.png");
+	m_PacketManager->CreateFile("TextureGroups/MyGroup", "images/texCollection.tc");
+
+	//
+
+	// The model creator
+	ModelComposer::Creator modelCreator;
+
+	// Prepare the model
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(-1.0, -1.0, 0.0), glm::vec2(0.0, 0.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, -1.0, 0.0), glm::vec2(1.0, 0.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, 1.0, 0.0), glm::vec2(1.0, 1.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(-1.0, 1.0, 0.0), glm::vec2(0.0, 1.0)));
+	modelCreator.AddIndex(0);
+	modelCreator.AddIndex(1);
+	modelCreator.AddIndex(2);
+	modelCreator.AddIndex(2);
+	modelCreator.AddIndex(3);
+	modelCreator.AddIndex(0);
+
+	// Create from the current vertex data
+	modelCreator.CreateFromCurrentData();
+
+	// Save the model
+	modelCreator.SaveModel("MyModel", "models/model.m");
+
+	// Set our packet resource data
+	m_PacketManager->CreateFile("Models/MyModel", "models/model.m");
+
+	//
+	//
+	//
+
+	VulkanWrapper::VWTextureGroupIndex newTextureGroupIndex = {};
+	newTextureGroupIndex.Create(HashedString("textureGroupSky").Hash(), "TextureGroups/MyGroup");
+
+	VulkanWrapper::VWModelIndex newModelIndex = {};
+	newModelIndex.Create(HashedString("square").Hash(), "Models/MyModel");
+
+	m_ResourceContext->GetTextureGroupIndexLoader()->AddIndex(m_PacketManager, newTextureGroupIndex);
+	m_ResourceContext->GetModelIndexLoader()->AddIndex(m_PacketManager, newModelIndex);
 }
 
 void Application::ValidateApplicationInstances()
@@ -159,6 +213,12 @@ void Application::MainLoopAux(void* _dummy)
 		{
 			// Update this application instance
 			applicationInstance->Update(timeDifference);
+
+			// Get the context reference
+			VulkanWrapper::Context* applicationContext = applicationInstance->GetContextReference();
+
+			// Do the application update
+			applicationContext->ApplicationUpdate();
 		}
 
 		// Validate all application instances
@@ -184,6 +244,6 @@ void Application::MainLoopAux(void* _dummy)
 		lockedTime = currentTime;
 
 		// Process all resource requests (we can use another thread)
-		m_ResourceManager->ProcessResourceRequestQueues();
+		m_ResourceContext->ProcessResourceRequests();
 	}
 }

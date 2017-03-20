@@ -59,17 +59,20 @@ public:
 
 	uint32_t MaximumInstances = 64;
 
+	/*
 	struct Vertex {
 		glm::vec2 pos;
 		glm::vec3 color;
 		glm::vec2 texCoord;
 	};
+	*/
 
 	struct InstanceData
 	{
 		glm::vec4 model1;
 		glm::vec4 model2;
 		glm::vec4 model3;
+		glm::vec4 other;
 	};
 
 	struct UniformBufferObject {

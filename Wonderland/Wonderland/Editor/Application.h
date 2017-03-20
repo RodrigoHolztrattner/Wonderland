@@ -10,6 +10,12 @@
 #include <GLFW/glfw3.h>
 
 #include "Modules\VulkanWrapper\VulkanWrapper.h"
+#include "Modules\GlobalInstance.h"
+#include "Modules\Peon\Peon.h"
+#include "Modules\Packet\Packet.h"
+#include "Modules\Hoard\Hoard.h"
+#include "Modules\ModelComposer\ModelComposer.h"
+
 #include "ApplicationInstance.h"
 #include "ApplicationMetrics.h"
 
@@ -20,9 +26,6 @@
 /////////////
 // DEFINES //
 /////////////
-#include "Modules\GlobalInstance.h"
-#include "Modules\Peon\Peon.h"
-#include "Modules\Packet\Packet.h"
 
 ////////////
 // GLOBAL //
@@ -89,7 +92,7 @@ public: //////////
 private:
 
 	// Initialize our common resources
-	void InitializeCommonResources();
+	void InitializeInternalStorage();
 
 	// Validate all application instances
 	void ValidateApplicationInstances();
@@ -114,8 +117,8 @@ private: //////
 	// Our packet manager
 	GlobalInstance<Packet::Manager> m_PacketManager;
 
-	// Our resource manager
-	GlobalInstance<VulkanWrapper::ResourceManager> m_ResourceManager;
+	// Our resource context
+	GlobalInstance<VulkanWrapper::ResourceContext> m_ResourceContext;
 
 	// Our application metrics
 	GlobalInstance<ApplicationMetrics> m_ApplicationMetrics;

@@ -12,10 +12,10 @@
 
 // FreeType Headers
 #include <ft2build.h>
-#include <freetype.h>
-#include <ftglyph.h>
-#include <ftoutln.h>
-#include <fttrigon.h>
+#include <freetype\freetype.h>
+#include <freetype\ftglyph.h>
+#include <freetype\ftoutln.h>
+#include <freetype\fttrigon.h>
 
 #include <vector>
 #include <string>

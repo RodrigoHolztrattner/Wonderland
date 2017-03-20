@@ -27,15 +27,14 @@
 
 */
 
-uint32_t constexpr SimpleHash(char const *input)
+typedef uint32_t HashedStringIdentifier;
+
+HashedStringIdentifier constexpr SimpleHash(char const *input)
 {
 	return *input ?
 		static_cast<uint32_t>(*input) + 33 * SimpleHash(input + 1) :
 		5381;
 }
-
-// The hash id
-typedef int64_t FHashId;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: HashedString
@@ -44,48 +43,20 @@ class HashedString
 {
 public:
 
-	// Used to return the hash component
-	class Hasher
+	HashedString() {}
+	HashedString(const char* _string)
 	{
-		friend HashedString;
-
-	public:
-		FHashId operator()(const HashedString & _hashedString) const
-		{
-			return _hashedString.m_Hash;
-		}
-	};
+		m_String = _string;
+		m_Hash = SimpleHash(_string);
+	}
 
 	// Compare 2 hashed strings
-	class Equal
+	bool operator() (HashedString const& t1, HashedString const& t2) const
 	{
-		friend HashedString;
-
-	public:
-		bool operator() (HashedString const& t1, HashedString const& t2) const
-		{
-			return (t1.m_Hash == t2.m_Hash);
-		}
-	};
-
-private:
-	
-	// Just a constant wrapper
-	struct ConstCharWrapper
-	{
-		inline ConstCharWrapper(const char* str);
-		const char* str;
-	};
-
-
+		return (t1.m_Hash == t2.m_Hash);
+	}
 
 public:
-
-	// A wrapper so we can generate any number of functions using the pre-processor (const strings)
-	inline explicit HashedString(const char* _string)
-	{
-	
-	}
 
 	// Return the original string
 	const char* String()
@@ -94,7 +65,7 @@ public:
 	}
 
 	// Return the hash
-	FHashId Hash()
+	HashedStringIdentifier Hash()
 	{
 		return m_Hash;
 	}
@@ -102,7 +73,7 @@ public:
 public:
 
 	// The hash object (pre-calculated if we use the full optimization flag)
-	FHashId m_Hash;
+	HashedStringIdentifier m_Hash;
 
 	// The original string
 	const char* m_String;

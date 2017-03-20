@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "ApplicationInstance.h"
 #include "Modules\GlobalInstance.h"
-#include "Modules\VulkanWrapper\Material\VWTextureGroupManager.h"
+#include "Modules\VulkanWrapper\VWResourceContext.h"
 
 #include <chrono>
 
@@ -24,8 +24,11 @@ bool ApplicationInstance::Initialize()
 	// Get the graphic adapter singleton
 	VulkanWrapper::GraphicAdapter* graphicAdapter = GlobalInstance<VulkanWrapper::GraphicAdapter>();
 
+	// Get the resource context singleton
+	VulkanWrapper::VWResourceContext* resourceContext = GlobalInstance<VulkanWrapper::VWResourceContext>();
+
 	// Initialize our graphic context
-	result = m_Context.Initialize(graphicAdapter);
+	result = m_Context.Initialize(graphicAdapter, resourceContext);
 	if (!result)
 	{
 		return false;
@@ -37,7 +40,7 @@ bool ApplicationInstance::Initialize()
 	{
 		return false;
 	}
-
+	
 	//
 	{
 		// Initialize the alpha object
@@ -47,6 +50,7 @@ bool ApplicationInstance::Initialize()
 			return false;
 		}
 
+		/*
 		// Initialize the beta object
 		result = m_ObjectBeta.Initialize(&m_Context);
 		if (!result)
@@ -60,8 +64,9 @@ bool ApplicationInstance::Initialize()
 		{
 			return false;
 		}
+		*/
 	}
-
+	
 	// Set is valid
 	return m_IsValid = true;
 }
@@ -93,8 +98,8 @@ void ApplicationInstance::Update(float _timeElapsed)
 
 	// Update our renderables
 	m_ObjectAlpha.Update(_timeElapsed, true, false, false);
-	m_ObjectBeta.Update(_timeElapsed, false, true, false);
-	m_ObjectGama.Update(_timeElapsed, true, true, false);
+	// m_ObjectBeta.Update(_timeElapsed, false, true, false);
+	// m_ObjectGama.Update(_timeElapsed, true, true, false);
 
 	// Get the graphic adapter singleton
 	VulkanWrapper::GraphicAdapter* graphicAdapter = GlobalInstance<VulkanWrapper::GraphicAdapter>();
@@ -107,8 +112,8 @@ void ApplicationInstance::Update(float _timeElapsed)
 	m_RenderShard.UpdateUniformBuffer(&m_Context, &m_ObjectAlpha);
 
 	m_RenderShard.AddRenderable(&m_ObjectAlpha);
-	m_RenderShard.AddRenderable(&m_ObjectBeta);
-	m_RenderShard.AddRenderable(&m_ObjectGama);
+	// m_RenderShard.AddRenderable(&m_ObjectBeta);
+	// m_RenderShard.AddRenderable(&m_ObjectGama);
 
 	m_RenderShard.RenderOpaqueGeometry(&m_Context, imageIndex);
 

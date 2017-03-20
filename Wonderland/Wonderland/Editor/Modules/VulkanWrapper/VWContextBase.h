@@ -16,9 +16,18 @@
 #include "VWGraphicInstance.h"
 #include "VWSwapChain.h"
 #include "VWRenderShard.h"
-#include "Material\VWTextureGroupManager.h"
+
 #include "VWFrameCommandBufferAllocator.h"
-#include "Resource\VWResourceManager.h"
+#include "VWResourceContext.h"
+#include "..\Hoard\Hoard.h"
+
+#include "Resource\Texture\VWTextureGroupManager.h"
+#include "Resource\Model\VWModelManager.h"
+
+#include "Resource\Texture\VWTextureGroupIndex.h"
+#include "Resource\Model\VWModelIndex.h"
+
+#include "Resource\Texture\VWTextureGroupManagerTest.h"
 
 ///////////////
 // NAMESPACE //
@@ -64,7 +73,7 @@ public: //////////
 public: //////////
 
 	// Initialize
-	virtual bool Initialize(VWGraphicAdapter* _adapter) = 0;
+	virtual bool Initialize(VWGraphicAdapter* _adapter, VWResourceContext* _resourceContext) = 0;
 
 	// Release
 	virtual void Release() = 0;
@@ -80,6 +89,9 @@ public:
 	// Return the graphic adapter reference
 	VWGraphicAdapter* GetGraphicAdapter() { return m_GraphicAdapterReference; }
 
+	// Return our resource context reference
+	VWResourceContext* GetResourceContext() { return m_ResourceContextReference; }
+
 	// Return our window
 	VWWindow* GetWindow() { return &m_Window; }
 
@@ -89,11 +101,14 @@ public:
 	// Return our swap chain
 	VWSwapChain* GetSwapChain() { return &m_SwapChain; }
 
+	// Return the command buffer allocator
+	VWFrameCommandBufferAllocator* GetCommandBufferAllocator() { return &m_CommandBufferAllocator; }
+
 	// Return our texture group manager
 	VWTextureGroupManager* GetTextureGroupManager() { return &m_TextureGroupManager; }
 
-	// Return the command buffer allocator
-	VWFrameCommandBufferAllocator* GetCommandBufferAllocator() { return &m_CommandBufferAllocator; }
+	// Return our model manager
+	VWModelManager* GetModelManager() { return &m_ModelManager; }
 
 ///////////////
 // VARIABLES //
@@ -101,6 +116,9 @@ protected: ////
 
 	// A ptr to our graphic adapter
 	VWGraphicAdapter* m_GraphicAdapterReference;
+
+	// A ptr to our resource context
+	VWResourceContext* m_ResourceContextReference;
 
 	// Our window instance
 	VWWindow m_Window;
@@ -116,6 +134,11 @@ protected: ////
 
 	// Our texture group manager
 	VWTextureGroupManager m_TextureGroupManager;
+
+	// Our model manager
+	VWModelManager m_ModelManager;
+
+	
 
 	// If we are valid
 	bool m_IsValid;

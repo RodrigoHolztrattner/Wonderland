@@ -70,6 +70,9 @@ public: //////////
 	// Deserialize this file from the given data
 	uint32_t Deserialize(std::vector<unsigned char>& _data, uint32_t _index);
 
+	// Return the identifier
+	uint32_t GetIdentifier() { return fileId; }
+
 ///////////////
 // VARIABLES //
 private: //////
