@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWModel.h"
-#include "..\..\VWContext.h"
+#include "..\..\Context\VWContext.h"
 #include "..\..\..\LogSystem.h"
 #include "..\..\..\ModelComposer\ModelComposer.h"
 
@@ -55,6 +55,12 @@ bool VulkanWrapper::VWModel::ProcessResource(VWContext* _graphicContext)
 
 bool VulkanWrapper::VWModel::IsValid()
 {
+	// Check our current status
+	if (GetStatus() != Hoard::Supply::Object::Status::Initialized)
+	{
+		return false;
+	}
+
 	// Get the resource reference
 	Reference::Blob<Hoard::HoardResource>* resourceReference = GetResourceReference();
 	if (!resourceReference->IsValid())

@@ -17,10 +17,10 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include "..\VWGraphicAdapter.h"
-#include "..\VWRenderable.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Renderable\VWRenderable.h"
 
-#include "..\VWBuffer.h"
+#include "..\Resource\VWBuffer.h"
 
 ///////////////
 // NAMESPACE //

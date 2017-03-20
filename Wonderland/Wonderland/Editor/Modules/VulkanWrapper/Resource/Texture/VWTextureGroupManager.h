@@ -14,7 +14,7 @@
 #include "..\..\..\Reference.h"
 #include "..\..\..\Hoard\Hoard.h"
 
-#include "..\..\Material\VWDescriptorSetCreator.h"
+#include "..\..\Misc\VWDescriptorSetCreator.h"
 #include "VWTextureGroup.h"
 #include "VWTextureGroupIndex.h"
 

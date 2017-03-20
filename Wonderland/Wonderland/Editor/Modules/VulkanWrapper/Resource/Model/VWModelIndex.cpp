@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWModelIndex.h"
-#include "..\..\VWContext.h"
+#include "..\..\Context\VWContext.h"
 
 VulkanWrapper::VWModelIndex::VWModelIndex()
 {

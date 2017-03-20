@@ -2,16 +2,17 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWShaderRenderingBase.h"
-#include "..\VWGraphicAdapter.h"
-#include "..\VWSwapChain.h"
-#include "..\VWGraphicInstance.h"
-#include "..\VWRenderable.h"
-#include "..\VWContext.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Core\VWSwapChain.h"
+#include "..\Core\VWGraphicInstance.h"
+#include "..\Renderable\VWRenderable.h"
+#include "..\Context\VWContext.h"
 
 VulkanWrapper::VWShaderRenderingBase::VWShaderRenderingBase()
 {
 	// Set the initial data
-	// ...
+	m_IgnoreTextureChanges = false;
+	m_IgnoreModelChanges = false;
 }
 
 VulkanWrapper::VWShaderRenderingBase::~VWShaderRenderingBase()
@@ -63,7 +64,7 @@ void VulkanWrapper::VWShaderRenderingBase::RenderOpaqueGeometry(VWContext* _grap
 		uint32_t vertexIdentificator = model->GetModelIdentificator();
 
 		// Check if the next object should be threated as a new object
-		if (textureIdentificator != currentTextureIdentificator || vertexIdentificator != currentVertexObjectId)
+		if ((!m_IgnoreTextureChanges && textureIdentificator != currentTextureIdentificator) || (!m_IgnoreModelChanges && vertexIdentificator != currentVertexObjectId))
 		{
 			// Verify if we have at last one instance to be rendered
 			if (instanceCounter)
@@ -77,17 +78,17 @@ void VulkanWrapper::VWShaderRenderingBase::RenderOpaqueGeometry(VWContext* _grap
 			}
 
 			// Check if we should update the vertex data
-			if (vertexIdentificator != currentVertexObjectId)
+			if (!m_IgnoreModelChanges && vertexIdentificator != currentVertexObjectId)
 			{
-				// Update the vertices
-				UpdateVertices(currentObject, indexCount);
+				// Update the model
+				UpdateModel(currentObject, indexCount);
 
 				// Set the new vertex object id
 				currentVertexObjectId = vertexIdentificator;
 			}
 
 			// Check if we should update the texture
-			if (textureIdentificator != currentTextureIdentificator)
+			if (!m_IgnoreTextureChanges && textureIdentificator != currentTextureIdentificator)
 			{
 				// Update the textures
 				UpdateTextures(currentObject);
@@ -127,7 +128,7 @@ void VulkanWrapper::VWShaderRenderingBase::UpdateTextures(VWRenderable* _instanc
 {
 }
 
-void VulkanWrapper::VWShaderRenderingBase::UpdateVertices(VWRenderable* _instance, uint32_t& _indexCount)
+void VulkanWrapper::VWShaderRenderingBase::UpdateModel(VWRenderable* _instance, uint32_t& _indexCount)
 {
 }
 

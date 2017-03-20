@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWObject.h"
-#include "..\VWContext.h"
+#include "..\Context\VWContext.h"
 
 VulkanWrapper::VWObject::VWObject()
 {

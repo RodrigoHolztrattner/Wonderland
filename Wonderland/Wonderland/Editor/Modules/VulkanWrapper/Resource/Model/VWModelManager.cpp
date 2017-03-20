@@ -4,7 +4,7 @@
 #include "VWModelManager.h"
 #include "VWModel.h"
 #include "VWModelIndex.h"
-#include "..\..\VWContext.h"
+#include "..\..\Context\VWContext.h"
 #include "..\..\..\LogSystem.h"
 #include "..\..\..\Peon\Peon.h"
 

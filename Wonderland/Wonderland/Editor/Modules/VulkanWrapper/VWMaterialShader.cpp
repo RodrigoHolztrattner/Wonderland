@@ -2,10 +2,10 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWMaterialShader.h"
-#include "VWRenderable.h"
-#include "VWContext.h"
+#include "Renderable\VWRenderable.h"
+#include "Context\VWContext.h"
 
-#include "VWBuffer.h"
+#include "Resource\VWBuffer.h"
 #include "Resource\Texture\VWTexture.h"
 #include "..\ModelComposer\ModelComposer.h"
 
@@ -103,6 +103,9 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 	VkPipelineRasterizationStateCreateInfo rasterizer = VWShaderBase::CreateRasterizer(VK_POLYGON_MODE_FILL);
 	VkPipelineMultisampleStateCreateInfo multisampling = VWShaderBase::CreateMultisampleState(VK_SAMPLE_COUNT_1_BIT);
 
+	// Create the depth stencil state
+	VkPipelineDepthStencilStateCreateInfo depthStencil = VWShaderBase::CreateDepthStencilState(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS, VK_FALSE, VK_FALSE);
+
 	// Add a color blend attachment
 	VWShaderBase::AddColorBlendAttachment(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
@@ -133,6 +136,7 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 	pipelineInfo.renderPass = renderPass;
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+	pipelineInfo.pDepthStencilState = &depthStencil;
 
 	// Create our pipeline
 	if (vkCreateGraphicsPipelines(_graphicContext->GetGraphicInstance()->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
@@ -142,8 +146,11 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 
 void VulkanWrapper::VWMaterialShader::CreateRenderPass(VWContext* _graphicContext)
 {
+	// Get the swap chain object
+	VWSwapChain* swapChain = _graphicContext->GetSwapChain();
+
 	VkAttachmentDescription colorAttachment = {};
-	colorAttachment.format = _graphicContext->GetSwapChain()->GetFormat();
+	colorAttachment.format = swapChain->GetFormat();
 	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
 	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -152,14 +159,29 @@ void VulkanWrapper::VWMaterialShader::CreateRenderPass(VWContext* _graphicContex
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
+	VkAttachmentDescription depthAttachment = {};
+	depthAttachment.format = swapChain->GetDepthImage()->GetFormat();
+	depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD; // VK_ATTACHMENT_LOAD_OP_CLEAR
+	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
 	VkAttachmentReference colorAttachmentRef = {};
 	colorAttachmentRef.attachment = 0;
 	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference depthAttachmentRef = {};
+	depthAttachmentRef.attachment = 1;
+	depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
 	VkSubpassDescription subpass = {};
 	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttachmentRef;
+	subpass.pDepthStencilAttachment = &depthAttachmentRef;
 
 	VkSubpassDependency dependency = {};
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -169,10 +191,11 @@ void VulkanWrapper::VWMaterialShader::CreateRenderPass(VWContext* _graphicContex
 	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
+	std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
 	VkRenderPassCreateInfo renderPassInfo = {};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderPassInfo.attachmentCount = 1;
-	renderPassInfo.pAttachments = &colorAttachment;
+	renderPassInfo.attachmentCount = attachments.size();
+	renderPassInfo.pAttachments = attachments.data();
 	renderPassInfo.subpassCount = 1;
 	renderPassInfo.pSubpasses = &subpass;
 	renderPassInfo.dependencyCount = 1;
@@ -294,6 +317,11 @@ void VulkanWrapper::VWMaterialShader::BeginRender(VWContext* _graphicContext, in
 	// Begin the command buffer
 	vkBeginCommandBuffer(m_CommandBuffer, &beginInfo);
 
+	// Set the clear color
+	std::array<VkClearValue, 2> clearValues = {};
+	clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
 	// Set the render pass info
 	VkRenderPassBeginInfo renderPassInfo = {};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -301,11 +329,8 @@ void VulkanWrapper::VWMaterialShader::BeginRender(VWContext* _graphicContext, in
 	renderPassInfo.framebuffer = framebuffers[_swapchainImageIndex];
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = _graphicContext->GetSwapChain()->GetExtent();
-
-	// Set the clear color
-	VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-	renderPassInfo.clearValueCount = 0;
-	renderPassInfo.pClearValues = &clearColor;
+	renderPassInfo.clearValueCount = 0; // clearValues.size()
+	renderPassInfo.pClearValues = clearValues.data();
 
 	// Begin the render pass
 	vkCmdBeginRenderPass(m_CommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -361,7 +386,7 @@ void VulkanWrapper::VWMaterialShader::UpdateTextures(VWRenderable* _instance)
 	vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 2, descriptorSets, 0, nullptr);
 }
 
-void VulkanWrapper::VWMaterialShader::UpdateVertices(VWRenderable* _instance, uint32_t& _indexCount)
+void VulkanWrapper::VWMaterialShader::UpdateModel(VWRenderable* _instance, uint32_t& _indexCount)
 {
 	// Get the vertex buffers
 	VWBuffer* vertexBuffer = _instance->GetModel()->GetVertexBuffer();

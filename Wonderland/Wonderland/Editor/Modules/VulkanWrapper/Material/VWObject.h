@@ -18,7 +18,7 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include "..\VWBuffer.h"
+#include "..\Resource\VWBuffer.h"
 
 ///////////////
 // NAMESPACE //

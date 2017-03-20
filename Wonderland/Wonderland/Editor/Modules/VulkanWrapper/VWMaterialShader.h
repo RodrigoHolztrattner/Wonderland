@@ -59,14 +59,6 @@ public:
 
 	uint32_t MaximumInstances = 64;
 
-	/*
-	struct Vertex {
-		glm::vec2 pos;
-		glm::vec3 color;
-		glm::vec2 texCoord;
-	};
-	*/
-
 	struct InstanceData
 	{
 		glm::vec4 model1;
@@ -136,8 +128,8 @@ private:
 	// Called when we need to update the shader textures
 	void UpdateTextures(VWRenderable* _instance);
 
-	// Called when we need to update the shader vertex/index buffers
-	void UpdateVertices(VWRenderable* _instance, uint32_t& _indexCount);
+	// Called when we need to update the shader model data
+	void UpdateModel(VWRenderable* _instance, uint32_t& _indexCount);
 
 	// Everything is ready to go, just render what was processed
 	void RenderCall(uint32_t _globalInstanceCount, uint32_t _indexCount, uint32_t _instanceCount);

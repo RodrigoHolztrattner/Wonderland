@@ -80,6 +80,12 @@ public:
 	{
 		// The main thread should take controll of the first __InternalPeonWorker Thread, untill now there is
 		// no caution because everything was single threaded, now the critical section begins :)
+		
+		// Check if we should throw an error
+		if (m_JobArea != nullptr)
+		{
+			return nullptr;
+		}
 
 		// Create the new job
 		m_JobArea = new __InternalPeon::__InternalPeonJob;

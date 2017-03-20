@@ -81,7 +81,7 @@ private: //////
 	VulkanWrapper::Context m_Context;
 
 	// Our render shard
-	VulkanWrapper::VWMaterialShader m_RenderShard;
+	VulkanWrapper::MaterialShader m_RenderShard;
 
 	// Our renderable objects
 	VulkanWrapper::Renderable m_ObjectAlpha;

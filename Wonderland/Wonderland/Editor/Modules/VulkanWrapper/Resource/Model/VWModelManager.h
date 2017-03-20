@@ -14,6 +14,9 @@
 #include "..\..\..\Reference.h"
 #include "..\..\..\Hoard\Hoard.h"
 
+#include "VWModel.h"
+#include "VWModelIndex.h"
+
 #include <vector>
 #include <map>
 #include <array>
@@ -44,8 +47,6 @@ NamespaceBegin(VulkanWrapper)
 ////////////////
 
 class VWContext;
-class VWModel;
-class VWModelIndex;
 
 ////////////////
 // STRUCTURES //

@@ -2,10 +2,10 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWMaterial.h"
-#include "..\VWGraphicAdapter.h"
-#include "..\VWSwapChain.h"
-#include "..\VWGraphicInstance.h"
-#include "..\VWContext.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Core\VWSwapChain.h"
+#include "..\Core\VWGraphicInstance.h"
+#include "..\Context\VWContext.h"
 #include "VWObject.h"
 
 VulkanWrapper::VWMaterial::VWMaterial()

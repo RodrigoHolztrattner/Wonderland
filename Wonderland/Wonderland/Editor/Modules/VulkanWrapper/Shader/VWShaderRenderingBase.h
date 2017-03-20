@@ -17,10 +17,10 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include "..\VWGraphicAdapter.h"
-#include "..\VWRenderable.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Renderable\VWRenderable.h"
 
-#include "..\VWBuffer.h"
+#include "..\Resource\VWBuffer.h"
 
 ///////////////
 // NAMESPACE //
@@ -75,6 +75,12 @@ public: ///////
 	// Render all transparent (remaining) geometry
 	void RenderTransparentGeometry();	
 
+	// Ignore texture changes
+	void IgnoreTextureChanges() { m_IgnoreTextureChanges = true; }
+
+	// Ignore model changes
+	void IgnoreModelChanges() { m_IgnoreModelChanges = true; }
+
 protected:
 
 	// Called when we start the rendering process
@@ -90,7 +96,7 @@ protected:
 	virtual void UpdateTextures(VWRenderable* _instance);			
 
 	// Called when we need to update the shader vertex/index buffers
-	virtual void UpdateVertices(VWRenderable* _instance, uint32_t& _indexCount);			
+	virtual void UpdateModel(VWRenderable* _instance, uint32_t& _indexCount);			
 
 	// Everything is ready to go, just render what was processed
 	virtual void RenderCall(uint32_t _globalInstanceCount, uint32_t _indexCount, uint32_t _instanceCount);
@@ -101,6 +107,12 @@ private: //////
 
 	// All objects we will render
 	std::vector<VWRenderable*> m_Renderables;
+
+	// If we should ignore texture changed
+	bool m_IgnoreTextureChanges;
+
+	// If we should ignore model changes
+	bool m_IgnoreModelChanges;
 };
 
 // Just another graphic wrapper

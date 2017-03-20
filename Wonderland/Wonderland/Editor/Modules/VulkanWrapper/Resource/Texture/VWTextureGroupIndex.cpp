@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroupIndex.h"
-#include "..\..\VWContext.h"
+#include "..\..\Context\VWContext.h"
 
 VulkanWrapper::VWTextureGroupIndex::VWTextureGroupIndex()
 {

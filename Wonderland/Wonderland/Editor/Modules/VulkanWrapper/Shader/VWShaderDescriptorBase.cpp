@@ -2,11 +2,11 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWShaderDescriptorBase.h"
-#include "..\VWGraphicAdapter.h"
-#include "..\VWSwapChain.h"
-#include "..\VWGraphicInstance.h"
-#include "..\VWRenderable.h"
-#include "..\VWContext.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Core\VWSwapChain.h"
+#include "..\Core\VWGraphicInstance.h"
+#include "..\Renderable\VWRenderable.h"
+#include "..\Context\VWContext.h"
 
 VulkanWrapper::VWShaderDescriptorBase::VWShaderDescriptorBase()
 {

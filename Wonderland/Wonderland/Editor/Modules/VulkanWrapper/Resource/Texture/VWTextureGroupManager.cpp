@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroupManager.h"
-#include "..\..\VWContext.h"
+#include "..\..\Context\VWContext.h"
 #include "..\..\..\LogSystem.h"
 #include "..\..\..\Peon\Peon.h"
 

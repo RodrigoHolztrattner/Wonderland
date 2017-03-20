@@ -87,11 +87,6 @@ public: //////////
 	// Check if a internal resource is currently loaded into memory
 	ObjectType* IsLoaded(HashedStringIdentifier _identifier)
 	{
-		if (!m_Objects.size())
-		{
-			return nullptr;
-		}
-
 		// For each object loaded
 		for (auto& objectHolder : m_Objects)
 		{

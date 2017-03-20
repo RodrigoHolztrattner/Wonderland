@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "ApplicationInstance.h"
 #include "Modules\GlobalInstance.h"
-#include "Modules\VulkanWrapper\VWResourceContext.h"
+#include "Modules\VulkanWrapper\VulkanWrapper.h"
 
 #include <chrono>
 
@@ -50,7 +50,7 @@ bool ApplicationInstance::Initialize()
 			return false;
 		}
 
-		/*
+		
 		// Initialize the beta object
 		result = m_ObjectBeta.Initialize(&m_Context);
 		if (!result)
@@ -64,7 +64,7 @@ bool ApplicationInstance::Initialize()
 		{
 			return false;
 		}
-		*/
+		
 	}
 	
 	// Set is valid
@@ -98,8 +98,8 @@ void ApplicationInstance::Update(float _timeElapsed)
 
 	// Update our renderables
 	m_ObjectAlpha.Update(_timeElapsed, true, false, false);
-	// m_ObjectBeta.Update(_timeElapsed, false, true, false);
-	// m_ObjectGama.Update(_timeElapsed, true, true, false);
+	m_ObjectBeta.Update(_timeElapsed, false, true, false);
+	m_ObjectGama.Update(_timeElapsed, true, true, false);
 
 	// Get the graphic adapter singleton
 	VulkanWrapper::GraphicAdapter* graphicAdapter = GlobalInstance<VulkanWrapper::GraphicAdapter>();
@@ -112,8 +112,8 @@ void ApplicationInstance::Update(float _timeElapsed)
 	m_RenderShard.UpdateUniformBuffer(&m_Context, &m_ObjectAlpha);
 
 	m_RenderShard.AddRenderable(&m_ObjectAlpha);
-	// m_RenderShard.AddRenderable(&m_ObjectBeta);
-	// m_RenderShard.AddRenderable(&m_ObjectGama);
+	m_RenderShard.AddRenderable(&m_ObjectBeta);
+	m_RenderShard.AddRenderable(&m_ObjectGama);
 
 	m_RenderShard.RenderOpaqueGeometry(&m_Context, imageIndex);
 

@@ -17,10 +17,10 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include "..\VWGraphicAdapter.h"
-#include "..\VWRenderable.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Renderable\VWRenderable.h"
 
-#include "..\VWBuffer.h"
+#include "..\Resource\VWBuffer.h"
 
 ///////////////
 // NAMESPACE //
@@ -77,6 +77,7 @@ protected: ////////////
 	VkPipelineViewportStateCreateInfo CreatePipelineViewport();
 	VkPipelineRasterizationStateCreateInfo CreateRasterizer(VkPolygonMode _polygonMode);
 	VkPipelineMultisampleStateCreateInfo CreateMultisampleState(VkSampleCountFlagBits _sampleCount);
+	VkPipelineDepthStencilStateCreateInfo CreateDepthStencilState(VkBool32 _testEnable, VkBool32 _writeEnable, VkCompareOp _compareOp, VkBool32 _boundsTestEnable, VkBool32 _stencilTestEnable, VkStencilOpState _front = {}, VkStencilOpState _back = {}, float _minDepthBounds = 0, float _maxDepthBounds = 0);
 	VkPipelineColorBlendStateCreateInfo CreateColorBlendState();
 	VkPipelineLayout CreatePipelineLayout(VWGraphicInstance* _graphicInstance, VkDescriptorSetLayout* _setLayouts, uint32_t _totalLayouts, VkPushConstantRange* _pushConstants = nullptr, uint32_t _pushConstantRangeCount = 0, VkPipelineLayoutCreateFlags _flags = 0);
 	void AddVertexInputAttributeDescription(uint32_t _binding, uint32_t _location, VkFormat _format, uint32_t _offset);

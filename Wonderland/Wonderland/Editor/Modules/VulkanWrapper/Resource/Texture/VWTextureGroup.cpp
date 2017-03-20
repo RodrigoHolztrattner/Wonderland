@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroup.h"
-#include "..\..\VWContext.h"
+#include "..\..\Context\VWContext.h"
 #include "..\..\..\LogSystem.h"
 #include "..\..\..\TextureCollecion\TextureCollectionUnpacker.h"
 
@@ -119,6 +119,12 @@ uint32_t VulkanWrapper::VWTextureGroup::FindTextureIndex(const char* _textureNam
 
 bool VulkanWrapper::VWTextureGroup::IsValid()
 {
+	// Check our current status
+	if (GetStatus() != Hoard::Supply::Object::Status::Initialized)
+	{
+		return false;
+	}
+
 	// Get the resource reference
 	Reference::Blob<Hoard::HoardResource>* resourceReference = GetResourceReference();
 	if (!resourceReference->IsValid())

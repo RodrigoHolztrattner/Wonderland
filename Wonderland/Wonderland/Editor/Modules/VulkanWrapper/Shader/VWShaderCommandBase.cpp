@@ -2,7 +2,7 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWShaderCommandBase.h"
-#include "..\VWContext.h"
+#include "..\Context\VWContext.h"
 
 VulkanWrapper::VWShaderCommandBase::VWShaderCommandBase()
 {

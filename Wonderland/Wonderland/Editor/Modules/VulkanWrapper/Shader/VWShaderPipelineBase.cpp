@@ -2,11 +2,11 @@
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWShaderPipelineBase.h"
-#include "..\VWGraphicAdapter.h"
-#include "..\VWSwapChain.h"
-#include "..\VWGraphicInstance.h"
-#include "..\VWRenderable.h"
-#include "..\VWContext.h"
+#include "..\Core\VWGraphicAdapter.h"
+#include "..\Core\VWSwapChain.h"
+#include "..\Core\VWGraphicInstance.h"
+#include "..\Renderable\VWRenderable.h"
+#include "..\Context\VWContext.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -139,6 +139,23 @@ VkPipelineMultisampleStateCreateInfo VulkanWrapper::VWShaderPipelineBase::Create
 	return multisampling;
 }
 
+VkPipelineDepthStencilStateCreateInfo VulkanWrapper::VWShaderPipelineBase::CreateDepthStencilState(VkBool32 _testEnable, VkBool32 _writeEnable, VkCompareOp _compareOp, VkBool32 _boundsTestEnable, VkBool32 _stencilTestEnable, VkStencilOpState _front, VkStencilOpState _back, float _minDepthBounds, float _maxDepthBounds)
+{
+	VkPipelineDepthStencilStateCreateInfo depthStencil = {};
+	depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	depthStencil.depthTestEnable = _testEnable;
+	depthStencil.depthWriteEnable = _writeEnable;
+	depthStencil.depthCompareOp = _compareOp;
+	depthStencil.depthBoundsTestEnable = _boundsTestEnable;
+	depthStencil.stencilTestEnable = _stencilTestEnable;
+	depthStencil.front = _front;
+	depthStencil.back = _back;
+	depthStencil.minDepthBounds = _minDepthBounds;
+	depthStencil.maxDepthBounds = _maxDepthBounds;
+
+	return depthStencil;
+}
+
 VkPipelineColorBlendStateCreateInfo VulkanWrapper::VWShaderPipelineBase::CreateColorBlendState()
 {
 	VkPipelineColorBlendStateCreateInfo colorBlending = {};
@@ -242,18 +259,19 @@ void VulkanWrapper::VWShaderPipelineBase::CreateFramebuffers(VWGraphicInstance* 
 	// Get the swap chain images
 	const std::vector<VkImageView>& swapChainImageViews = _swapChain->GetImageViews();
 	_framebuffers.resize(swapChainImageViews.size(), VkFramebuffer());
-
+	
 	for (size_t i = 0; i < swapChainImageViews.size(); i++)
 	{
-		VkImageView attachments[] = {
-			swapChainImageViews[i]
+		std::array<VkImageView, 2> attachments = {
+			swapChainImageViews[i],
+			_swapChain->GetDepthImage()->GetImageView()
 		};
 
 		VkFramebufferCreateInfo framebufferInfo = {};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = _renderPass;
-		framebufferInfo.attachmentCount = 1;
-		framebufferInfo.pAttachments = attachments;
+		framebufferInfo.attachmentCount = attachments.size();
+		framebufferInfo.pAttachments = attachments.data();
 		framebufferInfo.width = _swapChain->GetExtent().width;
 		framebufferInfo.height = _swapChain->GetExtent().height;
 		framebufferInfo.layers = 1;

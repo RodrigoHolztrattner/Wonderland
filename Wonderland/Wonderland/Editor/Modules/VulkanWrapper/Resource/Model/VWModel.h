@@ -10,11 +10,11 @@
 #include <GLFW/glfw3.h>
 
 #include "..\..\..\NamespaceDefinitions.h"
-#include "..\..\Material\VWDescriptorSetCreator.h"
+#include "..\..\Misc\VWDescriptorSetCreator.h"
 #include "..\..\..\Reference.h"
 #include "..\..\..\HashedString.h"
 #include "..\..\..\Hoard\Hoard.h"
-#include "..\..\VWBuffer.h"
+#include "..\VWBuffer.h"
 
 #include <vector>
 #include <map>
