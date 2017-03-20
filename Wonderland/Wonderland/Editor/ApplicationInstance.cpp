@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "ApplicationInstance.h"
 #include "Modules\GlobalInstance.h"
-#include "Modules\VulkanWrapper\Resource\VWResourceContext.h"
+#include "Modules\VulkanWrapper\VWResourceContext.h"
 
 #include <chrono>
 
@@ -16,9 +16,6 @@ ApplicationInstance::ApplicationInstance()
 ApplicationInstance::~ApplicationInstance()
 {
 }
-
-Reference::Blob<VulkanWrapper::VWTextureGroup> s_TextureGroup;
-Reference::Blob<VulkanWrapper::VWTextureGroup> s_TextureGroup2;
 
 bool ApplicationInstance::Initialize()
 {
@@ -43,7 +40,7 @@ bool ApplicationInstance::Initialize()
 	{
 		return false;
 	}
-	/*
+	
 	//
 	{
 		// Initialize the alpha object
@@ -53,6 +50,7 @@ bool ApplicationInstance::Initialize()
 			return false;
 		}
 
+		/*
 		// Initialize the beta object
 		result = m_ObjectBeta.Initialize(&m_Context);
 		if (!result)
@@ -66,12 +64,9 @@ bool ApplicationInstance::Initialize()
 		{
 			return false;
 		}
+		*/
 	}
-	*/
 	
-	m_Context.GetTextureGroupManager()->RequestTextureGroup(&s_TextureGroup, HashedString("textureGroupSky").Hash());
-	m_Context.GetTextureGroupManager()->RequestTextureGroup(&s_TextureGroup2, HashedString("textureGroupSky").Hash());
-
 	// Set is valid
 	return m_IsValid = true;
 }
@@ -102,7 +97,7 @@ void ApplicationInstance::Update(float _timeElapsed)
 	m_Context.BeginRenderingFrame();
 
 	// Update our renderables
-	// m_ObjectAlpha.Update(_timeElapsed, true, false, false);
+	m_ObjectAlpha.Update(_timeElapsed, true, false, false);
 	// m_ObjectBeta.Update(_timeElapsed, false, true, false);
 	// m_ObjectGama.Update(_timeElapsed, true, true, false);
 
@@ -116,7 +111,7 @@ void ApplicationInstance::Update(float _timeElapsed)
 
 	m_RenderShard.UpdateUniformBuffer(&m_Context, &m_ObjectAlpha);
 
-	// m_RenderShard.AddRenderable(&m_ObjectAlpha);
+	m_RenderShard.AddRenderable(&m_ObjectAlpha);
 	// m_RenderShard.AddRenderable(&m_ObjectBeta);
 	// m_RenderShard.AddRenderable(&m_ObjectGama);
 

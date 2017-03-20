@@ -12,14 +12,22 @@
 #include "..\NamespaceDefinitions.h"
 
 #include "VWGraphicAdapter.h"
-#include "Resource\VWResourceContext.h"
 #include "VWWindow.h"
 #include "VWGraphicInstance.h"
 #include "VWSwapChain.h"
 #include "VWRenderShard.h"
-#include "Resource\Texture\VWTextureGroupManager.h"
+
 #include "VWFrameCommandBufferAllocator.h"
-#include "Resource\VWResourceContext.h"
+#include "VWResourceContext.h"
+#include "..\Hoard\Hoard.h"
+
+#include "Resource\Texture\VWTextureGroupManager.h"
+#include "Resource\Model\VWModelManager.h"
+
+#include "Resource\Texture\VWTextureGroupIndex.h"
+#include "Resource\Model\VWModelIndex.h"
+
+#include "Resource\Texture\VWTextureGroupManagerTest.h"
 
 ///////////////
 // NAMESPACE //
@@ -99,6 +107,9 @@ public:
 	// Return our texture group manager
 	VWTextureGroupManager* GetTextureGroupManager() { return &m_TextureGroupManager; }
 
+	// Return our model manager
+	VWModelManager* GetModelManager() { return &m_ModelManager; }
+
 ///////////////
 // VARIABLES //
 protected: ////
@@ -123,6 +134,11 @@ protected: ////
 
 	// Our texture group manager
 	VWTextureGroupManager m_TextureGroupManager;
+
+	// Our model manager
+	VWModelManager m_ModelManager;
+
+	
 
 	// If we are valid
 	bool m_IsValid;

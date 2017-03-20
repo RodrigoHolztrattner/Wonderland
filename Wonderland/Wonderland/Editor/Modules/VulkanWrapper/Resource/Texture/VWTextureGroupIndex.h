@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "..\..\..\NamespaceDefinitions.h"
-#include "..\VWResourceIndex.h"
+#include "..\..\..\Hoard\Hoard.h"
 
 ///////////////
 // NAMESPACE //
@@ -43,7 +43,7 @@ class VWContext;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWTextureGroupIndex
 ////////////////////////////////////////////////////////////////////////////////
-class VWTextureGroupIndex : public VWResourceIndex
+class VWTextureGroupIndex : public Hoard::Supply::Index
 {
 public:
 

@@ -13,6 +13,8 @@
 #include "Modules\GlobalInstance.h"
 #include "Modules\Peon\Peon.h"
 #include "Modules\Packet\Packet.h"
+#include "Modules\Hoard\Hoard.h"
+#include "Modules\ModelComposer\ModelComposer.h"
 
 #include "ApplicationInstance.h"
 #include "ApplicationMetrics.h"
@@ -90,7 +92,7 @@ public: //////////
 private:
 
 	// Initialize our common resources
-	void InitializeCommonResources();
+	void InitializeInternalStorage();
 
 	// Validate all application instances
 	void ValidateApplicationInstances();
@@ -115,7 +117,7 @@ private: //////
 	// Our packet manager
 	GlobalInstance<Packet::Manager> m_PacketManager;
 
-	// Our resource manager
+	// Our resource context
 	GlobalInstance<VulkanWrapper::ResourceContext> m_ResourceContext;
 
 	// Our application metrics

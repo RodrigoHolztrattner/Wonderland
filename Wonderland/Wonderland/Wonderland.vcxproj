@@ -88,9 +88,28 @@
     <ClInclude Include="Editor\Foundation\UI\Widgets\View\UIView.h" />
     <ClInclude Include="Editor\Modules\ConcurrentQueue.h" />
     <ClInclude Include="Editor\Modules\HashedString.h" />
-    <ClInclude Include="Editor\Modules\HookGui\Shaders\HGWidgetBackgroundShader.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Hoard.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResource.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResourceBase.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResourceCache.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResourceLoader.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResourceManager.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResourceRequest.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardResourceVault.h" />
+    <ClInclude Include="Editor\Modules\Hoard\HoardString.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Supply\HoardSupplyIndex.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Supply\HoardSupplyIndexLoader.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Supply\HoardSupplyManager.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Supply\HoardSupplyObject.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Supply\HoardSupplyRequest.h" />
+    <ClInclude Include="Editor\Modules\Hoard\Supply\HoardSupplyVault.h" />
     <ClInclude Include="Editor\Modules\hopscotch_map.h" />
     <ClInclude Include="Editor\Modules\LogSystem.h" />
+    <ClInclude Include="Editor\Modules\ModelComposer\ModelComposer.h" />
+    <ClInclude Include="Editor\Modules\ModelComposer\ModelComposerCreator.h" />
+    <ClInclude Include="Editor\Modules\ModelComposer\ModelComposerFormat.h" />
+    <ClInclude Include="Editor\Modules\ModelComposer\ModelComposerString.h" />
+    <ClInclude Include="Editor\Modules\ModelComposer\ModelComposerUnpacker.h" />
     <ClInclude Include="Editor\Modules\NamespaceDefinitions.h" />
     <ClInclude Include="Editor\Modules\Flux\Box\Box.h" />
     <ClInclude Include="Editor\Modules\Flux\Box\BoxBody.h" />
@@ -146,25 +165,24 @@
     <ClInclude Include="Editor\Modules\Peon\PeonSystem.h" />
     <ClInclude Include="Editor\Modules\Peon\PeonWorker.h" />
     <ClInclude Include="Editor\Modules\Reference.h" />
+    <ClInclude Include="Editor\Modules\TextureCollecion\TextureCollection.h" />
+    <ClInclude Include="Editor\Modules\TextureCollecion\TextureCollectionCreator.h" />
+    <ClInclude Include="Editor\Modules\TextureCollecion\TextureCollectionFormat.h" />
+    <ClInclude Include="Editor\Modules\TextureCollecion\TextureCollectionString.h" />
+    <ClInclude Include="Editor\Modules\TextureCollecion\TextureCollectionUnpacker.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWDescriptorSetCreator.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWMaterial.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWShaderParameterHolder.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWObject.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTexture.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroup.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupIndex.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupManager.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupRequest.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupVault.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWTextureManager.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Material\VWVertexObject.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResource.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResourceBase.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResourceCache.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResourceLoader.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResourceManager.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResourceRequest.h" />
-    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\VWResourceVault.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Model\VWModel.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Model\VWModelIndex.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Model\VWModelManager.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTexture.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroup.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroupIndex.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroupManager.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroupManagerTest.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderBase.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderCommandBase.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\Shader\VWShaderDescriptorBase.h" />
@@ -177,8 +195,10 @@
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWBufferClear.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWContext.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWGraphicInstance.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWImageArray.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWMaterialShader.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWRenderable.h" />
+    <ClInclude Include="Editor\Modules\VulkanWrapper\VWResourceContext.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWSwapChain.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VulkanWrapper.h" />
     <ClInclude Include="Editor\Modules\VulkanWrapper\VWWindow.h" />
@@ -301,14 +321,31 @@
     <ClCompile Include="Editor\Modules\Flux\Type\TypeCreator.cpp" />
     <ClCompile Include="Editor\Modules\Flux\Type\TypeRegister.cpp" />
     <ClCompile Include="Editor\Modules\Flux\Variable.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResource.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResourceBase.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResourceCache.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResourceLoader.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResourceManager.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResourceRequest.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardResourceVault.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\HoardString.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\Supply\HoardSupplyIndex.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\Supply\HoardSupplyIndexLoader.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\Supply\HoardSupplyManager.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\Supply\HoardSupplyObject.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\Supply\HoardSupplyRequest.cpp" />
+    <ClCompile Include="Editor\Modules\Hoard\Supply\HoardSupplyVault.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\Anchor.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\Frame.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\InputDispatcher.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\ReferenceCounter.cpp" />
-    <ClCompile Include="Editor\Modules\HookGui\Shaders\HGWidgetBackgroundShader.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\Widget.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\WidgetController.cpp" />
     <ClCompile Include="Editor\Modules\HookGui\Window.cpp" />
+    <ClCompile Include="Editor\Modules\ModelComposer\ModelComposerCreator.cpp" />
+    <ClCompile Include="Editor\Modules\ModelComposer\ModelComposerFormat.cpp" />
+    <ClCompile Include="Editor\Modules\ModelComposer\ModelComposerString.cpp" />
+    <ClCompile Include="Editor\Modules\ModelComposer\ModelComposerUnpacker.cpp" />
     <ClCompile Include="Editor\Modules\Packet\PacketDirectory.cpp" />
     <ClCompile Include="Editor\Modules\Packet\PacketFile.cpp" />
     <ClCompile Include="Editor\Modules\Packet\PacketIndex.cpp" />
@@ -320,25 +357,23 @@
     <ClCompile Include="Editor\Modules\Peon\PeonStealingQueue.cpp" />
     <ClCompile Include="Editor\Modules\Peon\PeonSystem.cpp" />
     <ClCompile Include="Editor\Modules\Peon\PeonWorker.cpp" />
+    <ClCompile Include="Editor\Modules\TextureCollecion\TextureCollectionCreator.cpp" />
+    <ClCompile Include="Editor\Modules\TextureCollecion\TextureCollectionFormat.cpp" />
+    <ClCompile Include="Editor\Modules\TextureCollecion\TextureCollectionString.cpp" />
+    <ClCompile Include="Editor\Modules\TextureCollecion\TextureCollectionUnpacker.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWDescriptorSetCreator.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWMaterial.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWShaderParameterHolder.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWObject.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTexture.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroup.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupIndex.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupManager.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupRequest.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureGroupVault.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWTextureManager.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Material\VWVertexObject.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResource.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResourceBase.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResourceCache.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResourceLoader.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResourceManager.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResourceRequest.cpp" />
-    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\VWResourceVault.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Model\VWModel.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Model\VWModelIndex.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Model\VWModelManager.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTexture.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroup.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroupIndex.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroupManager.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\Resource\Texture\VWTextureGroupManagerTest.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderBase.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderCommandBase.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\Shader\VWShaderDescriptorBase.cpp" />
@@ -351,8 +386,10 @@
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWBufferClear.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWContext.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWGraphicInstance.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWImageArray.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWMaterialShader.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWRenderable.cpp" />
+    <ClCompile Include="Editor\Modules\VulkanWrapper\VWResourceContext.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWSwapChain.cpp" />
     <ClCompile Include="Editor\Modules\VulkanWrapper\VWWindow.cpp" />
     <ClCompile Include="Editor\Support\Callback\MemberCallback.cpp" />
@@ -471,7 +508,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vulkan-1.lib;pthreadVC2.lib;opengl32.lib;glew32s.lib;glfw3.lib;glfw3dll.lib;freetype.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glew32s.lib;glfw3.lib;glfw3dll.lib;freetype.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.39.1\Bin32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -505,7 +542,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vulkan-1.lib;pthreadVC2.lib;opengl32.lib;glew32s.lib;glfw3.lib;glfw3dll.lib;freetype.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glew32s.lib;glfw3.lib;glfw3dll.lib;freetype.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.39.1\Bin32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

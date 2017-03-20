@@ -8,6 +8,8 @@ Packet::PacketManager::PacketManager()
 	// Set the initial data
 	m_RootFolder.folderId = RootDirectory;
 	m_RootFolder.folderName.SetString("root");
+	m_RootFolder.childFileInfos.reserve(1000); //TODO: Arrumar esse fix, quando um rezize é feito perdemos as referências
+	m_RootFolder.childFolders.reserve(100);
 }
 
 Packet::PacketManager::~PacketManager()
@@ -373,6 +375,9 @@ Packet::PacketDirectory* Packet::PacketManager::CreateFolderAux(PacketDirectory*
 	PacketDirectory newFolder = {};
 	newFolder.folderName.SetString(_withName, _nameSize);
 	newFolder.folderId = GetValidFolderIdentifier();
+
+	newFolder.childFileInfos.reserve(100); //TODO: Fix temporário, acontece que quando adicionamos algo a esses vetores e eles crescem, perdemos as referências dos objetos
+	newFolder.childFolders.reserve(100);
 
 	// Insert into the child list
 	uint32_t insertIndex = _fromFolder->childFolders.size();

@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWContext.h"
 #include "..\Peon\Peon.h"
-#include "Resource\VWResourceContext.h"
+#include "VWResourceContext.h"
 
 VulkanWrapper::VWContext::VWContext()
 {
@@ -69,13 +69,6 @@ bool VulkanWrapper::VWContext::Initialize(VWGraphicAdapter* _adapter, VWResource
 
 	// Create the background cleaner
 	m_SwapChain.CreateBackgroundCleaner(_adapter, &m_GraphicInstance);
-
-	// Initialize the texture group manager
-	result = m_TextureGroupManager.Initialize(this, _resourceContext->GetTextureGroupIndexLoader(), Peon::GetTotalWorkers());
-	if (!result)
-	{
-		return false;
-	}
 	
 	// Initialize the command buffer allocator
 	result = m_CommandBufferAllocator.Initialize(_adapter, &m_GraphicInstance, Peon::GetTotalWorkers(), 3);
@@ -83,6 +76,26 @@ bool VulkanWrapper::VWContext::Initialize(VWGraphicAdapter* _adapter, VWResource
 	{
 		return false;
 	}
+
+	// Initialize the texture group manager
+	result = m_TextureGroupManager.Initialize(_resourceContext->GetTextureGroupIndexLoader(), Peon::GetTotalWorkers());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Initialize the model manager
+	result = m_ModelManager.Initialize(_resourceContext->GetModelIndexLoader(), Peon::GetTotalWorkers());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Create the descriptor layout for the texture group manager
+	m_TextureGroupManager.CreateDescriptorLayout(this);
+
+	// Set the context reference for the model manager
+	m_ModelManager.SetContextReference(this);
 
 	// Set is valid
 	return m_IsValid = true;
@@ -111,5 +124,6 @@ void VulkanWrapper::VWContext::EndRenderingFrame()
 
 void VulkanWrapper::VWContext::ApplicationUpdate()
 {
-	m_TextureGroupManager.ProcessTextureGroupRequestQueues(m_ResourceContextReference->GetResourceManager());
+	m_TextureGroupManager.ProcessRequestQueues(m_ResourceContextReference->GetResourceManager());
+	m_ModelManager.ProcessRequestQueues(m_ResourceContextReference->GetResourceManager());
 }

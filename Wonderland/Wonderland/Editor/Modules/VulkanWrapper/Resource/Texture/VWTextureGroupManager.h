@@ -12,13 +12,10 @@
 #include "..\..\..\NamespaceDefinitions.h"
 #include "..\..\..\HashedString.h"
 #include "..\..\..\Reference.h"
-#include "..\..\Resource\VWResourceManager.h"
-#include "..\..\Resource\VWResourceIndexLoader.h"
+#include "..\..\..\Hoard\Hoard.h"
 
 #include "..\..\Material\VWDescriptorSetCreator.h"
 #include "VWTextureGroup.h"
-#include "VWTextureGroupRequest.h"
-#include "VWTextureGroupVault.h"
 #include "VWTextureGroupIndex.h"
 
 #include <vector>
@@ -87,7 +84,7 @@ class VWTexture;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWTextureGroupManager
 ////////////////////////////////////////////////////////////////////////////////
-class VWTextureGroupManager : public VWDescriptorSetCreator
+class VWTextureGroupManager : public VWDescriptorSetCreator, public Hoard::Supply::Manager<VWTextureGroup, VWTextureGroupIndex>
 {
 public:
 
@@ -103,43 +100,21 @@ public: //////////
 // MAIN METHODS //
 public: //////////
 
-	// Initialize
-	bool Initialize(VWContext* _graphicContext, VWResourceIndexLoader<VWTextureGroupIndex>* _textureGroupIndexLoaderRef, uint32_t _totalWorkerThreads);
+	// Create the descriptor layout
+	void CreateDescriptorLayout(VWContext* _graphicContext);
 
 	// Release this image
-	void Release();
+	void Release() override;
 
-public:
-
-	// Request a texture group
-	void RequestTextureGroup(Reference::Blob<VWTextureGroup>* _textureGroupReference, HashedStringIdentifier _groupIdentifier);
-
-	// Process texture group requests
-	void ProcessTextureGroupRequestQueues(VWResourceManager* _resourceManager);
-
-private:
-
-	// Process a texture group request
-	void ProcessTextureGroupRequest(VWResourceManager* _resourceManager, VWTextureGroupRequest& _textureGroupRequest);
+	// Create a new supply object and request the resource loading
+	VWTextureGroup* CreateAndRequestObject(Hoard::ResourceManager* _resourceManager, uint32_t _resourceIdentifier) override;
 
 ///////////////
 // VARIABLES //
 private: //////
 
-	// The total number of worker threads we are using
-	uint32_t m_TotalWorkerThreads;
-
-	// Our texture group requests
-	std::vector<VWTextureGroupRequest>* m_TextureGroupRequests;
-
-	// Our texture group vault
-	VWTextureGroupVault m_TextureGroupVault;
-
-	// The texture index loader reference
-	VWResourceIndexLoader<VWTextureGroupIndex>* m_TextureGroupIndexLoader;
-
-	// Our texture groups
-	// std::map<std::string, VWTextureGroup> m_TextureGroups;
+	// The context reference
+	VWContext* m_ContextReference;
 };
 
 // Just another graphic wrapper

@@ -12,7 +12,9 @@
 #include "..\..\..\NamespaceDefinitions.h"
 #include "..\..\Material\VWDescriptorSetCreator.h"
 #include "..\..\..\Reference.h"
-#include "..\VWResource.h"
+#include "..\..\..\HashedString.h"
+#include "..\..\..\Hoard\Hoard.h"
+#include "..\..\VWImageArray.h"
 
 #include <vector>
 #include <map>
@@ -54,18 +56,9 @@ class VWTextureGroupManager;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWTextureGroup
 ////////////////////////////////////////////////////////////////////////////////
-class VWTextureGroup
+class VWTextureGroup : public Hoard::Supply::Object
 {
 public:
-
-	enum class TextureGroupStatus
-	{
-		Unknow,
-		Created,
-		Loading,
-		Loaded,
-		Initialized
-	};
 
 	// Static const uint32_t TextureGroupBindingLocation	= 0;
 	static const uint32_t MaximumTexturePerGroup = 76;
@@ -83,109 +76,50 @@ public: //////////
 // MAIN METHODS //
 public: //////////
 
-	// Initialize this texture group
-	bool Initialize();
+	// Create the descriptor set
+	bool CreateDescriptorSet(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout);
 
-	// The loading process
-	void LoadingProcess();
-
-	// Create this texture group
-	bool Create(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout);
-
-	// Find a texture inside this group
-	VulkanWrapper::VWTexture* VWTextureGroup::FindTexture(std::string _textureName);
-
-	// Insert a texture
-	bool InsertTexture(VWContext* _graphicContext, VulkanWrapper::VWTexture* _texture, std::string _textureName);
+	// Process the internal resource
+	bool ProcessResource(VWContext* _graphicContext);
 
 	// Return the descriptor set
 	VkDescriptorSet GetDescriptorSet() { return m_DescriptorSet; }
 
-	// Return the status
-	TextureGroupStatus GetStatus() { return m_Status; }
+	// Return the total number of textures
+	uint32_t GetTotalTextures() { return m_TextureNameMap.size(); }
 
-	// Return the resource reference
-	Reference::Blob<VulkanWrapper::VWResource>* GetResourceReference() { return &m_ResourceReference; }
+	// Return the texture group identificator
+	HashedStringIdentifier GetTextureGroupIdentificator() { return m_TextureGroupIdentificator; }
 
-private:
+	// Check if this object is valid
+	bool IsValid() override;
 
-	// Update the descriptor set
-	bool UpdateDescription(VWContext* _graphicContext);
+protected:
+
+	// Texture is a friend class
+	friend VWTexture;
+
+	// Find a texture inside this group
+	uint32_t VWTextureGroup::FindTextureIndex(const char* _textureName);
 
 ///////////////
 // VARIABLES //
 private: //////
 
-	// The status
-	TextureGroupStatus m_Status;
+	// The image object
+	VWImageArray m_Image;
 
-	// The resource reference
-	Reference::Blob<VulkanWrapper::VWResource> m_ResourceReference;
+	// The texture group identificator
+	HashedStringIdentifier m_TextureGroupIdentificator;
 
 	// The group descriptor set
 	VkDescriptorSet m_DescriptorSet;
 
-	 // All textures inside this group by name and texture id
-	std::map<std::string, VWTexture*> m_TexturesByName;
-	VWTexture* m_TexturesById[MaximumTexturePerGroup];
-
-	// The texture id freelist
-	std::list<uint32_t> m_TextureIdFreelist;
+	// The texture name map
+	std::map<HashedStringIdentifier, uint32_t> m_TextureNameMap;
 };
-/*
-////////////////////////////////////////////////////////////////////////////////
-// Class name: VWTextureGroupReference
-////////////////////////////////////////////////////////////////////////////////
-class VWTextureGroupReference
-{
-public:
 
-	VWTextureGroupReference()
-	{
-		// Set the initial data
-		m_IsValid = false;
-		m_TextureGroupPtr = nullptr;
-	}
+typedef Reference::Blob<VWTextureGroup> VWTextureGroupReference;
 
-	// If we can use this reference
-	bool IsValid()
-	{
-		return m_IsValid;
-	}
-
-	// Get the internal resource
-	VWTextureGroup* GetGroup()
-	{
-		return m_TextureGroupPtr;
-	}
-
-	// Access the internal texture group
-	VWTextureGroup* operator->() const
-	{
-		return m_TextureGroupPtr;
-	}
-
-protected:
-
-	// The VWResourceManager is a friend
-	friend VWTextureGroupManager;
-
-	// Validate this resource reference
-	void ValidateResourceReference(VWTextureGroup* _textureGroupPtr)
-	{
-		m_TextureGroupPtr = _textureGroupPtr;
-		std::atomic_thread_fence(std::memory_order_seq_cst); // Ensure no reordering
-		m_IsValid = true;
-	}
-
-private:
-
-	// If we can use the resource reference
-	bool m_IsValid;
-
-	// Our resource ptr
-	VWTextureGroup* m_TextureGroupPtr;
-};
-*/
 // Just another graphic wrapper
 NamespaceEnd(VulkanWrapper)

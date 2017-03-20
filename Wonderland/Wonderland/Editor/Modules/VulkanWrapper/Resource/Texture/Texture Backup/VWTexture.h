@@ -1,0 +1,87 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: VWTexture.h
+////////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+//////////////
+// INCLUDES //
+//////////////
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+#include "..\..\..\NamespaceDefinitions.h"
+#include "VWTextureGroup.h"
+
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <array>
+#include <glm/glm.hpp>
+
+///////////////
+// NAMESPACE //
+///////////////
+
+/////////////
+// DEFINES //
+/////////////
+
+////////////
+// GLOBAL //
+////////////
+
+///////////////
+// NAMESPACE //
+///////////////
+
+// Just another graphic wrapper
+NamespaceBegin(VulkanWrapper)
+
+////////////////
+// FORWARDING //
+////////////////
+
+class VWContext;
+
+////////////////
+// STRUCTURES //
+////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: VWTexture
+////////////////////////////////////////////////////////////////////////////////
+class VWTexture
+{
+public:
+
+//////////////////
+// CONSTRUCTORS //
+public: //////////
+
+	// Constructor / destructor
+	VWTexture();
+	~VWTexture();
+
+//////////////////
+// MAIN METHODS //
+public: //////////
+
+	// Create this texture
+	void Create(VWTextureGroup* _textureGroup, uint16_t _textureIndex);
+
+///////////////
+// VARIABLES //
+private: //////
+
+	// If this image was initialized
+	bool m_Initialized;
+
+	// The texture group reference
+	VWTextureGroup* m_TextureGroup;
+
+	// The texture index
+	uint16_t m_TextureIndex;
+};
+
+// Just another graphic wrapper
+NamespaceEnd(VulkanWrapper)

@@ -20,7 +20,14 @@
 #include <glm/glm.hpp>
 
 #include "VWBuffer.h"
+#include "..\Reference.h"
+
 #include "Resource\Texture\VWTexture.h"
+#include "Resource\Texture\VWTextureGroup.h"
+#include "Resource\Model\VWModel.h"
+
+#include "Resource\Texture\VWTextureGroupManager.h"
+#include "Resource\Model\VWModelManager.h"
 
 ///////////////
 // NAMESPACE //
@@ -140,16 +147,34 @@ public: //////////
 	bool Initialize(VWContext* _context);
 
 	// Update our position
-	void Update(float _timeElapsed, bool _horizontal, bool _vertical, bool _depth);
+	virtual void Update(float _timeElapsed, bool _horizontal, bool _vertical, bool _depth);
 
-	// Return our position
+public:
+
+	// Return our position/rotation/scale/alpha
 	glm::vec3 GetPosition() { return m_Position; }
+	glm::vec3 GetRotation() { return m_Rotation; }
+	glm::vec3 GetScale() { return m_Scale; }
+	float GetAlpha() { return m_Alpha; }
 
-	// Return our vertex object
-	VWVertexObject* GetVertexObject() { return m_VertexObject; }
-	
-	// Return the texture group reference
-	VWTextureGroup* GetTextureGroup() { return m_TextureGroup; }
+	// Set the position/rotation/scale/alpha
+	virtual void SetPosition(glm::vec3 _position) { m_Position = _position; }
+	virtual void SetRotation(glm::vec3 _rotation) { m_Rotation = _rotation; }
+	virtual void SetScale(glm::vec3 _scale) { m_Scale = _scale; }
+	virtual void SetAlpha(float _alpha) { m_Alpha = _alpha; }
+
+	// Return our model object/texture group
+	VWModel* GetModel() { return m_Model.GetResource(); }
+	VWTextureGroup* GetTextureGroup() { return m_TextureGroup.GetResource(); }
+
+	// Return our texture group reference
+	VWTextureGroupReference& GetTextureGroupReference() { return m_TextureGroup; }
+
+	// Return our model reference
+	VWModelReference& GetModelReference() { return m_Model; }
+
+	// Check if this renderable is valid to be used
+	virtual bool IsValid();
 
 private:
 
@@ -157,22 +182,25 @@ private:
 // VARIABLES //
 private: //////
 	
-	// Our vertex object reference
-	VWVertexObject* m_VertexObject;
-
-	// Our texture group reference
-	VWTextureGroup* m_TextureGroup;
+	// Our diffuse texture
+	VWTexture m_DiffuseTexture;
 
 protected:
 
 	// If we are loading a resource async (prevents this object being deleted until the resource is loaded into memory)
 	bool m_IsWaitingForResource;
-	// resource counter
 
-	// Our alpha value (needed for sorting)
-
-	// Our position
+	// Our position/rotation/scale/alpha
 	glm::vec3 m_Position;
+	glm::vec3 m_Rotation;
+	glm::vec3 m_Scale;
+	float m_Alpha;
+
+	// Our model reference
+	VWModelReference m_Model;
+
+	// Our texture group reference
+	VWTextureGroupReference m_TextureGroup;
 
 	// The update time
 	float m_UpdateTime;

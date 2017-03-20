@@ -3,33 +3,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "VWTextureGroup.h"
 #include "..\..\VWContext.h"
-#include "VWTexture.h"
 #include "..\..\..\LogSystem.h"
+#include "..\..\..\TextureCollecion\TextureCollectionUnpacker.h"
 
 VulkanWrapper::VWTextureGroup::VWTextureGroup()
 {
 	// Set the initial data
-	m_Status = TextureGroupStatus::Unknow;
+	// ...
 }
 
 VulkanWrapper::VWTextureGroup::~VWTextureGroup()
 {
 }
 
-bool VulkanWrapper::VWTextureGroup::Initialize()
-{
-	// Set the status
-	m_Status = TextureGroupStatus::Created;
-
-	return true;
-}
-
-void VulkanWrapper::VWTextureGroup::LoadingProcess()
-{
-	m_Status = TextureGroupStatus::Initialized;
-}
-
-bool VulkanWrapper::VWTextureGroup::Create(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout)
+bool VulkanWrapper::VWTextureGroup::CreateDescriptorSet(VWContext* _graphicContext, VkDescriptorPool _descriptorPool, VkDescriptorSetLayout _descriptorSetLayout)
 {
 	VkDescriptorSetAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -42,94 +29,109 @@ bool VulkanWrapper::VWTextureGroup::Create(VWContext* _graphicContext, VkDescrip
 		throw std::runtime_error("failed to allocate descriptor set!");
 	}
 
-	// Insert all avaliable texture ids
-	for (int i = 0; i < VWTextureGroup::MaximumTexturePerGroup; i++)
-	{
-		m_TextureIdFreelist.push_back(i);
-		m_TexturesById[i] = nullptr;
-	}
-
 	return true;
 }
 
-VulkanWrapper::VWTexture* VulkanWrapper::VWTextureGroup::FindTexture(std::string _textureName)
+bool VulkanWrapper::VWTextureGroup::ProcessResource(VWContext* _graphicContext)
 {
-	// Check if the texture group has the target texture
-	if (m_TexturesByName.find(_textureName) == m_TexturesByName.end())
-	{
-		return nullptr;
-	}
+	// Get the resource reference
+	Reference::Blob<Hoard::HoardResource>* resourceReference = GetResourceReference();
 
-	return m_TexturesByName[_textureName];
-}
+	// Get the resource itself
+	Hoard::HoardResource* resource = resourceReference->GetResource();
 
-bool VulkanWrapper::VWTextureGroup::InsertTexture(VWContext* _graphicContext, VulkanWrapper::VWTexture* _texture, std::string _textureName)
-{
-	// Check if we have enought space avaliable
-	if (m_TexturesByName.size() >= MaximumTexturePerGroup)
+	// Get the resource byte array
+	std::vector<unsigned char>& byteArray = resource->GetByteArrayData();
+
+	// Prepare to unpack the texture group
+	TextureCollection::TextureCollectionUnpacker textureCollectionUnpacker;
+
+	// Unpack the texture collection
+	bool unpackResult;
+	std::vector<TextureCollection::TextureCollectionData> unpackedTextures = textureCollectionUnpacker.UnpackCollection(byteArray, unpackResult);
+
+	// Check if the unpack was sucessfull
+	if (!unpackResult)
 	{
+		// Error unpacking the texture
 		return false;
 	}
 
-	// Insert the texture
-	m_TexturesByName[_textureName] = _texture;
+	// Get the header data
+	TextureCollection::TextureCollectionHeader& collectionHeader = textureCollectionUnpacker.GetCollectionHeader();
 
-	// Get a valid id for this texture
-	uint32_t textureId = m_TextureIdFreelist.front();
-	m_TextureIdFreelist.pop_front();
+	// Set the texture group identificator
+	m_TextureGroupIdentificator = HashedString(collectionHeader.collectionName.GetString()).Hash();
 
-	// Set the texture slot
-	m_TexturesById[textureId] = _texture;
+	// Create the image from the collection
+	m_Image.CreateFromCollection(_graphicContext, collectionHeader, unpackedTextures);
 
-	// Update the texture group description
-	if (!UpdateDescription(_graphicContext))
-	{
-		return false;
-	}
+	// Prepare the image info
+	VkDescriptorImageInfo imageInfo = {};
+	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	imageInfo.imageView = m_Image.GetImageView();
+	imageInfo.sampler = m_Image.GetSampler();
 
-	return true;
-}
-
-bool VulkanWrapper::VWTextureGroup::UpdateDescription(VWContext* _graphicContext)
-{
-	std::vector<VkDescriptorImageInfo> imageInfos = {}; int textureIndex = 0;
-	for (int i = 0; i < MaximumTexturePerGroup; i++)
-	{
-		// Get the current texture
-		VWTexture* texture = m_TexturesById[i];
-
-		// Check if this texture is valid
-		if (texture == nullptr)
-		{
-			// Ignore this texture
-			texture = m_TexturesById[0]; //TODO adjust the null reference
-			//continue;
-		}
-
-		// Prepare the image info
-		VkDescriptorImageInfo imageInfo = {};
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		// imageInfo.imageView = texture->GetImageView();
-		// imageInfo.sampler = texture->GetSampler();
-		imageInfos.push_back(imageInfo);
-
-		// Set the texture index
-		// texture->SetId(textureIndex);
-
-		// Increment our texture index
-		textureIndex++;
-	}
-	
+	// Prepare the descriptor write data
+	VkDescriptorImageInfo imageInfos[] = { imageInfo };
 	VkWriteDescriptorSet descriptorWrite = {};
 	descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 	descriptorWrite.dstSet = m_DescriptorSet;
 	descriptorWrite.dstBinding = 0;
 	descriptorWrite.dstArrayElement = 0;
 	descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	descriptorWrite.descriptorCount = imageInfos.size();
-	descriptorWrite.pImageInfo = imageInfos.data();
+	descriptorWrite.descriptorCount = 1;
+	descriptorWrite.pImageInfo = imageInfos;
 
+	// Update the descriptor set
 	vkUpdateDescriptorSets(_graphicContext->GetGraphicInstance()->GetDevice(), 1, &descriptorWrite, 0, nullptr);
+
+	// Insert all texture names into the map
+	for (int i = 0; i<unpackedTextures.size(); i++)
+	{
+		// Get the current texture
+		TextureCollection::TextureCollectionData& textureData = unpackedTextures[i];
+
+		// Hash the texture name
+		HashedStringIdentifier hashedTextureName = HashedString(textureData.name.GetString()).Hash();
+
+		// Insert into the map
+		m_TextureNameMap[hashedTextureName] = i;
+	}
+
+	return true;
+}
+
+uint32_t VulkanWrapper::VWTextureGroup::FindTextureIndex(const char* _textureName)
+{
+	// Hash the name
+	HashedStringIdentifier hashedTextureName = HashedString(_textureName).Hash();
+
+	// Check if the given texture exist
+	if (m_TextureNameMap.find(hashedTextureName) == m_TextureNameMap.end())
+	{
+		// Error, there is no texture with the given name
+		return -1;
+	}
+
+	return m_TextureNameMap[hashedTextureName];
+}
+
+bool VulkanWrapper::VWTextureGroup::IsValid()
+{
+	// Get the resource reference
+	Reference::Blob<Hoard::HoardResource>* resourceReference = GetResourceReference();
+	if (!resourceReference->IsValid())
+	{
+		return false;
+	}
+
+	// Get the resource itself
+	Hoard::HoardResource* resource = resourceReference->GetResource();
+	if (resource->GetStatus() != Hoard::Resource::ResourceStatus::Initialized)
+	{
+		return false;
+	}
 
 	return true;
 }

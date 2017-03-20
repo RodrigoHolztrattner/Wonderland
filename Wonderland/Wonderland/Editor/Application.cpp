@@ -74,16 +74,7 @@ bool Application::Initialize(InitializationParams _initializationParams)
 	m_GraphicAdapter->SetupDebugCallback();
 
 	// Initialize the common resources
-	InitializeCommonResources();
-
-	//
-	//
-	//
-
-	VulkanWrapper::VWTextureGroupIndex newTextureGroupIndex = {};
-	newTextureGroupIndex.Create(HashedString("textureGroupSky").Hash(), "Images/Galaxy");
-
-	m_ResourceContext->GetTextureGroupIndexLoader()->AddIndex(m_PacketManager, newTextureGroupIndex);
+	InitializeInternalStorage();
 
 	//
 	//
@@ -120,11 +111,61 @@ void Application::MainLoop()
 	Peon::CreateWorkingArea([&] { MainLoopAux(nullptr); }); // Changed from [=]
 }
 
-void Application::InitializeCommonResources()
+#include "Modules\TextureCollecion\TextureCollection.h"
+
+void Application::InitializeInternalStorage()
 {
+	// The texture collection creator
+	TextureCollection::Creator textureCollectionCreator;
+
+	// Create a texture collection
+	textureCollectionCreator.AddTextureFromFile("Galaxy", "images/teste.png");
+	textureCollectionCreator.AddTextureFromFile("Ground", "images/teste3.png");
+
+	// Save the texture collection
+	textureCollectionCreator.SaveTextureCollection("MyTextureCollection", "images/texCollection.tc");
+
 	// Set our packet resource data
-	m_PacketManager->CreateFile("Images/Galaxy", "images/teste.png");
-	m_PacketManager->CreateFile("Images/Ground", "images/teste2.png");
+	m_PacketManager->CreateFile("TextureGroups/MyGroup", "images/texCollection.tc");
+
+	//
+
+	// The model creator
+	ModelComposer::Creator modelCreator;
+
+	// Prepare the model
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(-1.0, -1.0, 0.0), glm::vec2(0.0, 0.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, -1.0, 0.0), glm::vec2(1.0, 0.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, 1.0, 0.0), glm::vec2(1.0, 1.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(-1.0, 1.0, 0.0), glm::vec2(0.0, 1.0)));
+	modelCreator.AddIndex(0);
+	modelCreator.AddIndex(1);
+	modelCreator.AddIndex(2);
+	modelCreator.AddIndex(2);
+	modelCreator.AddIndex(3);
+	modelCreator.AddIndex(0);
+
+	// Create from the current vertex data
+	modelCreator.CreateFromCurrentData();
+
+	// Save the model
+	modelCreator.SaveModel("MyModel", "models/model.m");
+
+	// Set our packet resource data
+	m_PacketManager->CreateFile("Models/MyModel", "models/model.m");
+
+	//
+	//
+	//
+
+	VulkanWrapper::VWTextureGroupIndex newTextureGroupIndex = {};
+	newTextureGroupIndex.Create(HashedString("textureGroupSky").Hash(), "TextureGroups/MyGroup");
+
+	VulkanWrapper::VWModelIndex newModelIndex = {};
+	newModelIndex.Create(HashedString("square").Hash(), "Models/MyModel");
+
+	m_ResourceContext->GetTextureGroupIndexLoader()->AddIndex(m_PacketManager, newTextureGroupIndex);
+	m_ResourceContext->GetModelIndexLoader()->AddIndex(m_PacketManager, newModelIndex);
 }
 
 void Application::ValidateApplicationInstances()
