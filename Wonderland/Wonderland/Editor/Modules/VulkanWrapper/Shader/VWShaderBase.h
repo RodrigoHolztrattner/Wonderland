@@ -15,6 +15,7 @@
 #include "VWShaderDescriptorBase.h"
 #include "VWShaderRenderingBase.h"
 #include "VWShaderCommandBase.h"
+#include "VWShaderRenderPassBase.h"
 
 ///////////////
 // NAMESPACE //
@@ -49,7 +50,7 @@ class VWContext;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWShaderBase
 ////////////////////////////////////////////////////////////////////////////////
-class VWShaderBase : public VWShaderPipelineBase, public VWShaderDescriptorBase, public VWShaderRenderingBase, public VWShaderCommandBase
+class VWShaderBase : public VWShaderPipelineBase, public VWShaderDescriptorBase, public VWShaderRenderingBase, public VWShaderCommandBase, public VWShaderRenderPassBase
 {
 public:
 

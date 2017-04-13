@@ -1,25 +1,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: FluxWindow.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "Window.h"
+#include "HGWindow.h"
 
-HookGui::Window::Window()
+HookGui::HGWindow::HGWindow()
 {
 	// Set the initial data
     m_IsHidden = false;
     m_CanInteract = true;
 }
 
-HookGui::Window::~Window()
+HookGui::HGWindow::~HGWindow()
 {
 }
 
-bool HookGui::Window::Initialize()
+bool HookGui::HGWindow::Initialize()
 {
     return true;
 }
 
-void HookGui::Window::Update(float _elapsedTime)
+void HookGui::HGWindow::Update(float _elapsedTime)
 {
     // If we can interact
     if(m_CanInteract)
@@ -29,23 +29,23 @@ void HookGui::Window::Update(float _elapsedTime)
     }
 }
 
-void HookGui::Window::Shutdown()
+void HookGui::HGWindow::Shutdown()
 {
     
 }
 
-HookGui::InputDispatcher* HookGui::Window::GetInputDispatcher()
+HookGui::HGInputDispatcher* HookGui::HGWindow::GetInputDispatcher()
 {
     return &m_InputDispatcher;
 }
 
-void HookGui::Window::ProcessInput()
+void HookGui::HGWindow::ProcessInput()
 {
     // For each input
     for(m_InputDispatcher.StartIterator(); m_InputDispatcher.IteratorIsValid(); m_InputDispatcher.IteratorIncrement())
     {
         // Get the current input
-        HookGui::InputCommand input = m_InputDispatcher.GetIteratorInput();
+        HGInputCommand input = m_InputDispatcher.GetIteratorInput();
         
         // For each child widget controller
         for(auto child : m_WidgetControllers)

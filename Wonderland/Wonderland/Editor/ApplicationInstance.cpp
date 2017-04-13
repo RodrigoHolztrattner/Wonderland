@@ -35,36 +35,67 @@ bool ApplicationInstance::Initialize()
 	}
 
 	// Initialize our render shard
-	result = m_RenderShard.Initialize(&m_Context);
+	result = m_WidgetShader.Initialize(&m_Context);
 	if (!result)
 	{
 		return false;
 	}
-	
+
+	// Initialize our widget manager
+	result = m_WidgetManager.Initialize(&m_Context);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Initialize the root widget
+	m_RootWidget.Initialize();
+	m_RootWidget.SetFrame(HookGui::HGFrame(0, 0, m_Context.GetWindow()->GetWidth(), m_Context.GetWindow()->GetHeight()));
+	m_RootWidget.CanReceiveInput(false);
+	m_RootWidget.CanBeRendered(false);
+
 	//
 	{
 		// Initialize the alpha object
-		result = m_ObjectAlpha.Initialize(&m_Context);
+		result = m_MainWidget.Initialize();
 		if (!result)
 		{
 			return false;
 		}
 
-		
-		// Initialize the beta object
-		result = m_ObjectBeta.Initialize(&m_Context);
+		m_MainWidget.SetFrame(HookGui::HGFrame(0, 200, 640, 280));
+
+		// Get the widget image
+		HookGui::HGImage* widgetImage = m_MainWidget.GetImage();
+
+		m_RootWidget.AddSubwidget(&m_MainWidget);
+
+		// Initialize the image
+		widgetImage->InitWithSingleImage(&m_Context, "textureGroupSky", "Ground");
+
+		// Initialize the alpha object
+		result = m_MenuWidget.Initialize();
 		if (!result)
 		{
 			return false;
 		}
 
-		// Initialize the gama object
-		result = m_ObjectGama.Initialize(&m_Context);
-		if (!result)
-		{
-			return false;
-		}
+		m_MenuWidget.SetFrame(HookGui::HGFrame(0, 100, 640, 100));
+
+		// Get the widget image
+		HookGui::HGImage* menuWidgetImage = m_MenuWidget.GetImage();
+
+		m_RootWidget.AddSubwidget(&m_MenuWidget);
+
+
+		// Initialize the image
+		menuWidgetImage->InitWithSingleImage(&m_Context, "textureGroupSky", "Ground");
 		
+		m_MenuWidget.AddAnchor(&m_MainWidget, HookGui::HGAnchor::Policy::BottomAlign, HookGui::HGAnchor::Modifier::Scale);
+
+		//
+
+		m_MainWidget.AddSubwidget(&m_MenuWidget);
 	}
 	
 	// Set is valid
@@ -93,13 +124,23 @@ void ApplicationInstance::Update(float _timeElapsed)
 		return;
 	}
 
+	// Do the widget update
+	m_WidgetManager.Update(&m_RootWidget, _timeElapsed);
+
+	// Render all widgets
+	m_WidgetManager.Render(&m_RootWidget);
+
+	// Check if we are ready to go
+	if (!m_WidgetShader.IsValid())
+	{
+		return;
+	}
+
 	// Begin the rendering frame
 	m_Context.BeginRenderingFrame();
-
+	
 	// Update our renderables
-	m_ObjectAlpha.Update(_timeElapsed, true, false, false);
-	m_ObjectBeta.Update(_timeElapsed, false, true, false);
-	m_ObjectGama.Update(_timeElapsed, true, true, false);
+	// m_ObjectAlpha.Update(_timeElapsed, true, false, false);
 
 	// Get the graphic adapter singleton
 	VulkanWrapper::GraphicAdapter* graphicAdapter = GlobalInstance<VulkanWrapper::GraphicAdapter>();
@@ -109,17 +150,24 @@ void ApplicationInstance::Update(float _timeElapsed)
 
 	//
 
-	m_RenderShard.UpdateUniformBuffer(&m_Context, &m_ObjectAlpha);
+	m_WidgetShader.UpdateUniformBuffer(&m_Context);
 
-	m_RenderShard.AddRenderable(&m_ObjectAlpha);
-	m_RenderShard.AddRenderable(&m_ObjectBeta);
-	m_RenderShard.AddRenderable(&m_ObjectGama);
+	
+	m_WidgetShader.AddWidget(&m_MenuWidget);
+	m_WidgetShader.AddWidget(&m_MainWidget);
 
-	m_RenderShard.RenderOpaqueGeometry(&m_Context, imageIndex);
+	static float time = 0;
+	time += _timeElapsed;
+
+	float inc = std::sin(time) * 50.0f;
+	m_MainWidget.SetFrame(HookGui::HGFrame(0, 200 + inc, 640, 280 - inc));
+	
+
+	m_WidgetShader.Render(&m_Context, imageIndex);
 
 	//
 
-	VkCommandBuffer commandBuffer = m_RenderShard.GetCommandBufferReference();
+	VkCommandBuffer commandBuffer = m_WidgetShader.GetCommandBufferReference();
 
 	// Submit the graphic queue
 	m_Context.GetSwapChain()->SubmitGraphicQueue(graphicAdapter, m_Context.GetGraphicInstance(), &commandBuffer, 1, imageIndex);

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: VWBuffer.h
+// Filename: VulkanWrapper.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -72,6 +72,7 @@ typedef VWGraphicAdapter			GraphicAdapter;
 typedef VWGraphicInstance			GraphicInstance;
 typedef VWSwapChain					SwapChain;
 typedef VWWindow					Window;
+typedef VWWindowInputCallback		WindowInputCallback;
 
 // Context
 typedef VWContext					Context;
@@ -85,12 +86,14 @@ typedef VWImageArray				ImageArray;
 typedef VWModel						Model;
 typedef VWModelIndex				ModelIndex;
 typedef VWModelManager				ModelManager;
+typedef VWModelReference			ModelReference;
 
 // Resource/Texture
 typedef VWTexture					Texture;
 typedef VWTextureGroup				TextureGroup;
 typedef VWTextureGroupIndex			TextureGroupIndex;
 typedef VWTextureGroupManager		TextureGroupManager;
+typedef VWTextureGroupReference		TextureGroupReference;
 
 // Renderable
 typedef VWRenderable				Renderable;

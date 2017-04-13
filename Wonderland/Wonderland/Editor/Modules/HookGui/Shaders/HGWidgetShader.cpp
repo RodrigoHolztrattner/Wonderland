@@ -1,13 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: FluxMyWrapper.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "VWMaterialShader.h"
-#include "Renderable\VWRenderable.h"
-#include "Context\VWContext.h"
-
-#include "Resource\VWBuffer.h"
-#include "Resource\Texture\VWTexture.h"
-#include "..\ModelComposer\ModelComposer.h"
+#include "HGWidgetShader.h"
+#include "..\..\ModelComposer\ModelComposer.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -15,22 +10,28 @@
 
 #include <chrono>
 
-VulkanWrapper::VWMaterialShader::VWMaterialShader()
+HookGui::HGWidgetShader::HGWidgetShader()
 {
 	// Set the initial data
 	// ...
 }
 
-VulkanWrapper::VWMaterialShader::~VWMaterialShader()
+HookGui::HGWidgetShader::~HGWidgetShader()
 {
 }
 
-bool VulkanWrapper::VWMaterialShader::Initialize(VWContext* _graphicContext)
+bool HookGui::HGWidgetShader::Initialize(VulkanWrapper::Context* _graphicContext)
 {
+	// Get the model manager
+	VulkanWrapper::ModelManager* modelManager = _graphicContext->GetModelManager();
+
+	// Request our widget model object
+	modelManager->RequestObject(&m_WidgetModel, "square");
+
 	// Create the instance buffer
 	CreateInstanceBuffer(_graphicContext);
 
-	// Create the uniform buffers
+	// Create the uniform buffer
 	CreateUniformBuffer(_graphicContext);
 
 	// Create the descriptor set
@@ -51,10 +52,10 @@ bool VulkanWrapper::VWMaterialShader::Initialize(VWContext* _graphicContext)
 	return true;
 }
 
-void VulkanWrapper::VWMaterialShader::CreateDescriptorSet(VWContext* _graphicContext)
+void HookGui::HGWidgetShader::CreateDescriptorSet(VulkanWrapper::Context* _graphicContext)
 {
 	// Add our layout descriptors
-	VWShaderBase::AddDescriptorSetLayoutBinding(1,	VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,			1,	VK_SHADER_STAGE_VERTEX_BIT);
+	VWShaderBase::AddDescriptorSetLayoutBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_VERTEX_BIT);
 
 	// Create the set layout
 	m_DescriptorSetLayout = VWShaderBase::CreateDescriptorSetLayout(_graphicContext->GetGraphicInstance());
@@ -83,7 +84,7 @@ void VulkanWrapper::VWMaterialShader::CreateDescriptorSet(VWContext* _graphicCon
 	vkUpdateDescriptorSets(_graphicContext->GetGraphicInstance()->GetDevice(), descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
 }
 
-void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphicContext)
+void HookGui::HGWidgetShader::CreateGraphicsPipeline(VulkanWrapper::Context* _graphicContext)
 {
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = VWShaderBase::CreateShardStage(_graphicContext->GetGraphicInstance(), "shaders/vert.spv", VK_SHADER_STAGE_VERTEX_BIT, "main");
 	VkPipelineShaderStageCreateInfo fragShaderStageInfo = VWShaderBase::CreateShardStage(_graphicContext->GetGraphicInstance(), "shaders/frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, "main");
@@ -98,10 +99,10 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 	VWShaderBase::AddVertexInputAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT,			offsetof(ModelComposer::VertexFormat, textureCoordinate));
 	VWShaderBase::AddVertexInputAttributeDescription(0, 2, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(ModelComposer::VertexFormat, normal));
 	VWShaderBase::AddVertexInputAttributeDescription(0, 3, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(ModelComposer::VertexFormat, binormal));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 4, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, model1));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 5, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, model2));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 6, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, model3));
-	VWShaderBase::AddVertexInputAttributeDescription(1, 7, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, other));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 4, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, position));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 5, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, size));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 6, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, rotation));
+	VWShaderBase::AddVertexInputAttributeDescription(1, 7, VK_FORMAT_R32G32B32_SFLOAT,		offsetof(InstanceData, extra));
 
 	// Create our input state
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = VWShaderBase::CreateVertexInputState();
@@ -161,10 +162,10 @@ void VulkanWrapper::VWMaterialShader::CreateGraphicsPipeline(VWContext* _graphic
 	}
 }
 
-void VulkanWrapper::VWMaterialShader::CreateRenderPass(VWContext* _graphicContext)
+void HookGui::HGWidgetShader::CreateRenderPass(VulkanWrapper::Context* _graphicContext)
 {
 	// Get the swap chain object
-	VWSwapChain* swapChain = _graphicContext->GetSwapChain();
+	VulkanWrapper::SwapChain* swapChain = _graphicContext->GetSwapChain();
 
 	// Start a new render pass
 	VWShaderBase::RenderPass renderPass = VWShaderBase::StartRenderPass();
@@ -191,20 +192,7 @@ void VulkanWrapper::VWMaterialShader::CreateRenderPass(VWContext* _graphicContex
 	}
 }
 
-void VulkanWrapper::VWMaterialShader::CreateUniformBuffer(VWContext* _graphicContext)
-{
-	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
-	UniformBufferObject bufferData = {};
-
-	bufferData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	bufferData.proj = glm::perspective(glm::radians(45.0f), _graphicContext->GetSwapChain()->GetExtent().width / (float)_graphicContext->GetSwapChain()->GetExtent().height, 0.1f, 10.0f);
-	bufferData.model = glm::mat4();
-
-	// Create the index buffer
-	m_UniformBuffer.Create(_graphicContext, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, &bufferData, bufferSize);
-}
-
-void VulkanWrapper::VWMaterialShader::CreateInstanceBuffer(VWContext* _context)
+void HookGui::HGWidgetShader::CreateInstanceBuffer(VulkanWrapper::Context* _context)
 {
 	// Create the vertex position buffer
 	VkDeviceSize bufferSize = sizeof(InstanceData) * MaximumInstances;
@@ -216,29 +204,177 @@ void VulkanWrapper::VWMaterialShader::CreateInstanceBuffer(VWContext* _context)
 	delete [] tempData;
 }
 
-void VulkanWrapper::VWMaterialShader::UpdateUniformBuffer(VWContext* _graphicContext, VWRenderable* _renderable)
+
+void HookGui::HGWidgetShader::CreateUniformBuffer(VulkanWrapper::Context* _graphicContext)
 {
-	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 projMatrix = glm::perspective(glm::radians(45.0f), _graphicContext->GetSwapChain()->GetExtent().width / (float)_graphicContext->GetSwapChain()->GetExtent().height, 0.1f, 10.0f);
+	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+	UniformBufferObject bufferData = {};
+	
+	// Get the swap chain dimensions
+	float width = _graphicContext->GetSwapChain()->GetExtent().width;
+	float height = _graphicContext->GetSwapChain()->GetExtent().height;
+
+	bufferData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	bufferData.proj = glm::ortho(0.0f, width, -height, 0.0f, -1.0f, 1.0f);
+	bufferData.model = glm::mat4();
+
+	// Create the index buffer
+	m_UniformBuffer.Create(_graphicContext, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, &bufferData, bufferSize);
+}
+
+
+void HookGui::HGWidgetShader::UpdateUniformBuffer(VulkanWrapper::Context* _graphicContext)
+{
+	// Get the swap chain dimensions
+	float width = _graphicContext->GetSwapChain()->GetExtent().width;
+	float height = _graphicContext->GetSwapChain()->GetExtent().height;
+
+	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 projMatrix = glm::ortho(-width/2, width/2, -height / 2, height / 2, -1.0f, 1.0f);
+	glm::mat4 modelMatrix = glm::mat4();
 
 	UniformBufferObject ubo[1] = {};
 
 	// For each ubo
 	for (int i = 0; i < 1; i++)
 	{
-		glm::vec3 position = _renderable->GetPosition();
-		position.x *= (i % 2) == 0 ? 1 : -1;
-
-		ubo[i].model = glm::translate(glm::mat4(), position);
+		ubo[i].model = modelMatrix;
 		ubo[i].view = viewMatrix;
 		ubo[i].proj = projMatrix;
-		ubo[i].proj[1][1] *= -1;
+		// ubo[i].proj[1][1] *= -1;
 	}
 
 	m_UniformBuffer.Update(_graphicContext, &ubo);
 }
 
-void VulkanWrapper::VWMaterialShader::BeginRender(VWContext* _graphicContext, int _swapchainImageIndex)
+bool HookGui::HGWidgetShader::IsValid()
+{
+	// Check if the widget model reference is valid
+	if (!m_WidgetModel.IsValid())
+	{
+		return false;
+	}
+	
+	// Check if the widget model object is valid
+	if (!m_WidgetModel->IsValid())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void HookGui::HGWidgetShader::AddWidget(HGWidget* _widget)
+{
+	// Check if this shader is valid to be used
+	if (!IsValid())
+	{
+		return;
+	}
+
+	// Check if the widget is valid
+	if (_widget->IsValid())
+	{
+		m_Renderables.push_back(_widget);
+	}
+}
+
+void HookGui::HGWidgetShader::Render(VulkanWrapper::Context* _graphicContext, int _swapchainImageIndex)
+{
+	// Check if this shader is valid to be used
+	if (!IsValid())
+	{
+		return;
+	}
+
+	// Update the instance data
+	UpdateInstanceData(_graphicContext);
+
+	// Begin the rendering process
+	BeginRender(_graphicContext, _swapchainImageIndex);
+
+	// Get the vertex buffers
+	VulkanWrapper::Buffer* vertexBuffer = m_WidgetModel->GetVertexBuffer();
+	VulkanWrapper::Buffer* indexBuffer = m_WidgetModel->GetIndexBuffer();
+
+	// Set the buffers and offsets
+	VkBuffer vertexBuffers[] = { vertexBuffer->GetRawBuffer() };
+	VkBuffer instanceBuffers[] = { m_InstanceBuffer.GetRawBuffer() };
+	VkDeviceSize vertexOffsets[] = { 0 };
+	VkDeviceSize instaceOffsets[] = { 0 };
+
+	// Bind them
+	vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, vertexOffsets);
+	vkCmdBindVertexBuffers(m_CommandBuffer, 1, 1, instanceBuffers, instaceOffsets);
+	vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetRawBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+	// Set the initial texture identificator
+	uint32_t currentTextureIdentificator = -1;
+
+	// The total number of instances to be rendered
+	uint32_t totalInstances = 0;
+
+	// The first instance to be rendered
+	uint32_t firstInstance = 0;
+
+	// For each widget
+	for (int i = 0; i < m_Renderables.size(); i++)
+	{
+		// Get the current widget
+		HGWidget* widget = m_Renderables[i];
+
+		// Get the widget image
+		HGImage* widgetImage = widget->GetImage();
+
+		// Get the image texture group
+		VulkanWrapper::TextureGroup* widgetImageTextureGroup = widgetImage->GetTextureGroupReference();
+
+		// Get the texture group identificator
+		uint32_t textureIdentificator = widgetImageTextureGroup->GetTextureGroupIdentificator();
+
+		// Check if we are using the same texture group
+		if (currentTextureIdentificator != textureIdentificator)
+		{
+			// Update the texture identificator
+			VkDescriptorSet descriptorSets[] = { widgetImageTextureGroup->GetDescriptorSet(), m_DescriptorSet };
+			vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 2, descriptorSets, 0, nullptr);
+
+			// If we have at last one instance
+			if (totalInstances)
+			{
+				// Issue a draw call
+				vkCmdDrawIndexed(m_CommandBuffer, m_WidgetModel->GetIndexCount(), totalInstances, 0, 0, firstInstance);
+
+				// Set the new first instance
+				firstInstance = i;
+
+				// Zero the total instances
+				totalInstances = 0;
+			}
+			
+			// Set the new current texture identificator
+			currentTextureIdentificator = textureIdentificator;
+		}
+
+		// Increment the total number of instances
+		totalInstances++;
+	}
+
+	// Check if we have instances remaining
+	if (totalInstances)
+	{
+		// Issue the last draw call
+		vkCmdDrawIndexed(m_CommandBuffer, m_WidgetModel->GetIndexCount(), totalInstances, 0, 0, firstInstance);
+	}
+
+	// Clear the renderable array
+	m_Renderables.clear();
+
+	// End the rendering process
+	EndRender();
+}
+
+void HookGui::HGWidgetShader::BeginRender(VulkanWrapper::Context* _graphicContext, int _swapchainImageIndex)
 {
 	// Get a new command buffer for this rendering
 	// m_CommandBuffer = _graphicContext->GetValidFrameCommandBuffer(VK_COMMAND_BUFFER_LEVEL_PRIMARY);
@@ -273,7 +409,7 @@ void VulkanWrapper::VWMaterialShader::BeginRender(VWContext* _graphicContext, in
 	vkCmdBindPipeline(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
 }
 
-void VulkanWrapper::VWMaterialShader::EndRender()
+void HookGui::HGWidgetShader::EndRender()
 {
 	// End the render pass
 	vkCmdEndRenderPass(m_CommandBuffer);
@@ -285,65 +421,67 @@ void VulkanWrapper::VWMaterialShader::EndRender()
 	}
 }
 
-void VulkanWrapper::VWMaterialShader::UpdateInstanceData(VWContext* _context, std::vector<VWRenderable*>& _renderables)
+void HookGui::HGWidgetShader::UpdateInstanceData(VulkanWrapper::Context* _context)
 {
 	// Create the vertex position buffer
 	VkDeviceSize bufferSize = sizeof(InstanceData) * MaximumInstances;
 
+	// Set the instance temporary data //TODO: usar memória por frame e não ficar alocando usando new/delete
 	InstanceData* tempData = new InstanceData[MaximumInstances];
 
 	// For each renderable
-	for (int i = 0; i < _renderables.size(); i++)
+	for (int i = 0; i < m_Renderables.size(); i++)
 	{
-		// Set the data
-		InstanceData& instanceData = tempData[i];
+		// Get the current widget
+		HGWidget* widget = m_Renderables[i];
 
-		// Set the position
-		instanceData.model1 = glm::vec4(_renderables[i]->GetPosition(), 0);
+		// Get the instance data
+		InstanceData& instanceData = tempData[i];
+		
+		// Get the widget frame
+		HGFrame widgetFrame = widget->GetFrame();
+
+		// Get the widget transform matrix
+		glm::mat4 widgetTransformMatrix = widget->GetTransformMatrix();
+
+		// Set the transform data
+		instanceData.position = glm::vec4(widgetFrame.x, widgetFrame.y, 0, 0);
+		instanceData.size = glm::vec4(widgetFrame.width, widgetFrame.height, 1, 0);
+		instanceData.rotation = glm::vec4(0, 0, 0, 0);
+		instanceData.extra = glm::vec4(0, 0, 0, 0);
+
+		// Get the swap chain dimensions
+		float width = _context->GetSwapChain()->GetExtent().width;
+		float height = _context->GetSwapChain()->GetExtent().height;
+
+		// TEST
+
+		glm::vec4 vertice(0, 0, 0, 0);
+
+		vertice.x *= 330;
+		vertice.y *= 240;
+		
+		vertice.x += 0;
+		vertice.y += 0;
+
+		glm::mat4 projMatrix = glm::ortho(0.0f, width, -height, 0.0f, -1.0f, 1.0f);
+
+		glm::vec4 result = projMatrix * vertice;
+		result.x -= 1;
+		result.y -= 1;
+
+		// TEST
 
 		// Get the diffuse texture from the object
-		VWTexture* diffuseTexture = _renderables[i]->GetTextureParameter("diffuseTexture");
-		if (diffuseTexture != nullptr)
-		{
-			instanceData.other.x = diffuseTexture->GetTextureFetchIndex();
-		}	
+		VulkanWrapper::Texture widgetTextureImage = widget->GetImage()->GetTexture();
+
+		// Set the texture fetch instance
+		instanceData.extra.w = widgetTextureImage.GetTextureFetchIndex();
 	}
 
+	// Update the instance buffer
 	m_InstanceBuffer.Update(_context, tempData);
 
+	// Delete the temporary data
 	delete[] tempData;
-}
-
-void VulkanWrapper::VWMaterialShader::UpdateTextures(VWRenderable* _instance)
-{
-	VkDescriptorSet descriptorSets[] = { _instance->GetTextureGroup()->GetDescriptorSet(),  m_DescriptorSet };
-	vkCmdBindDescriptorSets(m_CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 2, descriptorSets, 0, nullptr);
-}
-
-void VulkanWrapper::VWMaterialShader::UpdateModel(VWRenderable* _instance, uint32_t& _indexCount)
-{
-	// Get the vertex buffers
-	VWBuffer* vertexBuffer = _instance->GetModel()->GetVertexBuffer();
-	VWBuffer* indexBuffer = _instance->GetModel()->GetIndexBuffer();
-
-	// Set the buffers and offsets
-	VkBuffer vertexBuffers[] = { vertexBuffer->GetRawBuffer() };
-	VkBuffer instanceBuffers[] = { m_InstanceBuffer.GetRawBuffer() };
-	VkDeviceSize vertexOffsets[] = { 0 };
-	VkDeviceSize instaceOffsets[] = { 0 };
-
-	// Bind them
-	vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, vertexBuffers, vertexOffsets);
-	vkCmdBindVertexBuffers(m_CommandBuffer, 1, 1, instanceBuffers, instaceOffsets);
-	vkCmdBindIndexBuffer(m_CommandBuffer, indexBuffer->GetRawBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-	// Set the index count
-	_indexCount = _instance->GetModel()->GetIndexCount();
-}
-
-void VulkanWrapper::VWMaterialShader::RenderCall(uint32_t _globalInstanceCount, uint32_t _indexCount, uint32_t _instanceCount)
-{
-	// vkCmdPushConstants(m_CommandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int32_t), &_globalInstanceCount);
-
-	vkCmdDrawIndexed(m_CommandBuffer, _indexCount, _instanceCount, 0, 0, _globalInstanceCount);
 }

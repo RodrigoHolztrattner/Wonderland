@@ -134,16 +134,16 @@ void Application::InitializeInternalStorage()
 	ModelComposer::Creator modelCreator;
 
 	// Prepare the model
-	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(-1.0, -1.0, 0.0), glm::vec2(0.0, 0.0)));
-	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, -1.0, 0.0), glm::vec2(1.0, 0.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(0.0, 1.0, 0.0), glm::vec2(0.0, 1.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, 0.0, 0.0), glm::vec2(1.0, 0.0)));
+	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(0.0, 0.0, 0.0), glm::vec2(0.0, 0.0)));
 	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(1.0, 1.0, 0.0), glm::vec2(1.0, 1.0)));
-	modelCreator.AddVertex(ModelComposer::VertexFormat(glm::vec3(-1.0, 1.0, 0.0), glm::vec2(0.0, 1.0)));
 	modelCreator.AddIndex(0);
 	modelCreator.AddIndex(1);
 	modelCreator.AddIndex(2);
-	modelCreator.AddIndex(2);
-	modelCreator.AddIndex(3);
 	modelCreator.AddIndex(0);
+	modelCreator.AddIndex(3);
+	modelCreator.AddIndex(1);
 
 	// Create from the current vertex data
 	modelCreator.CreateFromCurrentData();

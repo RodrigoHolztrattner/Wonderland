@@ -108,10 +108,6 @@ private:
 
 	//
 
-	void CreateDescriptorPool(VWContext* _graphicContext);
-
-	void CreateDescriptorSetLayout(VWContext* _graphicContext);
-
 	void CreateDescriptorSet(VWContext* _graphicContext);
 
 	//
@@ -142,13 +138,13 @@ private: //////
 	// All objects we will render
 	std::vector<VWRenderable*> m_Renderables;
 
-	VkPipelineLayout pipelineLayout;
+	VkPipelineLayout m_PipelineLayout;
 
-	VkRenderPass renderPass;
+	VkRenderPass m_RenderPass;
 
-	VkPipeline graphicsPipeline;
+	VkPipeline m_GraphicsPipeline;
 
-	std::vector<VkFramebuffer> framebuffers;
+	std::vector<VkFramebuffer> m_Framebuffers;
 
 	VkCommandBuffer m_CommandBuffer;
 
@@ -156,11 +152,11 @@ private: //////
 
 	VWBuffer m_InstanceBuffer;
 
-	VkDescriptorSetLayout descriptorSetLayout; // Referente à forma que os dados vão ser passados para os shaders (inclusive quais shaders) e como serão interpretados, qual posição, etc
+	VkDescriptorSetLayout m_DescriptorSetLayout; // Referente à forma que os dados vão ser passados para os shaders (inclusive quais shaders) e como serão interpretados, qual posição, etc
 
-	VkDescriptorPool descriptorPool; // Reference aos dados passados ao shader como textura e uniform buffers
+	VkDescriptorPool m_DescriptorPool; // Reference aos dados passados ao shader como textura e uniform buffers
 
-	VkDescriptorSet descriptorSet; // Usa os dados reais dos buffers e cria esse descriptor set (possivelmente devemos usar isso por objeto)
+	VkDescriptorSet m_DescriptorSet; // Usa os dados reais dos buffers e cria esse descriptor set (possivelmente devemos usar isso por objeto)
 };
 
 // Just another graphic wrapper

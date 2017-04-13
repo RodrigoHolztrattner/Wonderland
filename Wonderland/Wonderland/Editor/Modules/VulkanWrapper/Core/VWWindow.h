@@ -45,6 +45,24 @@ NamespaceBegin(VulkanWrapper)
 
 class VWGraphicAdapter;
 class VWSwapChain;
+class VWWindow;
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: VWWindowInputCallback
+////////////////////////////////////////////////////////////////////////////////
+class VWWindowInputCallback
+{
+public:
+
+	// Process a key callback
+	virtual void ProcessKeyCallback(int key, int scancode, int action, int mods) = 0;
+
+	// Process a mouse callback
+	virtual void ProcessMouseCallback(int button, int action, int mods) = 0;
+
+	// The glfw window reference
+	GLFWwindow* windowReference;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: VWWindow
@@ -80,7 +98,13 @@ public: //////////
 	// Return the width/height
 	unsigned int GetWidth();
 	unsigned int GetHeight();
-   
+
+	// Set the input callback object
+	void SetInputCallbackObject(VWWindowInputCallback* _inputCallbackObject);
+
+	// Return the input callback object
+	VWWindowInputCallback* GetInputCallbackObject();
+
 private:
 
 ///////////////
@@ -96,6 +120,9 @@ private: //////
 
 	// If this object is valid
 	bool m_IsValid;
+
+	// Our input callback object
+	VWWindowInputCallback* m_InputCallbackObject;
 };
 
 // Just another graphic wrapper

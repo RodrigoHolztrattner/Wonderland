@@ -71,8 +71,17 @@ public: //////////
 // DESCRIPTOR SET LAYOUT CREATION //
 protected: /////////////////////////
 
+	VkDescriptorPool CreateDescriptorPool(VWContext* _graphicContext, uint32_t _maxSets = 1);
+
+
 	VkDescriptorSetLayout CreateDescriptorSetLayout(VWGraphicInstance* _graphicInstance, VkDescriptorSetLayoutCreateFlags _flags = 0);
 	void AddDescriptorSetLayoutBinding(uint32_t _binding, VkDescriptorType _type, uint32_t _count, VkShaderStageFlags _flags, const VkSampler* _immutableSamplers = nullptr);
+
+	VkDescriptorSet CreateDescriptorSet(VWContext* _graphicContext, VkDescriptorPool _pool, uint32_t _descriptorSetCount, VkDescriptorSetLayout* _layouts);
+
+protected:
+
+
 
 ///////////////
 // VARIABLES //

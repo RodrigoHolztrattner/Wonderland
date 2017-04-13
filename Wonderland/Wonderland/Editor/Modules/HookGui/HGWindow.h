@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Window.h
+// Filename: HGWindow.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -7,8 +7,8 @@
 // INCLUDES //
 //////////////
 #include "UIDef.h"
-#include "InputDispatcher.h"
-#include "WidgetController.h"
+#include "HGInputDispatcher.h"
+#include "HGWidgetController.h"
 #include <vector>
 #include <string>
 
@@ -30,7 +30,7 @@
 
 /*
  
-    => Window
+    => HGWindow
  
         - Cada window vai teoricamente usar um contexto de opengl e vai se renderizar a parte de outras windows
         - Ela pode conter widget controllers filhos e é responsável por repassar eventos de input
@@ -55,9 +55,9 @@
 NamespaceBegin(HookGui)
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: Window
+// Class name: HGWindow
 ////////////////////////////////////////////////////////////////////////////////
-class Window
+class HGWindow
 {
 public:
 
@@ -66,8 +66,8 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	Window();
-	~Window();
+	HGWindow();
+	~HGWindow();
 
 //////////////////
 // MAIN METHODS //
@@ -85,7 +85,7 @@ public: //////////
 public:
     
     // Return the input dispatcher for this window
-    InputDispatcher* GetInputDispatcher();
+    HGInputDispatcher* GetInputDispatcher();
     
 private:
     
@@ -97,13 +97,13 @@ private:
 private: //////
     
     // The input dispatcher
-    InputDispatcher m_InputDispatcher;
+    HGInputDispatcher m_InputDispatcher;
     
     // All the widget controllers (childs)
-    std::vector<WidgetController*> m_WidgetControllers;
+    std::vector<HGWidgetController*> m_WidgetControllers;
     
     // The controller frame (the root view should match this value)
-    HookGui::Frame m_Frame;
+    HGFrame m_Frame;
     
     // Controllers
     bool m_IsHidden;

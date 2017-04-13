@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: InputDispatcher.h
+// Filename: HGInputDispatcher.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -9,6 +9,7 @@
 #include "UIDef.h"
 #include <vector>
 #include <string>
+#include "..\VulkanWrapper\VulkanWrapper.h"
 
 ///////////////
 // NAMESPACE //
@@ -34,7 +35,7 @@ NamespaceBegin(HookGui)
 //////////
 
 // The input author (who did the input)
-enum class InputAuthor
+enum class HGInputAuthor
 {
     Unknow,
     System,     // System input
@@ -43,18 +44,19 @@ enum class InputAuthor
 };
 
 // The input event type
-enum class InputEvent
+enum class HGInputEvent
 {
     Unknow,
     Press,      // Mouse or keyboard
     Release,    // Mouse or keyboard
+	Repeat,		// Keyboard
     Hold,       // Mouse or keyboard
     Hover,      // Mouse hover
     Update      // System passive update
 };
 
 // The key action
-enum class InputKey
+enum class HGInputKey
 {
     Unknow,
     Right,
@@ -69,25 +71,79 @@ enum class InputKey
 ////////////
 
 // The input command itself
-struct InputCommand
+struct HGInputCommand
 {
     // The input author
-    InputAuthor inputAuthor;
+    HGInputAuthor inputAuthor;
     
     // The event itself
-    InputEvent inputEvent;
+    HGInputEvent inputEvent;
     
     // The key action
-    InputKey inputKey;
+    HGInputKey inputKey;
     
     // The key param (used by the keyboard)
     unsigned int keyParam;
+
+	// The upper param
+	unsigned int upperParam;
+
+	// The lower param
+	unsigned int lowerParam;
+
+	// Map a glfw action into an input event
+	static HGInputEvent MapActionFromGLFW(int _action)
+	{
+		switch(_action)
+		{
+			case GLFW_RELEASE:
+			{
+				return HGInputEvent::Release;
+			}
+			case GLFW_PRESS:
+			{
+				return HGInputEvent::Press;
+			}
+			case GLFW_REPEAT:
+			{
+				return HGInputEvent::Repeat;
+			}
+			default:
+			{
+				return HGInputEvent::Unknow;
+			}
+		}
+	}
+
+	// Map a glfw button into an input key
+	static HGInputKey MapButtonFromGLFW(int _button)
+	{
+		switch (_button)
+		{
+			case GLFW_MOUSE_BUTTON_LEFT:
+			{
+				return HGInputKey::Left;
+			}
+			case GLFW_MOUSE_BUTTON_RIGHT:
+			{
+				return HGInputKey::Right;
+			}
+			case GLFW_MOUSE_BUTTON_MIDDLE:
+			{
+				return HGInputKey::Middle;
+			}
+			default:
+			{
+				return HGInputKey::Other;
+			}
+		}
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: InputDispatcher
+// Class name: HGInputDispatcher
 ////////////////////////////////////////////////////////////////////////////////
-class InputDispatcher
+class HGInputDispatcher : public VulkanWrapper::WindowInputCallback
 {
 public:
 
@@ -96,8 +152,8 @@ public:
 public: //////////
 
 	// Constructor / destructor
-	InputDispatcher();
-	~InputDispatcher();
+	HGInputDispatcher();
+	~HGInputDispatcher();
 
 //////////////////
 // MAIN METHODS //
@@ -115,7 +171,7 @@ public: //////////
     void StartIterator();
     
     // Get the current iterator input
-    InputCommand GetIteratorInput();
+    HGInputCommand GetIteratorInput();
     
     // Consume the current iterator input
     void ConsumeIteratorInput();
@@ -125,13 +181,21 @@ public: //////////
     
     // Check if the current iterator is valid
     bool IteratorIsValid();
+
+protected:
+
+	// Process a key callback
+	void ProcessKeyCallback(int key, int scancode, int action, int mods) override;
+
+	// Process a mouse callback
+	void ProcessMouseCallback(int button, int action, int mods) override;
     
 ///////////////
 // VARIABLES //
 private: //////
     
     // The input array
-    std::vector<InputCommand> m_InputArray;
+    std::vector<HGInputCommand> m_InputArray; //TODO: Adicionar um lock para não correr riscos de escrever enquanto estamos lendo
     
     // The iterator
     unsigned int m_Iterator;

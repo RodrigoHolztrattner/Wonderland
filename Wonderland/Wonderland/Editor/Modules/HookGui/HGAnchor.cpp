@@ -1,26 +1,65 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: FluxAnchor.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "Anchor.h"
-#include "Frame.h"
+#include "HGAnchor.h"
+#include "Widget\HGFrame.h"
+#include "Widget\HGFrameComponent.h"
+#include "HGWidget.h"
 
-HookGui::Anchor::Anchor()
+HookGui::HGAnchor::HGAnchor()
 {
 	// Set the initial data
     // ...
 }
 
-HookGui::Anchor::~Anchor()
+HookGui::HGAnchor::~HGAnchor()
 {
 }
 
-void HookGui::Anchor::CreateAnchor(Frame* _currentFrame, Frame* _targetFrame, HookGui::Anchor::Policy _policy, HookGui::Anchor::Modifier _modifier)
+void HookGui::HGAnchor::CreateAnchor(HGFrameComponent* _currentWidget, HGWidget* _targetWidget, HookGui::HGAnchor::Policy _policy, HookGui::HGAnchor::Modifier _modifier)
 {
-    
+	// Set the operation mode
+	m_OperationMode = Mode::WidgetAnchor;
+
+	// Set the other data
+	m_Policy = _policy;
+	m_Modifier = _modifier;
+	m_CurrentWidget = _currentWidget;
+	m_TargetWidget = _targetWidget;
 }
 
-void HookGui::Anchor::Apply()
+void HookGui::HGAnchor::CreateAnchor(HGFrameComponent* _currentWidget, HGFrame _targetFrame, HookGui::HGAnchor::Policy _policy, HookGui::HGAnchor::Modifier _modifier)
 {
+	// Set the operation mode
+	m_OperationMode = Mode::PositionAnchor;
+
+	// Set the other data
+	m_Policy = _policy;
+	m_Modifier = _modifier;
+	m_CurrentWidget = _currentWidget;
+	m_TargetPosition = _targetFrame;
+}
+
+void HookGui::HGAnchor::Apply()
+{
+	// Check the operation mode
+	if (m_OperationMode == Mode::WidgetAnchor)
+	{
+		// Set the target widget
+		m_TargetFrame = m_TargetWidget->GetFrame(false);
+
+		// Set the current frame
+		m_CurrentFrame = m_CurrentWidget->GetFrame(false);
+	}
+	else if (m_OperationMode == Mode::PositionAnchor)
+	{
+		// Set the target widget
+		m_TargetFrame = m_TargetPosition;
+
+		// Set the current frame
+		m_CurrentFrame = m_CurrentWidget->GetFrame(false);
+	}
+
     // Check the modifier
     switch (m_Modifier)
     {
@@ -58,51 +97,14 @@ void HookGui::Anchor::Apply()
         }
     }
     
+	// Get the frame reference
+	HGFrame* frameReference = m_CurrentWidget->GetFrameReference();
+
     // Save the new frame value
-    // ...
+	*frameReference = m_CurrentFrame;
 }
 
-/*
-UIFrameComponent* HookGui::Anchor::GetControllerFrameComponent(AnchorController _controller)
-{
-    // Check the controller type
-    if (_controller.targetFrame == nullptr)
-    {
-        // Use parent frame //
-        
-        // Get the entity owner
-        ECS_Entity* entity = GetEntityOwner();
-        
-        // Find the entity tree component
-        UITreeComponent* treeComponent = entity->FindComponent<UITreeComponent>();
-        
-        // Get the entity parent tree component
-        UITreeComponent* parentTreeComponent = treeComponent->GetParent();
-        
-        // Check if the parent is valid
-        if (parentTreeComponent == nullptr)
-        {
-            // We are the root parent, we cant use an anchor
-            return nullptr;
-        }
-        
-        // Get the parent frame component
-        return (UIFrameComponent*)parentTreeComponent->GetEntityComponentById(UIFrameComponent::ClassComponentID());
-    }
-    else
-    {
-        // Use target frame //
-        
-        // Get the target frame component
-        return _controller.targetFrame;
-    }
-    
-    // Will never happen
-    return nullptr;
-}
-*/
-
-void HookGui::Anchor::MoveToAnchorPoint()
+void HookGui::HGAnchor::MoveToAnchorPoint()
 {
     // Check the policy type
     switch (m_Policy)
@@ -111,7 +113,7 @@ void HookGui::Anchor::MoveToAnchorPoint()
         case Policy::TopAlign:
         {
             // Set the frame
-            m_CurrentFrame->y = m_TargetFrame->y + m_TargetFrame->height;
+            m_CurrentFrame.y = m_TargetFrame.y + m_TargetFrame.height;
             
             break;
         }
@@ -119,7 +121,7 @@ void HookGui::Anchor::MoveToAnchorPoint()
         case Policy::RightAlign:
         {
             // Set the frame
-            m_CurrentFrame->x = m_TargetFrame->x - m_CurrentFrame->width;
+            m_CurrentFrame.x = m_TargetFrame.x - m_CurrentFrame.width;
             
             break;
         }
@@ -127,7 +129,7 @@ void HookGui::Anchor::MoveToAnchorPoint()
         case Policy::LeftAlign:
         {
             // Set the frame
-            m_CurrentFrame->x = m_TargetFrame->x + m_TargetFrame->width;
+            m_CurrentFrame.x = m_TargetFrame.x + m_TargetFrame.width;
             
             break;
         }
@@ -135,14 +137,14 @@ void HookGui::Anchor::MoveToAnchorPoint()
         case Policy::BottomAlign:
         {
             // Set the frame
-            m_CurrentFrame->y = m_TargetFrame->y - m_CurrentFrame->height;
+            m_CurrentFrame.y = m_TargetFrame.y - m_CurrentFrame.height;
             
             break;
         }
     }
 }
 
-void HookGui::Anchor::ScaleToAnchorPoint()
+void HookGui::HGAnchor::ScaleToAnchorPoint()
 {
     // Check the policy type
     switch (m_Policy)
@@ -151,8 +153,8 @@ void HookGui::Anchor::ScaleToAnchorPoint()
         case Policy::TopAlign:
         {
             // Set the frame
-            m_CurrentFrame->height = (m_CurrentFrame->y + m_CurrentFrame->height) - (m_TargetFrame->y + m_TargetFrame->height);
-            m_CurrentFrame->y = m_TargetFrame->y + m_TargetFrame->height;
+            m_CurrentFrame.height = (m_CurrentFrame.y + m_CurrentFrame.height) - (m_TargetFrame.y + m_TargetFrame.height);
+            m_CurrentFrame.y = m_TargetFrame.y + m_TargetFrame.height;
             
             break;
         }
@@ -160,7 +162,7 @@ void HookGui::Anchor::ScaleToAnchorPoint()
         case Policy::RightAlign:
         {
             // Set the frame
-            m_CurrentFrame->width = m_TargetFrame->x - m_CurrentFrame->x;
+            m_CurrentFrame.width = m_TargetFrame.x - m_CurrentFrame.x;
             
             break;
         }
@@ -168,8 +170,8 @@ void HookGui::Anchor::ScaleToAnchorPoint()
         case Policy::LeftAlign:
         {
             // Set the frame
-            m_CurrentFrame->width = (m_CurrentFrame->x + m_CurrentFrame->width) - (m_TargetFrame->x + m_TargetFrame->width);
-            m_CurrentFrame->x = m_TargetFrame->x + m_TargetFrame->width;
+            m_CurrentFrame.width = (m_CurrentFrame.x + m_CurrentFrame.width) - (m_TargetFrame.x + m_TargetFrame.width);
+            m_CurrentFrame.x = m_TargetFrame.x + m_TargetFrame.width;
             
             break;
         }
@@ -177,14 +179,14 @@ void HookGui::Anchor::ScaleToAnchorPoint()
         case Policy::BottomAlign:
         {
             // Set the frame
-            m_CurrentFrame->height = m_TargetFrame->y - m_CurrentFrame->y;
+            m_CurrentFrame.height = m_TargetFrame.y - m_CurrentFrame.y;
             
             break;
         }
     }
 }
 
-void HookGui::Anchor::PinToAnchorPoint()
+void HookGui::HGAnchor::PinToAnchorPoint()
 {
     // Check the policy type
     switch (m_Policy)
@@ -193,8 +195,8 @@ void HookGui::Anchor::PinToAnchorPoint()
         case Policy::TopAlign:
         {
             // Set the frame
-            m_CurrentFrame->height = (m_CurrentFrame->y + m_CurrentFrame->height) - (m_TargetFrame->y);
-            m_CurrentFrame->y = m_TargetFrame->y;
+            m_CurrentFrame.height = (m_CurrentFrame.y + m_CurrentFrame.height) - (m_TargetFrame.y);
+            m_CurrentFrame.y = m_TargetFrame.y;
             
             break;
         }
@@ -202,7 +204,7 @@ void HookGui::Anchor::PinToAnchorPoint()
         case Policy::RightAlign:
         {
             // Set the frame
-            m_CurrentFrame->width = (m_TargetFrame->x + m_TargetFrame->width) - m_CurrentFrame->x;
+            m_CurrentFrame.width = (m_TargetFrame.x + m_TargetFrame.width) - m_CurrentFrame.x;
             
             break;
         }
@@ -210,8 +212,8 @@ void HookGui::Anchor::PinToAnchorPoint()
         case Policy::LeftAlign:
         {
             // Set the frame
-            m_CurrentFrame->width = (m_CurrentFrame->x + m_CurrentFrame->width) - (m_TargetFrame->x);
-            m_CurrentFrame->x = m_TargetFrame->x;
+            m_CurrentFrame.width = (m_CurrentFrame.x + m_CurrentFrame.width) - (m_TargetFrame.x);
+            m_CurrentFrame.x = m_TargetFrame.x;
             
             break;
         }
@@ -219,14 +221,14 @@ void HookGui::Anchor::PinToAnchorPoint()
         case Policy::BottomAlign:
         {
             // Set the frame
-            m_CurrentFrame->height = (m_TargetFrame->y + m_TargetFrame->height) - m_CurrentFrame->y;
+            m_CurrentFrame.height = (m_TargetFrame.y + m_TargetFrame.height) - m_CurrentFrame.y;
             
             break;
         }
     }
 }
 
-void HookGui::Anchor::MovePinToAnchorPoint()
+void HookGui::HGAnchor::MovePinToAnchorPoint()
 {
     // Check the policy type
     switch (m_Policy)
@@ -235,7 +237,7 @@ void HookGui::Anchor::MovePinToAnchorPoint()
         case Policy::TopAlign:
         {
             // Set the frame
-            m_CurrentFrame->y = m_TargetFrame->y;
+            m_CurrentFrame.y = m_TargetFrame.y;
             
             break;
         }
@@ -243,7 +245,7 @@ void HookGui::Anchor::MovePinToAnchorPoint()
         case Policy::RightAlign:
         {
             // Set the frame
-            m_CurrentFrame->width = (m_TargetFrame->x + m_TargetFrame->width) - m_CurrentFrame->width;
+            m_CurrentFrame.width = (m_TargetFrame.x + m_TargetFrame.width) - m_CurrentFrame.width;
             
             break;
         }
@@ -251,7 +253,7 @@ void HookGui::Anchor::MovePinToAnchorPoint()
         case Policy::LeftAlign:
         {
             // Set the frame
-            m_CurrentFrame->x = m_TargetFrame->x;
+            m_CurrentFrame.x = m_TargetFrame.x;
             
             break;
         }
@@ -259,7 +261,7 @@ void HookGui::Anchor::MovePinToAnchorPoint()
         case Policy::BottomAlign:
         {
             // Set the frame
-            m_CurrentFrame->height = (m_TargetFrame->y + m_TargetFrame->height) - m_CurrentFrame->height;
+            m_CurrentFrame.height = (m_TargetFrame.y + m_TargetFrame.height) - m_CurrentFrame.height;
             
             break;
         }

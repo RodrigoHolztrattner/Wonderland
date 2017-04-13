@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: FluxWidgetController.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "WidgetController.h"
+#include "HGInputComponent.h"
 
-HookGui::WidgetController::WidgetController()
+HookGui::HGInputComponent::HGInputComponent()
 {
 	// Set the initial data
     m_RootView = nullptr;
@@ -11,11 +11,11 @@ HookGui::WidgetController::WidgetController()
     m_CanInteract = true;
 }
 
-HookGui::WidgetController::~WidgetController()
+HookGui::HGInputComponent::~HGInputComponent()
 {
 }
 
-bool HookGui::WidgetController::EvaluateInput(InputCommand _inputCommand)
+bool HookGui::HGInputComponent::EvaluateInput(HGInputCommand _inputCommand)
 {
     // If we cant interact, return false
     if(!m_CanInteract)

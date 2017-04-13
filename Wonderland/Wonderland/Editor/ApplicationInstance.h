@@ -10,6 +10,9 @@
 #include <GLFW/glfw3.h>
 
 #include "Modules\VulkanWrapper\VulkanWrapper.h"
+#include "Modules\HookGui\HGWidget.h"
+#include "Modules\HookGui\Shaders\HGWidgetShader.h"
+#include "Modules\HookGui\HookGui.h"
 
 ///////////////
 // NAMESPACE //
@@ -68,6 +71,9 @@ public: //////////
 	// Return the context reference
 	VulkanWrapper::Context* GetContextReference() { return &m_Context; }
 
+	// Return the root widget
+	HookGui::HGWidget* GetRootWidget() { return &m_RootWidget; }
+
 public:
 
 	// Return if we are valid
@@ -81,14 +87,18 @@ private: //////
 	VulkanWrapper::Context m_Context;
 
 	// Our render shard
-	VulkanWrapper::MaterialShader m_RenderShard;
+	HookGui::HGWidgetShader m_WidgetShader;
+
+	// Our widget manager
+	HookGui::WidgetManager m_WidgetManager;
+
+	// Our root widget
+	HookGui::HGWidget m_RootWidget;
 
 	// Our renderable objects
-	VulkanWrapper::Renderable m_ObjectAlpha;
-	VulkanWrapper::Renderable m_ObjectBeta;
-	VulkanWrapper::Renderable m_ObjectGama;
+	HookGui::HGWidget m_MainWidget;
+	HookGui::HGWidget m_MenuWidget;
 
 	// If we are valid
 	bool m_IsValid;
-
 };

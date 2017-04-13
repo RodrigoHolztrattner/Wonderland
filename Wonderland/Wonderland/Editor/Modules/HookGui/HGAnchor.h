@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Anchor.h
+// Filename: HGAnchor.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -9,6 +9,8 @@
 #include "UIDef.h"
 #include <vector>
 #include <string>
+#include "Widget\HGFrame.h"
+#include "Widget\HGFrame.h"
 
 ///////////////
 // NAMESPACE //
@@ -33,17 +35,21 @@ NamespaceBegin(HookGui)
 // FORWARDING //
 ////////////////
 
-class Frame;
-class FrameHolder;
+class HGWidget;
+class HGFrameComponent;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: Anchor
+// Class name: HGAnchor
 ////////////////////////////////////////////////////////////////////////////////
-class Anchor
+class HGAnchor
 {
-    // Frame and FrameHolder are friend classes
-    friend Frame;
-    friend FrameHolder;
+
+	// The mode
+	enum class Mode
+	{
+		WidgetAnchor,
+		PositionAnchor
+	};
     
 ////////////
 // POLICY //
@@ -72,21 +78,19 @@ public: ////
 public: //////////
 
 	// Constructor / destructor
-	Anchor();
-	~Anchor();
+	HGAnchor();
+	~HGAnchor();
 
 //////////////////
 // MAIN METHODS //
 public: //////////
     
     // Create this anchor
-    void CreateAnchor(Frame* _currentFrame, Frame* _targetFrame, HookGui::Anchor::Policy _policy, HookGui::Anchor::Modifier _modifier);
-    
+    void CreateAnchor(HGFrameComponent* _currentWidget, HGWidget* _targetWidget, HookGui::HGAnchor::Policy _policy, HookGui::HGAnchor::Modifier _modifier);
+	void CreateAnchor(HGFrameComponent* _currentWidget, HGFrame _targetFrame, HookGui::HGAnchor::Policy _policy, HookGui::HGAnchor::Modifier _modifier);
+
     // Apply this anchor
     void Apply();
-    
-    // Return the controller frame component
-    // UIFrameComponent* GetControllerFrameComponent();
     
     // Move the frame component to the anchor point
     void MoveToAnchorPoint();
@@ -100,22 +104,38 @@ public: //////////
     // Move pin the frame component to the anchor point
     void MovePinToAnchorPoint();
     
+	// Return the target widget
+	HGWidget* GetTargetWidget() { return m_TargetWidget; }
     
-    ///////////////
+///////////////
 // VARIABLES //
-private: //////
+protected: ////
+
+	// Our current mode
+	Mode m_OperationMode;
   
-    // The current frame
-    HookGui::Frame* m_CurrentFrame;
-    
-    // The policy used
-    Policy m_Policy;
-    
-    // The modifier
-    Modifier m_Modifier;
-    
-    // The target frame value (used to check if we should update)
-    HookGui::Frame* m_TargetFrame;
+	// The policy used
+	Policy m_Policy;
+
+	// The modifier
+	Modifier m_Modifier;
+
+	// The current widget
+	HGFrameComponent* m_CurrentWidget;
+
+	// The target widget (only usable in widget mode)
+	HGWidget* m_TargetWidget;
+
+	// The target position (only usable in position mode)
+	HookGui::HGFrame m_TargetPosition;
+
+private:
+
+	// The current frame
+	HookGui::HGFrame m_CurrentFrame;
+
+	// The target frame value
+	HookGui::HGFrame m_TargetFrame;
 };
 
 // HookGui workspace

@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: FluxWidget.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "Widget.h"
+#include "HGWidget.h"
+#include <glm/gtx/transform.hpp>
 
-HookGui::Widget::Widget()
+HookGui::HGWidget::HGWidget() : HGFrameComponent(this)
 {
 	// Set the initial data
     m_Delegate = this;
@@ -13,19 +14,31 @@ HookGui::Widget::Widget()
     m_IsHidden = false;
     m_ClipToBound = true;
     m_CanInteract = true;
+	m_CanReceiveInput = true;
     m_AutoresizeChilds = true;
+	m_CanBeRendered = true;
+
+	static uint32_t id = 0;
+	m_Handle = id;
+	id++;
 }
 
-HookGui::Widget::~Widget()
+HookGui::HGWidget::~HGWidget()
 {
 }
 
-bool HookGui::Widget::Initialize()
+bool HookGui::HGWidget::Initialize()
 {
     return true;
 }
 
-void HookGui::Widget::AddSubwidget(Widget* _widget)
+void HookGui::HGWidget::Update(float _timeElapsed)
+{
+	// Update the image
+	m_Image.Update(_timeElapsed);
+}
+
+void HookGui::HGWidget::AddSubwidget(HGWidget* _widget)
 {
     // Get the insert position
     int insertPosition = m_Childs.size();
@@ -34,7 +47,7 @@ void HookGui::Widget::AddSubwidget(Widget* _widget)
     InsertSubwidget(_widget, insertPosition);
 }
 
-void HookGui::Widget::InsertSubwidget(Widget* _widget, int _atIndex)
+void HookGui::HGWidget::InsertSubwidget(HGWidget* _widget, int _atIndex)
 {
     // Correct the index if it is out of bounds
     if(_atIndex > m_Childs.size())
@@ -56,7 +69,7 @@ void HookGui::Widget::InsertSubwidget(Widget* _widget, int _atIndex)
     m_Delegate->WidgetDidAddSubwidget(_widget, _atIndex);
 }
 
-bool HookGui::Widget::ExchangeSubwidget(int _fromIndex, int _toIndex)
+bool HookGui::HGWidget::ExchangeSubwidget(int _fromIndex, int _toIndex)
 {
     // -> Delegate
 //    m_Delegate->WidgetWillAddSubwidget(_widget, _toIndex);
@@ -67,7 +80,7 @@ bool HookGui::Widget::ExchangeSubwidget(int _fromIndex, int _toIndex)
     return true;
 }
 
-void HookGui::Widget::RemoveSubwidget(Widget* _widget)
+void HookGui::HGWidget::RemoveSubwidget(HGWidget* _widget)
 {
     // Get the remove position
     int removePosition = m_Childs.size();
@@ -79,12 +92,12 @@ void HookGui::Widget::RemoveSubwidget(Widget* _widget)
     m_Delegate->WidgetDidRemoveSubwidget(_widget, removePosition);
 }
 
-void HookGui::Widget::RemoveSubwidgetFromIndex(int _fromIndex)
+void HookGui::HGWidget::RemoveSubwidgetFromIndex(int _fromIndex)
 {
 
 }
 
-void HookGui::Widget::AddToSuperwidget(Widget* _widget)
+void HookGui::HGWidget::AddToSuperwidget(HGWidget* _widget)
 {
     // Add to the parent child list
     AddSubwidget(_widget);
@@ -93,7 +106,7 @@ void HookGui::Widget::AddToSuperwidget(Widget* _widget)
     m_Parent = _widget;
 }
 
-void HookGui::Widget::RemoveFromSuperwidget()
+void HookGui::HGWidget::RemoveFromSuperwidget()
 {
     // Remove from the parent
     m_Parent->RemoveSubwidget(this);
@@ -102,21 +115,19 @@ void HookGui::Widget::RemoveFromSuperwidget()
     m_Parent = nullptr;
 }
 
-void HookGui::Widget::SetFrame(HookGui::Frame _newFrame)
+bool HookGui::HGWidget::EvaluateInput(HookGui::HGInputCommand _inputCommand)
 {
-    // -> Delegate
-    m_Delegate->OnChangeLayout(_newFrame);
-    
-    // Set the new frame
-    m_FrameHolder.ChangeFrame(_newFrame);
+	std::cout << "Widget received input!" << std::endl;
+
+	return false;
 }
 
-HookGui::Frame HookGui::Widget::GetFrame()
+HookGui::HGImage* HookGui::HGWidget::GetImage()
 {
-    return m_FrameHolder.GetFrame();
+	return &m_Image;
 }
 
-bool HookGui::Widget::IsDescendant(Widget* _widget)
+bool HookGui::HGWidget::IsDescendant(HGWidget* _widget)
 {
     // Compare the widgets
     if(_widget == this)
@@ -137,26 +148,37 @@ bool HookGui::Widget::IsDescendant(Widget* _widget)
     return false;
 }
 
-bool HookGui::Widget::IsFocused()
+bool HookGui::HGWidget::IsValid()
+{
+	// Check if the image is valid
+	if (!m_Image.IsValid())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool HookGui::HGWidget::IsFocused()
 {
     return false;
 }
 
-void HookGui::Widget::SetDelegate(WidgetDelegate* _delegate)
+void HookGui::HGWidget::SetDelegate(HGWidgetDelegate* _delegate)
 {
     m_Delegate = _delegate;
 }
 
-HookGui::Widget* HookGui::Widget::FindPointTarget(HookGui::Point _point)
+HookGui::HGWidget* HookGui::HGWidget::FindPointTarget(HookGui::Point _point)
 {
     // First check if the point is inside this widget
-    if(!m_FrameHolder.PointIsInside(_point.x, _point.y))
+    if(!m_CurrentFrame.PointIsInside(_point.x, _point.y))
     {
         return nullptr;
     }
     
     // Set the current widget
-    HookGui::Widget* currentWidget = this;
+    HookGui::HGWidget* currentWidget = this;
     
     // Go until we break
     while(true)
@@ -197,7 +219,39 @@ HookGui::Widget* HookGui::Widget::FindPointTarget(HookGui::Point _point)
 }
 
 // Check if the given point is inside our frame
-bool HookGui::Widget::ContainPoint(HookGui::Point _point)
+bool HookGui::HGWidget::ContainPoint(HookGui::Point _point)
 {
-    return m_FrameHolder.PointIsInside(_point.x, _point.y);
+    return m_CurrentFrame.PointIsInside(_point.x, _point.y);
+}
+
+glm::mat4 HookGui::HGWidget::GetTransformMatrix()
+{
+	// Get our frame
+	HGFrame frame = m_CurrentFrame;
+
+	// Set the position, scale and rotation
+	glm::vec3 position = glm::vec3(frame.x, frame.y, 0);
+	glm::vec3 scale = glm::vec3(frame.width, frame.height, 1);
+	glm::vec3 rotation = glm::vec3(0, 0, 0);
+
+	// Create the transform matrix
+	glm::mat4 transformMatrix = glm::mat4();
+
+	// Scale the transform matrix
+	transformMatrix = glm::scale(transformMatrix, scale);
+
+	// Rotate the transform matrix
+	transformMatrix = glm::rotate(transformMatrix, rotation.x, glm::vec3(1, 0, 0));
+	transformMatrix = glm::rotate(transformMatrix, rotation.y, glm::vec3(1, 1, 0));
+	transformMatrix = glm::rotate(transformMatrix, rotation.z, glm::vec3(1, 0, 1));
+
+	// Translate the transform matrix
+	transformMatrix = glm::translate(transformMatrix, position);
+
+	return transformMatrix;
+}
+
+const std::vector<HookGui::HGWidget*>& HookGui::HGWidget::GetChildArray()
+{
+	return m_Childs;
 }

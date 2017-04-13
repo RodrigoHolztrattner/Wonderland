@@ -1,15 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: WidgetController.h
+// Filename: HGFrame.h
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
 //////////////
 // INCLUDES //
 //////////////
-#include "UIDef.h"
-#include "Frame.h"
-#include "InputDispatcher.h"
-#include "ReferenceCounter.h"
+#include "..\UIDef.h"
 #include <vector>
 #include <string>
 
@@ -32,53 +29,38 @@
 // HookGui workspace
 NamespaceBegin(HookGui)
 
-// We know the Widget class
-class Widget;
-class Window;
+////////////////
+// FORWARDING //
+////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: WidgetController
+// Class name: HGFrame
 ////////////////////////////////////////////////////////////////////////////////
-class WidgetController : public ReferenceCounter
+class HGFrame
 {
-public:
-    
-    // The Window is a friend class
-    friend Window;
 
 //////////////////
 // CONSTRUCTORS //
 public: //////////
 
 	// Constructor / destructor
-	WidgetController();
-	~WidgetController();
+	HGFrame();
+	HGFrame(float _x, float _y, float _width, float _height);
+	~HGFrame();
 
 //////////////////
 // MAIN METHODS //
-public: //////////
+//////////////////
     
-private:
-    
-    // Process a input command
-    bool EvaluateInput(InputCommand _inputCommand);
-    
-    // The destroy call
-    virtual void DestroyWarning(){};
-    
+	// Check if a point is inside this frame
+	bool PointIsInside(float _x, float _y);
+   
 ///////////////
 // VARIABLES //
-private: //////
+public: //////
     
-    // The root view
-    Widget* m_RootView;
-    
-    // The controller frame (the root view should match this value)
-    HookGui::Frame m_Frame;
-    
-    // Controllers
-    bool m_IsHidden;
-    bool m_CanInteract;
+	// The main data
+	float x, y, width, height;
 };
 
 // HookGui workspace
