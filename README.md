@@ -1,6 +1,6 @@
 # Wonderland
 A 3D vulkan rendering framework attempt
-(ainda em desenvolvimento)
+(still under development)
 
-Esse é um framework desenvolvido em cima da nova graphic API Vulkan, a ideia principal é desenvolver um wrapper que deixe o uso desta API mais fácil. O framework em si suporta rendering em 2D e 3D além de fazer uso de vários modulos construidos por mim para gerenciamente de processamento paralelo e tratamento de arquivos. 
-Todos os arquivos principais se encontram dentro do caminho: /Wonderland/Editor/
+This is a framework developed under the new graphic API: Vulkan. The main idea is to develop a wrapper that makes using this API easier. The framework itself supports 2D and 3D rendering as well as making use of several modules built by me to manage parallel processing and file processing.
+All the main files are within the path: /Wonderland/Editor/
